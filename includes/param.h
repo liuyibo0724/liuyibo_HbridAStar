@@ -30,19 +30,26 @@ namespace param
     //cell中坐标离散分辨率[#]
     static const int positionResolution = 10;
     //cell中离散位置数量[#]
-    static const int positionResolution*positionResolution;
+    static const int positions = positionResolution*positionResolution;
     //相对cell中心的坐标[m]
     struct relPos
     {
         int x;
         int y;
     };
-    //亚格子查询配置
-    struct subCellConfig
+    //位姿所占用的cells
+    struct poseConfig
     {
         int length;
         relPos pos[64];
     };
+    //转向惩罚[#]
+    static const double penaltyTurning = 1.05;
+    //倒车惩罚（运动图元>2）[#]
+    static const double penaltyReversing = 25.0;
+    //改变方向惩罚（运动图元由<3到>2）[#]
+    static const double penaltyCOD = 50.0;
+
 }
 
 #endif //HYBRID_ASTAR_PARAM_H
