@@ -62,7 +62,7 @@ public:
     //设置启发代价
     void setH(const double &h) { this->h = h; }
     //设置2D索引值
-    int setIdx(const int &width) { this->idx = this->x*width + this->y; return idx; }
+    int setIdx(const int &width) { this->idx = this->y*width + this->x; return idx; } //x, y顺序有疑问已修改
     //将节点加入open集
     void open() { this->o = true; }
     //将节点加入closed集
@@ -131,6 +131,66 @@ private:
 class Node3D
 {
 public:
+    //参数构造函数
+    Node3D(double x, double y, double t, double g, double h, Node3D* pred, int prim = 0)
+    {
+        this->x = x;
+        this->y = y;
+        this->t = t;
+        this->g = g;
+        this->h = h;
+        this->pred = pred;
+        this->prim = prim;
+        this->o = false;
+        this->c = false;
+        this->idx = -1;
+    }
+    //默认构造函数
+    Node3D(): Node3D(0, 0, 0, 0, 0, nullptr) {}
+
+    //1.查询类函数：
+    //查询坐标和姿态角
+    double getX() { return x; }
+    double getY() { return y; }
+    double getT() { return t; }
+    //查询已经付出的和启发代价
+    double getG() { return g; }
+    double getH() { return h; }
+    //查询总代价
+    double getC() { return g + h; }
+    //查询3D索引值
+    int getIdx() { return idx; }
+    //查询节点相关联的运动基元数
+    int getPrim() { return prim; }
+    //查询是否在open集
+    bool isOpen() { return o; }
+    //查询是否在closed集中
+    bool isClosed() { return c; }
+    //查询父节点
+    Node3D* getPred() { return pred; }
+
+    //1.设置类函数
+    //设置节点相关运动基元数
+    void setPrim(int p) { this->prim = p; }
+    //设置坐标和姿态角
+    void setX(double x) { this->x = x; }
+    void setY(double y) { this->y = y; }
+    void setT(double t) { this->t = t; }
+    //设置已经付出的和启发代价
+    void setG(double g) { this->g = g; }
+    void setH(double h) { this->h = h; }
+    //设置3D索引值
+    int setIdx(int width, int height)
+    {
+        this->idx = 
+            (int)(t / param::deltaHeadingRad) * width * height
+            + (int)(y) * width + (int)(x);
+        return idx;
+    }
+    //将节点加入open集
+    void open() { this->o = true; this->c = false; }
+    //将节点加入closed集
+    void close() { this->o = false; this->c = true; }
 
 private:
     //坐标
@@ -152,7 +212,7 @@ private:
     //父节点
     Node3D* pred;
 
-}
+};
 
 }
 
