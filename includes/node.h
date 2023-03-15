@@ -1,6 +1,7 @@
 #ifndef HYBRID_ASTAR_NODE_H
 #define HYBRID_ASTAR_NODE_H
 #include <cmath>
+#include <corecrt_math_defines.h>
 #include "param.h"
 
 namespace HybridAStar
@@ -83,7 +84,7 @@ public:
     //更新已经付出的代价g
     void updateG() { g += singleMoveCost(this->pred); }
     //更新启发代价H
-    void updateH(const Node2D goal) { h = singleMoveCost(&goal); }
+    void updateH(Node2D goal) { h = singleMoveCost(&goal); }
 
     //4.计算符重载类函数
     //重载等号
@@ -172,8 +173,8 @@ public:
         int cout = 0;
         for(int i = 0; i < 10; i ++)
         {
-            double dx = std::abs(x - goal.x) / reintepret_cast<double>(i);
-            double dy = std::abs(y - goal,y) / reintepret_cast<double>(i);
+            double dx = std::abs(x - goal.x) / static_cast<double>(i);
+            double dy = std::abs(y - goal.y) / static_cast<double>(i);
             if(std::pow(dx, 2) + std::pow(dy, 2) < param::dubinsShotDistance)
                 ++cout;
         }
@@ -237,11 +238,11 @@ public:
     //创建子结点方向数量
     static const int dir = 6;
     //x可能的移动步长
-    const double dx[] = { 0.7068582,   0.705224,   0.705224};
+    const double dx[3] = { 0.7068582,   0.705224,   0.705224 };
     //y可能的移动步长
-    const double dy[] = { 0,        -0.0415893,     0.0415893 };
+    const double dy[3] = { 0,        -0.0415893,     0.0415893 };
     //t可能的移动步长
-    const double dt[] = { 0,         0.1178097,    -0.1178097 };
+    const double dt[3] = { 0,         0.1178097,    -0.1178097 };
 
 private:
     //坐标
