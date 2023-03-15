@@ -49,7 +49,7 @@ namespace param
     static const double penaltyReversing = 25.0;
     //改变方向惩罚（运动图元由<3到>2）[#]
     static const double penaltyCOD = 50.0;
-
+    static const double dubinsShotDistance = 100.0;
 }
 
 #endif //HYBRID_ASTAR_PARAM_H

@@ -78,7 +78,7 @@ public:
     //单步代价
     double singleMoveCost(Node2D *pred) const
     {
-        return sqrt((x - this->x)*(x - this->x) + (y - this->y)*(y - this->y));
+        return sqrt((x - pred->x)*(x - pred->x) + (y - pred->y)*(y - pred->y));
     }
     //更新已经付出的代价g
     void updateG() { g += singleMoveCost(this->pred); }
@@ -103,9 +103,9 @@ public:
     Node2D* createSuccessor(const int i, double inv_scale);
     //可能的方向
     static const int dir = 8;
-    //x方向可能的方向
+    //x方向可能的移动步长
     const int dx[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
-    //y方向可能的方向
+    //y方向可能的移动步长
     const int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
 private:
@@ -166,10 +166,30 @@ public:
     bool isOpen() { return o; }
     //查询是否在closed集中
     bool isClosed() { return c; }
+    //查询是否可以通过解析方法求得解
+    bool isSolvable(const Node3D &goal) const
+    {
+        int cout = 0;
+        for(int i = 0; i < 10; i ++)
+        {
+            double dx = std::abs(x - goal.x) / reintepret_cast<double>(i);
+            double dy = std::abs(y - goal,y) / reintepret_cast<double>(i);
+            if(std::pow(dx, 2) + std::pow(dy, 2) < param::dubinsShotDistance)
+                ++cout;
+        }
+        return cout > 7;
+    }
+    //查询是否超出图网格范围
+    bool isOnGrid(const int width, const int height) const
+    {
+        return x >= 0 && x < width && y >= 0 && y < height
+        && (int)(t / param::deltaHeadingRad) >= 0
+        && (int)(t / param::deltaHeadingRad) < param::headings;
+    }
     //查询父节点
     Node3D* getPred() { return pred; }
 
-    //1.设置类函数
+    //2.设置类函数
     //设置节点相关运动基元数
     void setPrim(int p) { this->prim = p; }
     //设置坐标和姿态角
@@ -191,6 +211,37 @@ public:
     void open() { this->o = true; this->c = false; }
     //将节点加入closed集
     void close() { this->o = false; this->c = true; }
+    //设置父结点
+    void setPred(Node3D* pred) { this->pred = pred; }
+    //重置3D结点
+    void reset()
+    {
+        x = 0;
+        y = 0;
+        t = 0;
+        pred = nullptr;
+        o = false;
+        c = false;
+    }
+
+    //3.更新类函数
+    //更新已经付出的代价g
+    void updateG();
+
+    //4.计算符重载类函数
+    bool operator == (const Node3D &comparator) const;
+
+    //5.创建某方向上子结点
+    //创建子结点
+    Node3D* createSuccessor(const int i, double inv_scale);
+    //创建子结点方向数量
+    static const int dir = 6;
+    //x可能的移动步长
+    const double dx[] = { 0.7068582,   0.705224,   0.705224};
+    //y可能的移动步长
+    const double dy[] = { 0,        -0.0415893,     0.0415893 };
+    //t可能的移动步长
+    const double dt[] = { 0,         0.1178097,    -0.1178097 };
 
 private:
     //坐标
@@ -211,7 +262,6 @@ private:
     int prim;
     //父节点
     Node3D* pred;
-
 };
 
 }
