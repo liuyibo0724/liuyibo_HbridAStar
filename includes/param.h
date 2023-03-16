@@ -2,6 +2,7 @@
 #define HYBRID_ASTAR_PARAM_H
 
 #include <math.h>
+#include <vector>
 /*定义hybrid_astar算法基础参数*/
 namespace param
 {
@@ -38,11 +39,12 @@ namespace param
         int y;
     };
     //位姿所占用的cells
-    struct poseConfig
-    {
-        int length;
-        relPos pos[64];
-    };
+    //struct poseConfig
+    //{
+    //    int length;
+    //    relPos pos[64];
+    //};
+    vector<relPos> poseConfig;
     //转向惩罚[#]
     static const double penaltyTurning = 1.05;
     //倒车惩罚（运动图元>2）[#]
