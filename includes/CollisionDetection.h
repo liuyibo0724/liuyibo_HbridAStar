@@ -1,6 +1,8 @@
 #ifndef HYBRID_ASTAR_COLLISIONDETECTION_H
 #define HYBRID_ASTAR_COLLISIONDETECTION_H
 #include <math.h>
+#include <vector>
+#include <set>
 #include "node.h"
 
 namespace HybridAStar
@@ -24,8 +26,8 @@ namespace HybridAStar
         int m_width;    //图网格宽度
         int m_height;   //图网格高度
         unsigned char* m_map;   //读入的图片信息
-        //每个网格内所有亚格子姿态的碰撞查询清单（相对本网格中心的相对坐标）
-        param::poseConfig collisionLookup[param::positions * param::headings];
+        //网格内特定姿态的碰撞查询清单（集合set格式）
+        param::poseConfig collisionLookup;      //[param::positions * param::headings];
     }
 }
 

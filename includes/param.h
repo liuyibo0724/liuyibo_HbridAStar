@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <vector>
+#include <set>
 /*定义hybrid_astar算法基础参数*/
 namespace param
 {
@@ -37,6 +38,15 @@ namespace param
     {
         int x;
         int y;
+        //判断相等
+        bool operator == (const relPos &comparator) const 
+            { return x == comparator.x && y == comparator.y; }
+        //判断大小
+        bool operator  < (const relPos &comparator) const
+        {
+            if(x != comparator.x) return x < comparator.x;
+            else return y < comparator.y;
+        }
     };
     //位姿所占用的cells
     //struct poseConfig
@@ -44,7 +54,7 @@ namespace param
     //    int length;
     //    relPos pos[64];
     //};
-    vector<relPos> poseConfig;
+    typedef set<relPos> poseConfig;
     //转向惩罚[#]
     static const double penaltyTurning = 1.05;
     //倒车惩罚（运动图元>2）[#]
