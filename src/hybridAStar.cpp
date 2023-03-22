@@ -25,3 +25,17 @@ public:
         return node1.getC() < node2.getC();
     }
 };
+
+//构造函数
+hybridAStar::hybridAStar(CollisionDetetion *map) : m_map(map)
+{
+    m_nodes2D = new Node2D[map->getSize()];
+    m_nodes3D = new Node3D[map->getSize() * param::headings];
+}
+
+//析构函数
+hybridAStar::~hybridAStar()
+{
+    delete [] m_nodes2D;
+    delete [] m_nodes3D;
+}

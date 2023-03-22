@@ -27,8 +27,8 @@ namespace HybridAStar
     private:
         //更新启发代价H
         void updateH(Node3D &start, Node3D &goal);
-        Node2D *m_node2D{};
-        Node3D *m_node3D{};
+        Node2D *m_nodes2D{};
+        Node3D *m_nodes3D{};
         CollisionDetetion *m_map{};
         ReedsShepp m_RS{10};
         ReedsShepp::ReedsSheppPath m_RS_path;
