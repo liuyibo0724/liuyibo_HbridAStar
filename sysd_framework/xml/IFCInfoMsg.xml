@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="objectInfo">
+      <member name="id" type="uint8"/>
+      <member name="objType" type="uint8"/>
+      <member name="heading" type="float32"/>
+      <member name="dx" type="float32"/>
+      <member name="dy" type="float32"/>
+      <member name="length" type="float32"/>
+      <member name="width" type="float32"/>
+    </struct>
+    <struct name="laneInfo">
+      <member name="isValid" type="boolean"/>
+      <member name="lineTypeIsDash" type="boolean"/>
+      <member name="c0" type="float32"/>
+      <member name="c1" type="float32"/>
+      <member name="c2" type="float32"/>
+      <member name="c3" type="float32"/>
+    </struct>
+    <struct name="IFCInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="lanes" type="nonBasic" nonBasicTypeName="laneInfo" arrayDimensions="4"/>
+      <member name="objects" type="nonBasic" nonBasicTypeName="objectInfo" arrayDimensions="10"/>
+    </struct>
+  </type>
+</types>

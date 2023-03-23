@@ -1,0 +1,11 @@
+#include "Timestamp.idl"
+
+struct WebCameraImage
+{
+    uint32 seq;
+    Timestamp stamp;
+    uint32 fps;
+    uint32 width;
+    uint32 heigth;
+    string<1024000> jpgimage;
+};

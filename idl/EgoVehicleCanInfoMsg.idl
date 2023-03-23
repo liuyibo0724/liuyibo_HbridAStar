@@ -1,0 +1,155 @@
+/*
+ * @Author: Liuyibo
+ * @Date: 2023-3-23 13:37:56
+ * @LastEditTime: 2023-3-23 13:37:56
+ * @LastEditors: Liuyibo
+ * @Description: In User Settings Edit
+ * @FilePath: 
+ * 2023-3-23,JZJ modify:add 
+ */
+ #include "Timestamp.idl"
+
+ //钥匙状态
+ enum keyPositionType
+ {
+    OFF,
+    ACC,
+    On
+ }
+
+ //档位状态
+ enum gearStatusType
+ {
+    gearN,
+    gearD,
+    gearP,
+    gearR
+ };
+
+ //电源模式
+ enum powerOnModeType
+ {
+    LOCAL_0,
+    AIR_CONDITIONING_1,
+    PARKING_POWER_2,
+    ANTI_THEFT_POWER_3,
+    POWER_REMOTELY_4
+ };
+
+ //系统电源模式
+ enum SysPowerModeType
+ {
+    OFF0,
+    ACC1,
+    ON2,
+    START3
+ };
+
+ //准备状态
+ enum VecStatRdyType
+ {
+    NOT_READY0,
+    READY1
+ };
+
+ //远程控制模式
+ enum remoteControlMpdeType
+ {
+    UCU_NO_REQUEST,
+    UCU_START,
+    UCU_PAUSE,
+    UCU_RECOVER
+ };
+
+ //轮胎方向类型
+ enum WhlDirecType
+ {
+    INIT_0,
+    FORWARD_1,
+    BACKWARD_2,
+    STOP_3,
+    INVALID_4
+ };
+
+ //远程控制UCU请求信息结构体
+ struct UCURequestInfo
+ {
+    remoteControlMpdeType remoteControlMpde;
+    uint64 destinationInfo;
+ };
+
+ //自车can信息结构体
+ struct EgoVehicleCanInfoMsg
+ {
+    uint32 seq;     //序列
+    Timestamp stamp;    //时间戳
+    boolean automicDriveMode;   //自动驾驶模式
+    keyPositionType keyPosition;
+    gearStatusType gearStatus;
+    boolean electricParkBrakeLocked;    //电子停车锁状态
+    boolean brakePedalPressed;  //制动踏板状态
+    float brakePedalPercentage;     //制动踏板踩下百分比
+
+    float vehicleSpeed;     //车速 m/s
+    float steerWheelAngle;  //方向盘转角 degree
+    float steerTorque;      //轮端扭矩 N/m
+
+    flaot wheelSpeedFrontL; //左前轮速
+    flaot wheelSpeedFrontR; //右前轮速
+    flaot wheelSpeedRearL;  //左后轮速
+    flaot wheelSpeedRearL;  //右后轮速
+
+    float VSELongAcc;       //车辆纵向加速度
+    float VSELatAcc;        //车辆横向加速度
+
+    float TMTorqueValue;    //电机最大扭矩值
+    boolean TMTorqueValid;  //电机最大扭矩可用状态
+
+    float dynamicYawRate;   //车辆横摆角
+
+    powerOnModeType BCMRemtCtrlMod;
+    SysPowerModeType SystemPowerMode;
+    VecStatRdyType VecStatReady;
+    UCURequestInfo UCURequest;
+
+    uint8 vehicleSOC;       //车辆SOC
+
+    WhldDirecType LDWhldDirec;  //左主动轮向（左前）
+    WhldDirecType RDWhldDirec;  //右主动轮向（右前）
+    WhldDirecType LNDWhldDirec; //左从动轮向（左后）
+    WhldDirecType RNDWhldDirec; //右从动轮向（右后）
+
+    float VecTMActSpd;//unit:rpm
+    uint16 WhlGrndPlsLftDrvn;
+    uint16 WhlGrndPlsRtDrvn;
+    uint16 WRSLNDWhlDistPlsCntr;
+    uint16 WRSRNDWhlDistPlsCntr;
+ };
+
+ //自车can状态信息
+ struct EgoVehicleCanStatusMsg
+ {
+    uint32 seq;
+    Timestamp stamp;
+    uint8   EBSMcBrkPress;
+    uint8   EBSStatus;
+    uint8   VCUStatus;
+    uint8   EPSStatus;
+    uint8   VehicleMotorStatus;
+    uint8   VehicleMotorTemperature;
+    uint8   emergencyStopButtonStatus;
+    uint8   UNUSED_02;
+    uint8   UNUSED_03;
+    uint8   UNUSED_04;
+    uint8   UNUSED_05;
+    uint8   UNUSED_06;
+    uint8   UNUSED_07;
+    uint8   UNUSED_08;
+    uint8   UNUSED_09;
+    float   UNUSED_10;
+    float   UNUSED_11;
+    float   UNUSED_12;
+    float   UNUSED_13;
+    float   UNUSED_14;
+    float   UNUSED_15;
+ };

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="USSContent">
+      <member name="status" type="uint8"/>
+      <member name="distance" type="uint16"/>
+    </struct>
+    <struct name="USSListInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="USSList" type="nonBasic" nonBasicTypeName="USSContent" arrayDimensions="6"/>
+    </struct>
+  </type>
+</types>

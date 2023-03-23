@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="CanFrame">
+      <member name="ID" type="uint32"/>
+      <member name="DLC" type="uint32"/>
+      <member name="DB" type="uint8" arrayDimensions="8"/>
+    </struct>
+    <struct name="CanChannel">
+      <member name="canFrames" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="CanFrame"/>
+    </struct>
+    <struct name="CanMsgs">
+      <member name="seq" type="uint32"/>
+      <member name="canChannels" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="CanChannel"/>
+    </struct>
+    <struct name="vehicleControlSignalToMcu">
+      <member name="m_VclDrvModRqst" type="uint8"/>
+      <member name="m_PakBrkRqst" type="uint8"/>
+      <member name="m_BrkPressureTgt" type="float32"/>
+      <member name="m_IDUFltIndOn" type="uint8"/>
+      <member name="m_AutoSteerMod" type="uint8"/>
+      <member name="m_AutoSteerAngl" type="float32"/>
+      <member name="m_AutoVehDrvMod" type="uint8"/>
+      <member name="m_AutoVehShift" type="uint8"/>
+      <member name="m_VCUCtrl1Reserved2" type="uint8"/>
+      <member name="m_AutoVehBrakReqRe" type="uint8"/>
+      <member name="m_AutoVehVeloc" type="float32"/>
+      <member name="m_AutoVehBrakRe" type="uint8"/>
+    </struct>
+  </type>
+</types>

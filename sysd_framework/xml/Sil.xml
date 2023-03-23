@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="Sil">
+      <member name="isrunning" type="boolean"/>
+      <member name="name" stringMaxLength="255" type="string"/>
+    </struct>
+  </type>
+</types>

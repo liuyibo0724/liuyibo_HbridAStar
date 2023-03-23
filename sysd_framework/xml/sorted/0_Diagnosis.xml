@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="DiagnosisReq">
+      <member name="errorcode" type="uint32"/>
+    </struct>
+    <struct name="DiagnosisRsp">
+      <member name="iserrorexit" type="boolean"/>
+    </struct>
+    <struct name="DiagnosisStatus">
+      <member name="code" type="uint32"/>
+    </struct>
+  </type>
+</types>

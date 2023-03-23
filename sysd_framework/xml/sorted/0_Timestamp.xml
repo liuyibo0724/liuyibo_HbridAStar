@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="Timestamp">
+      <member name="second" type="uint32"/>
+      <member name="nanosecond" type="uint32"/>
+    </struct>
+  </type>
+</types>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="SysdVelodynePoint">
+      <member name="offset_time" type="uint16"/>
+      <member name="reflectivity" type="uint8"/>
+      <member name="ring" type="uint16"/>
+      <member name="azimuth" type="uint16"/>
+      <member name="x" type="float32"/>
+      <member name="y" type="float32"/>
+      <member name="z" type="float32"/>
+    </struct>
+    <struct name="VelodyneMsgs">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="msg_sequence_number" type="uint32"/>
+      <member name="timebase" type="float64"/>
+      <member name="point_num" type="uint32"/>
+      <member name="velodynePoints" sequenceMaxLength="60000" type="nonBasic" nonBasicTypeName="SysdVelodynePoint"/>
+    </struct>
+  </type>
+</types>

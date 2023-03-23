@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="EgoVehicleInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="axRef" type="float32"/>
+      <member name="vxRef" type="float32"/>
+      <member name="yawRate" type="float32"/>
+      <member name="fntWhlAngle" type="float32"/>
+      <member name="vehicleStandStillFlag" type="boolean"/>
+      <member name="LDWhldDirec" type="uint32"/>
+      <member name="RDWhldDirec" type="uint32"/>
+      <member name="LNDWhldDirec" type="uint32"/>
+      <member name="RNDWhldDirec" type="uint32"/>
+      <member name="VecTMActSpd" type="float32"/>
+    </struct>
+  </type>
+</types>

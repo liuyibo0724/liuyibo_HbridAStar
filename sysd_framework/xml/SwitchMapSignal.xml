@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="PoseIntialMethodSignalType">
+      <enumerator name="GNSS"/>
+      <enumerator name="INITIAL_POSE"/>
+      <enumerator name="LASTPOSE"/>
+    </enum>
+    <struct name="SwitchMapSignalReq">
+      <member name="method" type="uint32"/>
+      <member name="stationID" type="uint64"/>
+      <member name="x" type="float64"/>
+      <member name="y" type="float64"/>
+      <member name="theta" type="float64"/>
+    </struct>
+    <struct name="SwitchMapSignalRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+    <struct name="StationPointReq">
+      <member name="stationID" type="uint64"/>
+    </struct>
+    <struct name="StationPointrsp">
+      <member name="status" type="boolean"/>
+      <member name="x" type="float64"/>
+      <member name="y" type="float64"/>
+      <member name="theta" type="float64"/>
+    </struct>
+  </type>
+</types>

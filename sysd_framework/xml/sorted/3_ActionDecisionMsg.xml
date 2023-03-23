@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="RouteStationSelect.xml"/>-->
+    <!--<include file="PlanningStatus.xml"/>-->
+    <struct name="ActionPlannerPublishInfo">
+      <member name="seq" type="uint32"/>
+      <member name="currentAction" type="uint32"/>
+      <member name="runningStatus" type="uint32"/>
+      <member name="currentRunDirection" type="uint32"/>
+      <member name="vehStates" type="nonBasic" nonBasicTypeName="VehicleStatesStruct"/>
+      <member name="transStates" type="nonBasic" nonBasicTypeName="TransStatesStruct"/>
+      <member name="vehiclebutton" type="nonBasic" nonBasicTypeName="VehicleButtonStruct"/>
+    </struct>
+  </type>
+</types>

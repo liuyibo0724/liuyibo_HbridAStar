@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="BCMControlSignalType">
+      <enumerator name="WindscreenWiper_OFF"/>
+      <enumerator name="WindscreenWiper_Low"/>
+      <enumerator name="WindscreenWiper_High"/>
+      <enumerator name="Window_NoCmd"/>
+      <enumerator name="Window_Rose"/>
+      <enumerator name="Window_Fall"/>
+    </enum>
+    <struct name="BCMControlSignalReq">
+      <member name="cmd" type="uint32"/>
+    </struct>
+    <struct name="BCMControlSignalRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>

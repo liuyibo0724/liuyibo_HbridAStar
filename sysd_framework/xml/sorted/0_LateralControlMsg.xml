@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="LacDebug">
+      <member name="actualSteerAngle" type="float32"/>
+      <member name="activeFlag" type="boolean"/>
+      <member name="triggerFlag" type="boolean"/>
+      <member name="predictX" type="float32"/>
+      <member name="predictY" type="float32"/>
+      <member name="predictVx" type="float32"/>
+      <member name="predictIndex" type="float32"/>
+      <member name="egoY1" type="float32"/>
+      <member name="egoY2" type="float32"/>
+      <member name="error" type="float32"/>
+      <member name="steerAngleKpRequest" type="float32"/>
+      <member name="fntWhlAngleRequest" type="float32"/>
+    </struct>
+    <struct name="LateralControlMsg">
+      <member name="seq" type="uint32"/>
+      <member name="steerAngleRequest" type="float32"/>
+      <member name="lacDebugMsg" type="nonBasic" nonBasicTypeName="LacDebug"/>
+    </struct>
+  </type>
+</types>

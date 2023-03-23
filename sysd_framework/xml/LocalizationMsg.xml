@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="Localization">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="status" type="uint8"/>
+      <member name="longitude" type="float64"/>
+      <member name="latitude" type="float64"/>
+      <member name="altitude" type="float64"/>
+      <member name="headingAngle" type="float64"/>
+      <member name="pitchAngle" type="float64"/>
+      <member name="rollAngle" type="float64"/>
+    </struct>
+  </type>
+</types>

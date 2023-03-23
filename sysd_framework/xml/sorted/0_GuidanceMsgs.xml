@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="CornersInfo">
+      <member name="x" type="float32"/>
+      <member name="y" type="float32"/>
+    </struct>
+    <enum name="GuidanceStatus">
+      <enumerator name="notInCrossing"/>
+      <enumerator name="nearCrossing"/>
+      <enumerator name="inCrossing"/>
+      <enumerator name="passCrossing"/>
+    </enum>
+    <struct name="GuidancePoint">
+      <member name="pointType" type="int8"/>
+      <member name="distance" type="float64"/>
+      <member name="guidancestatus" type="uint32"/>
+      <member name="corners" type="nonBasic" nonBasicTypeName="CornersInfo" arrayDimensions="4"/>
+      <member name="corners_vec" sequenceMaxLength="20" type="nonBasic" nonBasicTypeName="CornersInfo"/>
+      <member name="linkId" type="int64"/>
+      <member name="laneId" type="int64"/>
+      <member name="target_speed" type="float64"/>
+      <member name="pointLane" type="int8"/>
+    </struct>
+    <struct name="Guidance">
+      <member name="seq" type="uint32"/>
+      <member name="guidancePointList" sequenceMaxLength="200" type="nonBasic" nonBasicTypeName="GuidancePoint"/>
+    </struct>
+  </type>
+</types>

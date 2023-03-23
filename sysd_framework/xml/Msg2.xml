@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="Msg2">
+      <member name="time" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="seq" type="uint32"/>
+      <member name="array1" type="uint8" arrayDimensions="3"/>
+      <member name="vector1" sequenceMaxLength="100" type="float32"/>
+      <member name="signal1" stringMaxLength="255" type="string"/>
+      <member name="signal2" type="uint8"/>
+      <member name="signal3" type="uint16"/>
+      <member name="signal4" type="uint32"/>
+      <member name="signal5" type="uint64"/>
+    </struct>
+  </type>
+</types>

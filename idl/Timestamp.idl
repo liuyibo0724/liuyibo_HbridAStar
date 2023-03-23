@@ -1,0 +1,14 @@
+/*
+ * @Author: Liuyibo
+ * @Date: 2023-3-23 13:37:56
+ * @LastEditTime: 2023-3-23 13:37:56
+ * @LastEditors: Liuyibo
+ * @Description: In User Settings Edit
+ * @FilePath: 
+ * 2023-3-23,JZJ modify:add 
+ */
+struct Timestamp
+{
+    uint32 second;
+    uint32 nanosecond;
+};

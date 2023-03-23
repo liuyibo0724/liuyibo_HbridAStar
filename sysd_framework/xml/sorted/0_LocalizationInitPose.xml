@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="LocPose">
+      <member name="x" type="float64"/>
+      <member name="y" type="float64"/>
+      <member name="theta" type="float64"/>
+    </struct>
+    <struct name="LocInitSignalReq">
+      <member name="pose" type="nonBasic" nonBasicTypeName="LocPose"/>
+    </struct>
+    <struct name="LocInitSignalRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>

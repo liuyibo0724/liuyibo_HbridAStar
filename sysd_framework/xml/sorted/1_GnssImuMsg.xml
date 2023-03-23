@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="GnssImuMsg">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="GPSTime" type="float64"/>
+      <member name="heading" type="float64"/>
+      <member name="pitch" type="float64"/>
+      <member name="roll" type="float64"/>
+      <member name="status" type="uint8"/>
+      <member name="latitude" type="float64"/>
+      <member name="longitude" type="float64"/>
+      <member name="altitude" type="float64"/>
+      <member name="vehicleNorthSpeed" type="float64"/>
+      <member name="vehicleEarthSpeed" type="float64"/>
+      <member name="vehicleGroundSpeed" type="float64"/>
+      <member name="accX" type="float64"/>
+      <member name="accY" type="float64"/>
+      <member name="accZ" type="float64"/>
+      <member name="gyroX" type="float64"/>
+      <member name="gyroY" type="float64"/>
+      <member name="gyroZ" type="float64"/>
+      <member name="locationState" type="uint16"/>
+      <member name="directionState" type="uint16"/>
+      <member name="starNumbers" type="uint16"/>
+    </struct>
+  </type>
+</types>

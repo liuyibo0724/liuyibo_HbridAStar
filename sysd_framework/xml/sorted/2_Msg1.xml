@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Msg2.xml"/>-->
+    <struct name="SubMsg1">
+      <member name="signal1" type="int32"/>
+    </struct>
+    <enum name="Enum1">
+      <enumerator name="STATUS1"/>
+      <enumerator name="STATUS2"/>
+    </enum>
+    <struct name="Msg1">
+      <member name="seq" type="uint32"/>
+      <member name="signal1" stringMaxLength="255" type="string"/>
+      <member name="signal2" type="uint8"/>
+      <member name="signal3" type="uint16"/>
+      <member name="signal4" type="uint32"/>
+      <member name="signal5" type="uint64"/>
+      <member name="signal6" type="float32"/>
+      <member name="signal7" type="float64"/>
+      <member name="signal8" type="boolean"/>
+      <member name="array1" type="int32" arrayDimensions="3"/>
+      <member name="array2" type="int32" arrayDimensions="2,2"/>
+      <member name="struct1" type="nonBasic" nonBasicTypeName="SubMsg1"/>
+      <member name="vector1" sequenceMaxLength="100" type="float32"/>
+      <member name="enum1_" type="uint32"/>
+      <member name="msg2_" type="nonBasic" nonBasicTypeName="Msg2"/>
+      <member name="vector2" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="Msg2"/>
+      <member name="array3" type="nonBasic" nonBasicTypeName="Msg2" arrayDimensions="3"/>
+    </struct>
+  </type>
+</types>

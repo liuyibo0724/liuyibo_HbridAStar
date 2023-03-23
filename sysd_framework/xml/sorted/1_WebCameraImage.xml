@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="WebCameraImage">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="fps" type="uint32"/>
+      <member name="width" type="uint32"/>
+      <member name="heigth" type="uint32"/>
+      <member name="jpgimage" stringMaxLength="1024000" type="string"/>
+    </struct>
+  </type>
+</types>

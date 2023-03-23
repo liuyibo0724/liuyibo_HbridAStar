@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="RunningStatus">
+      <enumerator name="normal_driving"/>
+      <enumerator name="ready_reverse"/>
+      <enumerator name="reversing"/>
+      <enumerator name="driving_out"/>
+    </enum>
+    <struct name="RouteStationSelectReq">
+      <member name="changeLane_status" type="boolean"/>
+      <member name="running_status" type="uint32"/>
+      <member name="routeID" type="uint64"/>
+      <member name="stationID" type="uint64"/>
+    </struct>
+    <struct name="RouteStationSelectRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>

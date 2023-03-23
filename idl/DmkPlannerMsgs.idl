@@ -1,0 +1,75 @@
+/*
+ * @Author: Liuyibo
+ * @Date: 2023-3-23 13:37:56
+ * @LastEditTime: 2023-3-23 13:37:56
+ * @LastEditors: Liuyibo
+ * @Description: In User Settings Edit
+ * @FilePath: 
+ * 2023-3-23,JZJ modify:add 
+ */
+
+ #include "Timestamp.idl"
+
+ //路径点结构体
+ struct PathPoint
+ {
+    double x;       //x坐标
+    double y;       //y坐标
+    float kappa;    //车辆航向角
+
+    float theta;    //方向盘转角
+ };
+
+ //轨迹点结构体
+ struct TrajectoryPoint
+ {
+    PathPoint pathPoint;
+    float Vel;        //车辆
+    float Acc;        //加速度
+    float Jerk;       //急动度
+ };
+
+ //行动状态枚举
+ enum Actions
+ {
+
+ };
+
+ //行驶方向枚举
+ enum RunningDirection
+ {
+    FORWARD_S,      //向前直去
+    FORWARD_L,      //向前左转
+    FORWARD_R,      //向前右转
+    BACKWARD_S,     //向后直去
+    BACKWARD_L,     //向后左转
+    BACKWARD_R      //向后右转
+ };
+
+ //子模块失效结构体
+ struct ComponentsFailure
+ {
+    boolean isParaLoadFailed;   //参数载入失败
+    boolean isSearchPathFailed; //路径规划失败
+    boolean isSmoothPathFailed; //光顺路径失败
+    boolean isResuOutputFailed; //结果输出失败
+    boolean isDMKTimeOut;       //失败超时
+ };
+
+ //轨迹点列
+ struct DiscretizedTrajectory
+ {
+    uint32 seq;         //序列
+    Timestamp stamp;    //时间戳
+    sequence<TrajectoryPoint, 500> discretizedTrajectory;   //boost库容器存放500个轨迹点
+    boolean isPlanSucceeded;    //是否规划成功
+ };
+
+ //运动规划器总信息
+ struct ActionPlannerInfo
+ {
+    uint32 seq;     //序列
+    Actions currentAction;      //当前行动
+    RunningDirection currentRunningDirection;   //当前形式方向
+    ComponentsFailure componentsFailure;    //子模块失效结构体实例
+ };

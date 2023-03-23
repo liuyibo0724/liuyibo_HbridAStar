@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <enum name="keyPositionType">
+      <enumerator name="OFF"/>
+      <enumerator name="ACC"/>
+      <enumerator name="ON"/>
+    </enum>
+    <enum name="gearStatusType">
+      <enumerator name="GearN"/>
+      <enumerator name="GearD"/>
+      <enumerator name="GearR"/>
+      <enumerator name="GearP"/>
+    </enum>
+    <enum name="powerOnModeType">
+      <enumerator name="LOCAL_0"/>
+      <enumerator name="AIR_CONDITIONING_1"/>
+      <enumerator name="PARKING_POWER_2"/>
+      <enumerator name="ANTI_THEFT_POWER_3"/>
+      <enumerator name="POWER_REMOTELY_4"/>
+    </enum>
+    <enum name="SysPowerModeType">
+      <enumerator name="OFF0"/>
+      <enumerator name="ACC1"/>
+      <enumerator name="ON2"/>
+      <enumerator name="START3"/>
+    </enum>
+    <enum name="VecStatRdyType">
+      <enumerator name="NOT_READY0"/>
+      <enumerator name="READY1"/>
+    </enum>
+    <enum name="remoteControlModeType">
+      <enumerator name="UCU_NO_REQUEST"/>
+      <enumerator name="UCU_START"/>
+      <enumerator name="UCU_PAUSE"/>
+      <enumerator name="UCU_RECOVER"/>
+    </enum>
+    <enum name="WhldDirecType">
+      <enumerator name="INIT_0"/>
+      <enumerator name="FORWARD_1"/>
+      <enumerator name="BACKWARD_2"/>
+      <enumerator name="STOP_3"/>
+      <enumerator name="INVALID_4"/>
+    </enum>
+    <struct name="UCURequestInfo">
+      <member name="remoteControlMode" type="uint32"/>
+      <member name="destinationInfo" type="uint64"/>
+    </struct>
+    <struct name="EgoVehicleCanInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="automicDriveMode" type="boolean"/>
+      <member name="keyPosition" type="uint32"/>
+      <member name="gearStatus" type="uint32"/>
+      <member name="electricParkBrakeLocked" type="boolean"/>
+      <member name="brakePedalPressed" type="boolean"/>
+      <member name="brakePedalPercentage" type="float32"/>
+      <member name="vehicleSpeed" type="float32"/>
+      <member name="steerWheelAngle" type="float32"/>
+      <member name="steerTorque" type="float32"/>
+      <member name="wheelSpeedFrontL" type="float32"/>
+      <member name="wheelSpeedFrontR" type="float32"/>
+      <member name="wheelSpeedRearL" type="float32"/>
+      <member name="wheelSpeedRearR" type="float32"/>
+      <member name="TMTorqueValue" type="float32"/>
+      <member name="TMTorqueValid" type="boolean"/>
+      <member name="VSELongAcc" type="float32"/>
+      <member name="VSELatAcc" type="float32"/>
+      <member name="dynamicsYawRate" type="float32"/>
+      <member name="BCMRemtCtrlMod" type="uint32"/>
+      <member name="SystemPowerMode" type="uint32"/>
+      <member name="VecStartReady" type="uint32"/>
+      <member name="UCURequest" type="nonBasic" nonBasicTypeName="UCURequestInfo"/>
+      <member name="vehicleSOC" type="uint8"/>
+      <member name="LDWhldDirec" type="uint32"/>
+      <member name="RDWhldDirec" type="uint32"/>
+      <member name="LNDWhldDirec" type="uint32"/>
+      <member name="RNDWhldDirec" type="uint32"/>
+      <member name="VecTMActSpd" type="float32"/>
+      <member name="WhlGrndPlsLftDrvn" type="uint16"/>
+      <member name="WhlGrndPlsRtDrvn" type="uint16"/>
+      <member name="WRSLNDWhlDistPlsCntr" type="uint16"/>
+      <member name="WRSRNDWhlDistPlsCntr" type="uint16"/>
+    </struct>
+    <struct name="EgoVehicleCanStatusMsg">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="EBSMcBrkPress" type="uint8"/>
+      <member name="EBSStatus" type="uint8"/>
+      <member name="VCUStatus" type="uint8"/>
+      <member name="EPSStatus" type="uint8"/>
+      <member name="VehicleMotorStatus" type="uint8"/>
+      <member name="VehicleMotorTemperature" type="uint8"/>
+      <member name="emergencyStopButtonStatus" type="uint8"/>
+      <member name="UNUSED_02" type="uint8"/>
+      <member name="UNUSED_03" type="uint8"/>
+      <member name="UNUSED_04" type="uint8"/>
+      <member name="UNUSED_05" type="uint8"/>
+      <member name="UNUSED_06" type="uint8"/>
+      <member name="UNUSED_07" type="uint8"/>
+      <member name="UNUSED_08" type="uint8"/>
+      <member name="UNUSED_09" type="uint8"/>
+      <member name="UNUSED_10" type="float32"/>
+      <member name="UNUSED_11" type="float32"/>
+      <member name="UNUSED_12" type="float32"/>
+      <member name="UNUSED_13" type="float32"/>
+      <member name="UNUSED_14" type="float32"/>
+      <member name="UNUSED_15" type="float32"/>
+    </struct>
+  </type>
+</types>

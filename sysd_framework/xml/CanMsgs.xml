@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="CanFrame">
+      <member name="ID" type="uint32"/>
+      <member name="DLC" type="uint32"/>
+      <member name="DB" type="uint8" arrayDimensions="8"/>
+    </struct>
+    <struct name="CanChannel">
+      <member name="canFrames" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="CanFrame"/>
+    </struct>
+    <struct name="CanMsgs">
+      <member name="seq" type="uint32"/>
+      <member name="canChannels" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="CanChannel"/>
+    </struct>
+  </type>
+</types>

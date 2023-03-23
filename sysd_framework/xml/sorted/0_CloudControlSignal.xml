@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="CloudControlSignalType">
+      <enumerator name="NO_CMD"/>
+      <enumerator name="POWER_ON"/>
+      <enumerator name="POWER_OFF"/>
+      <enumerator name="RESET"/>
+      <enumerator name="PAUSE"/>
+      <enumerator name="EMERGENCY_STOP"/>
+      <enumerator name="WEB_CONTROL"/>
+    </enum>
+    <struct name="webControlSignal">
+      <member name="trun_on" type="boolean"/>
+      <member name="gear" type="uint8"/>
+      <member name="brake" type="float32"/>
+      <member name="speed" type="float32"/>
+      <member name="steer" type="float32"/>
+    </struct>
+    <struct name="CloudControlSignalReq">
+      <member name="cmd" type="uint32"/>
+      <member name="webControlSignal_st" type="nonBasic" nonBasicTypeName="webControlSignal"/>
+    </struct>
+    <struct name="CloudControlSignalRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>

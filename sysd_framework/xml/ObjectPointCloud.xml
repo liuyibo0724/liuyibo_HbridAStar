@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="PointCloudOutput">
+      <member name="seq" type="uint32"/>
+      <member name="vaildPointCount" type="uint16"/>
+      <member name="pointArr" type="int16" arrayDimensions="30000"/>
+    </struct>
+  </type>
+</types>

@@ -1,0 +1,25 @@
+/*
+ * @Author: Liuyibo
+ * @Date: 2023-3-23 13:37:56
+ * @LastEditTime: 2023-3-23 13:37:56
+ * @LastEditors: Liuyibo
+ * @Description: In User Settings Edit
+ * @FilePath: 
+ * 2023-3-23,JZJ modify:add 
+ */
+ #include "EgoVehicleCanInfoMsg.idl"
+ //自车信息
+ struct EgoVehicleInfoMsg
+ {
+    uint32 seq;                     //序列
+    float  axRef;                   //参考加速度
+    float  vxRef;                   //参考速度
+    float  yawRate;                 //车辆横摆角
+    float  fntWhlAngle;             //前轮偏角
+    boolean vehicleStandStillFlag;  //车辆停驻flag
+    WhldDirecType LDWhldDirec;  //左主动轮向（左前）
+    WhldDirecType RDWhldDirec;  //右主动轮向（右前）
+    WhldDirecType LNDWhldDirec; //左从动轮向（左后）
+    WhldDirecType RNDWhldDirec; //右从动轮向（右后）
+    float         VecTMActSpd;
+ };

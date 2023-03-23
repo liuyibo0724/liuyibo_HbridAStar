@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="E100">
+      <member name="vehicleSpeedRequest" type="float32"/>
+      <member name="MCpressRequest" type="float32"/>
+      <member name="vehicleSpeedRequestEnable" type="boolean"/>
+      <member name="MCpressRequestEnable" type="boolean"/>
+      <member name="isyError" type="boolean"/>
+      <member name="TooManyRestarts" type="boolean"/>
+      <member name="vehicleStartTimeOut" type="boolean"/>
+      <member name="isVehicleBackWard" type="boolean"/>
+    </struct>
+    <struct name="Controller">
+      <member name="PlanSpeed" type="float32"/>
+      <member name="Timer4vehicleStarting" type="float32"/>
+      <member name="axvAimKpRequest" type="float32"/>
+      <member name="axvAimKiRequest" type="float32"/>
+      <member name="numHillstart" type="float32"/>
+      <member name="MCpressKiRequest" type="float32"/>
+      <member name="vehicleStartDefeat" type="boolean"/>
+      <member name="isVehicleBackWardK1" type="boolean"/>
+      <member name="vehicleStarting" type="boolean"/>
+      <member name="decToStopRequest" type="boolean"/>
+    </struct>
+    <struct name="LongitudinalControlMsg">
+      <member name="seq" type="uint32"/>
+      <member name="running" type="boolean"/>
+      <member name="e100Request" type="nonBasic" nonBasicTypeName="E100"/>
+      <member name="locController" type="nonBasic" nonBasicTypeName="Controller"/>
+    </struct>
+  </type>
+</types>

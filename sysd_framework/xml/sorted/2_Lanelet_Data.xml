@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="ObjectInfoArray.xml"/>-->
+    <!--<include file="GuidanceMsgs.xml"/>-->
+    <!--<include file="RouteDataMsgs.xml"/>-->
+    <enum name="LinePosition">
+      <enumerator name="none"/>
+      <enumerator name="Left"/>
+      <enumerator name="Right"/>
+      <enumerator name="Current"/>
+    </enum>
+    <struct name="FusionInfo_lanelet">
+      <member name="fusionobjdata" type="nonBasic" nonBasicTypeName="FusionInfo"/>
+      <member name="is_in_specialregion" type="boolean"/>
+      <member name="is_in_junction" type="boolean"/>
+      <member name="is_in_factory" type="boolean"/>
+      <member name="is_in_curve" type="boolean"/>
+      <member name="is_in_ramp" type="boolean"/>
+      <member name="is_in_crosswalk" type="boolean"/>
+      <member name="reverse1" type="boolean"/>
+      <member name="line_position" type="uint32"/>
+      <member name="lane_angle_global" type="float32"/>
+    </struct>
+    <struct name="FusionData_lanelet">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="number_msfobject_uw" type="uint32"/>
+      <member name="msfObj_st" type="nonBasic" nonBasicTypeName="FusionInfo_lanelet" arrayDimensions="128"/>
+      <member name="ultrasonic_object_info" type="nonBasic" nonBasicTypeName="UltrasonicObjectInfo" arrayDimensions="3"/>
+    </struct>
+    <struct name="Guidance_Roi">
+      <member name="seq" type="uint32"/>
+      <member name="guidancePointList" sequenceMaxLength="20" type="nonBasic" nonBasicTypeName="GuidancePoint"/>
+    </struct>
+    <struct name="RouteData_lanlet">
+      <member name="seq" type="uint32"/>
+      <member name="routePlanLinkList" sequenceMaxLength="10" type="nonBasic" nonBasicTypeName="RoutePlanLink"/>
+    </struct>
+    <enum name="Direction">
+      <enumerator name="GO_AHEAD_"/>
+      <enumerator name="TURN_LEFT_"/>
+      <enumerator name="TURN_RIGHT_"/>
+      <enumerator name="REVERSE_"/>
+      <enumerator name="RUNINGDIRECTION_NUM_"/>
+    </enum>
+    <struct name="Lanelet_Data">
+      <member name="seq" type="uint32"/>
+      <member name="direction" type="uint32"/>
+      <member name="CanChangelane" type="boolean"/>
+      <member name="Destination" type="boolean"/>
+      <member name="CloseToFactory" type="boolean"/>
+      <member name="UseLanelet" type="boolean"/>
+      <member name="objprocessbylanelet" type="nonBasic" nonBasicTypeName="FusionData_lanelet"/>
+      <member name="roiguidance" type="nonBasic" nonBasicTypeName="Guidance_Roi"/>
+      <member name="routedatalanelet" type="nonBasic" nonBasicTypeName="RouteData_lanlet"/>
+      <member name="target_speed" type="float64"/>
+    </struct>
+  </type>
+</types>

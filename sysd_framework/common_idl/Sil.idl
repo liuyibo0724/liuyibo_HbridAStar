@@ -1,0 +1,5 @@
+struct Sil
+{
+    boolean         isrunning;
+    string          name;
+};

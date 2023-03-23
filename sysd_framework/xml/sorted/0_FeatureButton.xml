@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="other_Request">
+      <enumerator name="cmd_turn_on_hazard"/>
+      <enumerator name="cmd_turn_off_hazard"/>
+      <enumerator name="cmd_turn_on_windscreen_wiper"/>
+      <enumerator name="cmd_turn_off_windscreen_wiper"/>
+      <enumerator name="cmd_turn_on_low_beam"/>
+      <enumerator name="cmd_turn_off_low_beam"/>
+      <enumerator name="cmd_turn_on_high_beam"/>
+      <enumerator name="cmd_turn_off_high_beam"/>
+      <enumerator name="cmd_lock_car"/>
+      <enumerator name="cmd_rising_window"/>
+      <enumerator name="cmd_drop_window"/>
+      <enumerator name="cmd_turn_on_false_detection_of_obstacles"/>
+    </enum>
+    <struct name="FeatureButtonReq">
+      <member name="cmd" type="uint32"/>
+    </struct>
+    <struct name="FeatureButtonRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>

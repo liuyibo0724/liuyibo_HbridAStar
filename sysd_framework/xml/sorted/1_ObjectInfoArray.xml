@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="CornerPositionInfo">
+      <member name="x" type="float32"/>
+      <member name="y" type="float32"/>
+    </struct>
+    <struct name="UltrasonicObjectInfo">
+      <member name="has_object" type="uint16"/>
+      <member name="ul_state" type="uint16"/>
+      <member name="ul_distance" type="uint16"/>
+      <member name="dummy" type="uint32"/>
+    </struct>
+    <struct name="FusionInfo">
+      <member name="id_uw" type="uint16"/>
+      <member name="classification_ub" type="uint8"/>
+      <member name="height_uw" type="float32"/>
+      <member name="width_uw" type="float32"/>
+      <member name="length_uw" type="float32"/>
+      <member name="rotate_angle" type="float32"/>
+      <member name="dxv_sw" type="float32"/>
+      <member name="dyv_sw" type="float32"/>
+      <member name="vxv_sw" type="float32"/>
+      <member name="vyv_sw" type="float32"/>
+      <member name="corners" type="nonBasic" nonBasicTypeName="CornerPositionInfo" arrayDimensions="4"/>
+    </struct>
+    <struct name="FusionData">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="number_msfobject_uw" type="uint32"/>
+      <member name="msfObj_st" type="nonBasic" nonBasicTypeName="FusionInfo" arrayDimensions="128"/>
+      <member name="ultrasonic_object_info" type="nonBasic" nonBasicTypeName="UltrasonicObjectInfo" arrayDimensions="3"/>
+    </struct>
+  </type>
+</types>

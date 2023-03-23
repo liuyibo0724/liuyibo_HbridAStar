@@ -1,0 +1,37 @@
+#include "Msg2.idl"
+struct SubMsg1
+{
+    int32              signal1;
+};
+
+enum Enum1
+{
+    STATUS1,
+    STATUS2
+};
+
+struct Msg1
+{
+    uint32              seq;    //recommended for easy debug
+    string              signal1;//std::string
+    uint8               signal2;//uint8_t
+    uint16              signal3;//uint16_t
+    uint32              signal4;//uint32_t
+    uint64              signal5;//uint64_t
+    float               signal6;//float
+    double              signal7;//double
+    boolean             signal8;//bool
+
+    int32               array1[3];//std::array<int32_t, 6>
+    int32               array2[2][2];
+
+    //map<int32, float>   map1;//std::map<int32, float>
+
+    SubMsg1             struct1;
+    sequence<float>     vector1;//std::vector<float>
+    Enum1               enum1_;
+    Msg2                msg2_;
+    sequence<Msg2>      vector2;
+    Msg2                array3[3];
+
+};

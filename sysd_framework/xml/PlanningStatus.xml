@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="GuidanceMsgs.xml"/>-->
+    <!--<include file="DmkPlannerMsgs.xml"/>-->
+    <struct name="FocusObjInfoStruct">
+      <member name="uid" type="uint32"/>
+      <member name="objdist_y" type="float32"/>
+      <member name="objdist_x" type="float32"/>
+      <member name="objdist_theta" type="float32"/>
+      <member name="objdist_vx" type="float32"/>
+      <member name="objdist_vy" type="float32"/>
+      <member name="objdist_v" type="float32"/>
+      <member name="obj_max_caution_Level" type="uint32"/>
+    </struct>
+    <struct name="ObstaclesInfoStruct">
+      <member name="is_need_stop_for_give_way" type="boolean"/>
+      <member name="is_obj_crossing" type="boolean"/>
+      <member name="is_stop_wait" type="boolean"/>
+      <member name="is_need_ebrake" type="boolean"/>
+      <member name="is_need_changelane4obs" type="boolean"/>
+      <member name="is_car_intargetlane" type="boolean"/>
+    </struct>
+    <struct name="EgoVehicleInfoStruct">
+      <member name="isyerror" type="boolean"/>
+      <member name="f_isstarterror" type="boolean"/>
+      <member name="is_in_stop_station" type="boolean"/>
+      <member name="is_approach_station" type="boolean"/>
+      <member name="is_in_tmp_station" type="boolean"/>
+      <member name="is_in_factory" type="boolean"/>
+      <member name="is_in_curve" type="boolean"/>
+      <member name="is_car_in_protected" type="boolean"/>
+      <member name="egoGuidanceStatus" type="uint32"/>
+    </struct>
+    <struct name="PlanningStatusInfo">
+      <member name="seq" type="uint32"/>
+      <member name="is_can_signal_success" type="boolean"/>
+      <member name="is_key_signal_success" type="boolean"/>
+      <member name="currentRunDirection" type="uint32"/>
+      <member name="componentsFailure" type="nonBasic" nonBasicTypeName="ComponentsFailureStruct"/>
+      <member name="focusobjinfo" type="nonBasic" nonBasicTypeName="FocusObjInfoStruct"/>
+      <member name="obstaclesInfo" type="nonBasic" nonBasicTypeName="ObstaclesInfoStruct"/>
+      <member name="egoVehicleInfo" type="nonBasic" nonBasicTypeName="EgoVehicleInfoStruct"/>
+    </struct>
+  </type>
+</types>

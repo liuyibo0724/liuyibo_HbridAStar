@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="KeyboardInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="key_changelane_req" type="boolean"/>
+    </struct>
+  </type>
+</types>

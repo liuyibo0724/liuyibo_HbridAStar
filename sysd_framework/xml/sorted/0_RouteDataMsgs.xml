@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="Coordinate">
+      <member name="x" type="float64"/>
+      <member name="y" type="float64"/>
+      <member name="z" type="float64"/>
+    </struct>
+    <struct name="RoutePlanLink">
+      <member name="id" type="int64"/>
+      <member name="travelDirection" type="int8"/>
+      <member name="geometry" sequenceMaxLength="81" type="nonBasic" nonBasicTypeName="Coordinate"/>
+    </struct>
+    <struct name="RouteData">
+      <member name="seq" type="uint32"/>
+      <member name="routePlanLinkList" sequenceMaxLength="10" type="nonBasic" nonBasicTypeName="RoutePlanLink"/>
+    </struct>
+  </type>
+</types>

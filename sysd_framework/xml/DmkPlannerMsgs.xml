@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <!--<include file="Timestamp.xml"/>-->
+    <struct name="PathPointStruct">
+      <member name="x" type="float64"/>
+      <member name="y" type="float64"/>
+      <member name="theta" type="float32"/>
+      <member name="s" type="float32"/>
+      <member name="kappa" type="float32"/>
+      <member name="dkappa" type="float32"/>
+      <member name="ddkappa" type="float32"/>
+    </struct>
+    <enum name="CautionLevelState">
+      <enumerator name="cautionIgnore"/>
+      <enumerator name="cautionLow"/>
+      <enumerator name="cautionMiddle"/>
+      <enumerator name="cautionHigh"/>
+      <enumerator name="cautionDanger"/>
+    </enum>
+    <struct name="TrajectoryPoint">
+      <member name="pathPoint" type="nonBasic" nonBasicTypeName="PathPointStruct"/>
+      <member name="steer" type="float32"/>
+      <member name="v" type="float32"/>
+      <member name="a" type="float32"/>
+      <member name="da" type="float32"/>
+      <member name="relativeTime" type="float32"/>
+    </struct>
+    <enum name="Maneuver">
+      <enumerator name="LANE_KEEP"/>
+      <enumerator name="CHANGE_TO_LEFT"/>
+      <enumerator name="CHANGE_TO_RIGHT"/>
+      <enumerator name="ONTO_LANE"/>
+      <enumerator name="INVALID"/>
+    </enum>
+    <enum name="Actions">
+      <enumerator name="Init"/>
+      <enumerator name="Remote_control_passive"/>
+      <enumerator name="Pedal_press_passive"/>
+      <enumerator name="No_ready"/>
+      <enumerator name="Lane_keeping"/>
+      <enumerator name="In_factory_cruising"/>
+      <enumerator name="In_factory_reversing"/>
+      <enumerator name="Narrow_driving"/>
+      <enumerator name="Following"/>
+      <enumerator name="Obstacle_crossing_deceleration"/>
+      <enumerator name="Obstacle_insertion_deceleration"/>
+      <enumerator name="E_brake"/>
+      <enumerator name="Ready_to_reverse"/>
+      <enumerator name="Reversing"/>
+      <enumerator name="Driveout"/>
+      <enumerator name="Avoidance"/>
+      <enumerator name="Slow_down_crossing"/>
+      <enumerator name="Give_way"/>
+      <enumerator name="Try_passing"/>
+      <enumerator name="Approach_station"/>
+      <enumerator name="Null"/>
+      <enumerator name="Stop_wait"/>
+      <enumerator name="Stop_station"/>
+      <enumerator name="Stop_pause"/>
+      <enumerator name="Change_line"/>
+      <enumerator name="Can_data_error"/>
+      <enumerator name="Key_data_error"/>
+      <enumerator name="Vehicle_y_error"/>
+      <enumerator name="Vehicle_start_failed"/>
+      <enumerator name="ACTION_NUM"/>
+      <enumerator name="Stop_tmp_station"/>
+      <enumerator name="Postion_data_drift"/>
+      <enumerator name="Location_untrusted"/>
+      <enumerator name="Trajectory_planner_fail"/>
+      <enumerator name="Vehicle_in_protect"/>
+      <enumerator name="Vehicle_eps_fault"/>
+      <enumerator name="Emergency_stop"/>
+
+    </enum>
+    <enum name="RuningDirection">
+      <enumerator name="GO_AHEAD"/>
+      <enumerator name="TURN_LEFT"/>
+      <enumerator name="TURN_RIGHT"/>
+      <enumerator name="REVERSE"/>
+      <enumerator name="RUNINGDIRECTION_NUM"/>
+    </enum>
+    <struct name="VehicleStatesStruct">
+      <member name="isActuatorActive" type="boolean"/>
+      <member name="isHeadLampStateOK" type="boolean"/>
+      <member name="isAebActive" type="boolean"/>
+      <member name="isAbsActive" type="boolean"/>
+      <member name="isEspActive" type="boolean"/>
+      <member name="isEpbActive" type="boolean"/>
+      <member name="isEpsStateOK" type="boolean"/>
+      <member name="isEbrakeButtonPushed" type="boolean"/>
+      <member name="isSeatBeltClosed" type="boolean"/>
+      <member name="isDoorClosed" type="boolean"/>
+      <member name="isRemoteOverridden" type="boolean"/>
+      <member name="isPedalPressOverridden" type="boolean"/>
+      <member name="isMainSwitchON" type="boolean"/>
+      <member name="isMainSwitchONLastTime" type="boolean"/>
+      <member name="isGoalReached" type="boolean"/>
+      <member name="isStandStill" type="boolean"/>
+      <member name="isHazardous" type="boolean"/>
+    </struct>
+    <struct name="TransStatesStruct">
+      <member name="isInitSucceed" type="boolean"/>
+      <member name="isInitFailed" type="boolean"/>
+      <member name="isReady" type="boolean"/>
+      <member name="isErrorForSwitchON" type="boolean"/>
+      <member name="isReadyForSwitchON" type="boolean"/>
+      <member name="isGoalReached" type="boolean"/>
+      <member name="isErrorExit" type="boolean"/>
+      <member name="isNormalExit" type="boolean"/>
+    </struct>
+    <struct name="ComponentsFailureStruct">
+      <member name="isParametersLoadFailed" type="boolean"/>
+      <member name="isSubsInitFailed" type="boolean"/>
+      <member name="isTaskPlannerFailed" type="boolean"/>
+      <member name="isActionPlannerFailed" type="boolean"/>
+      <member name="isPredictorFailed" type="boolean"/>
+      <member name="isRoutePlannerFailed" type="boolean"/>
+      <member name="isTrajectoryPlannerFailed" type="boolean"/>
+      <member name="isSyncInputsFailed" type="boolean"/>
+      <member name="isDMKTimeOut" type="boolean"/>
+    </struct>
+    <struct name="PredictionInfo">
+      <member name="predictedTrajectory" sequenceMaxLength="100" type="nonBasic" nonBasicTypeName="TrajectoryPoint"/>
+      <member name="uid" type="int16"/>
+      <member name="maneuver" type="uint32"/>
+    </struct>
+    <struct name="PredictionPacket">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="predictionInfoArray" sequenceMaxLength="150" type="nonBasic" nonBasicTypeName="PredictionInfo"/>
+    </struct>
+    <struct name="DiscretizedTrajectory">
+      <member name="seq" type="uint32"/>
+      <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
+      <member name="discretizedTrajectory" sequenceMaxLength="500" type="nonBasic" nonBasicTypeName="TrajectoryPoint"/>
+      <member name="isPlanSucceeded" type="boolean"/>
+    </struct>
+    <struct name="ReferenceLine">
+      <member name="seq" type="uint32"/>
+      <member name="sGap" type="float32"/>
+      <member name="refLinePoints" sequenceMaxLength="500" type="nonBasic" nonBasicTypeName="PathPointStruct"/>
+    </struct>
+    <struct name="VehicleButtonStruct">
+      <member name="isHazardON" type="boolean"/>
+      <member name="isWindscreenWiperON" type="boolean"/>
+      <member name="isLowBeamON" type="boolean"/>
+      <member name="isHighBeamON" type="boolean"/>
+      <member name="isLockCarON" type="boolean"/>
+      <member name="isRisingWindowON" type="boolean"/>
+      <member name="isFdofobstacles" type="boolean"/>
+    </struct>
+    <struct name="DangerObjInfoStruct">
+      <member name="uid" type="uint32"/>
+      <member name="objdist_y" type="float32"/>
+      <member name="objdist_x" type="float32"/>
+    </struct>
+    <struct name="ActionPlannerInfo">
+      <member name="seq" type="uint32"/>
+      <member name="currentAction" type="uint32"/>
+      <member name="currentTask" type="int16"/>
+      <member name="currentRunDirection" type="uint32"/>
+      <member name="vehStates" type="nonBasic" nonBasicTypeName="VehicleStatesStruct"/>
+      <member name="componentsFailure" type="nonBasic" nonBasicTypeName="ComponentsFailureStruct"/>
+      <member name="transStates" type="nonBasic" nonBasicTypeName="TransStatesStruct"/>
+      <member name="vehiclebutton" type="nonBasic" nonBasicTypeName="VehicleButtonStruct"/>
+      <member name="dangerobjinfo" type="nonBasic" nonBasicTypeName="DangerObjInfoStruct"/>
+    </struct>
+  </type>
+</types>

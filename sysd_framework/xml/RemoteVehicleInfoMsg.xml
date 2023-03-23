@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <struct name="RemoteVehicleInfoMsg">
+      <member name="seq" type="uint32"/>
+      <member name="kbdcontrolsignal" type="boolean"/>
+      <member name="automicDrivesignal" type="boolean"/>
+      <member name="loc_vset" type="float32"/>
+      <member name="lac_vset" type="float32"/>
+      <member name="gear" type="float32"/>
+      <member name="Ebrake" type="boolean"/>
+      <member name="emergencyStop" type="boolean"/>
+    </struct>
+  </type>
+</types>

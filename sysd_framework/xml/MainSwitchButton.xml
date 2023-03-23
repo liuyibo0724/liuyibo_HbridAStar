@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+  <type>
+    <enum name="Request">
+      <enumerator name="cmd_turn_off"/>
+      <enumerator name="cmd_turn_on"/>
+      <enumerator name="cmd_turn_getstatus"/>
+      <enumerator name="cmd_e_brake"/>
+      <enumerator name="cmd_changelane"/>
+      <enumerator name="cmd_reverse_on"/>
+      <enumerator name="cmd_Drive_out"/>
+    </enum>
+    <struct name="MainSwitchButtonReq">
+      <member name="cmd" type="uint32"/>
+      <member name="call_routeID" type="uint64"/>
+      <member name="call_stationID" type="uint64"/>
+      <member name="call_starting_routeID" type="uint64"/>
+      <member name="call_starting_stationID" type="uint64"/>
+    </struct>
+    <struct name="MainSwitchButtonRsp">
+      <member name="status" type="boolean"/>
+    </struct>
+  </type>
+</types>
