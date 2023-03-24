@@ -30,9 +30,12 @@
  };
 
  //行动状态枚举
- enum Actions
+ enum States
  {
-
+   Prepare,       //准备
+   Guidance,      //导航
+   Guidance_done, //导航结束
+   STATE_NUM      //空
  };
 
  //行驶方向枚举
@@ -69,7 +72,7 @@
  struct ActionPlannerInfo
  {
     uint32 seq;     //序列
-    Actions currentAction;      //当前行动
+    States currentAction;      //当前行动
     RunningDirection currentRunningDirection;   //当前形式方向
     ComponentsFailure componentsFailure;    //子模块失效结构体实例
  };

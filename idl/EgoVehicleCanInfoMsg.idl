@@ -20,10 +20,10 @@
  //档位状态
  enum gearStatusType
  {
-    gearN,
-    gearD,
-    gearP,
-    gearR
+    GearN,
+    GearD,
+    GearR,
+    GearP
  };
 
  //电源模式
@@ -53,7 +53,7 @@
  };
 
  //远程控制模式
- enum remoteControlMpdeType
+ enum remoteControlModeType
  {
     UCU_NO_REQUEST,
     UCU_START,
@@ -74,7 +74,7 @@
  //远程控制UCU请求信息结构体
  struct UCURequestInfo
  {
-    remoteControlMpdeType remoteControlMpde;
+    remoteControlMpdeType remoteControlMode;
     uint64 destinationInfo;
  };
 
@@ -97,13 +97,13 @@
     flaot wheelSpeedFrontL; //左前轮速
     flaot wheelSpeedFrontR; //右前轮速
     flaot wheelSpeedRearL;  //左后轮速
-    flaot wheelSpeedRearL;  //右后轮速
-
-    float VSELongAcc;       //车辆纵向加速度
-    float VSELatAcc;        //车辆横向加速度
-
+    flaot wheelSpeedRearR;  //右后轮速
+    
     float TMTorqueValue;    //电机最大扭矩值
     boolean TMTorqueValid;  //电机最大扭矩可用状态
+    
+    float VSELongAcc;       //车辆纵向加速度
+    float VSELatAcc;        //车辆横向加速度
 
     float dynamicYawRate;   //车辆横摆角
 
