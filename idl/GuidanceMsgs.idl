@@ -1,0 +1,34 @@
+
+struct CornersInfo
+{
+	float x;
+	float y;
+};
+
+enum GuidanceStatus
+{
+    notInCrossing, //不在框内
+    nearCrossing,  
+    inCrossing,
+    passCrossing
+};
+
+struct GuidancePoint
+{
+    int8        pointType;
+    double      distance;
+    GuidanceStatus guidancestatus;
+    CornersInfo corners[4]; //暂时保留，之后删除
+    sequence<CornersInfo, 20> corners_vec;
+    int64       linkId;
+    int64       laneId;
+    double      target_speed;
+    int8        pointLane;
+};
+
+struct Guidance
+{
+    uint32                     seq;
+
+    sequence<GuidancePoint, 200>    guidancePointList;
+};

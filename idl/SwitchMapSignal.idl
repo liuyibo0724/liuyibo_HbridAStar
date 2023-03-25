@@ -1,0 +1,35 @@
+
+enum PoseIntialMethodSignalType
+{
+    GNSS,
+    INITIAL_POSE,
+    LASTPOSE
+};
+
+struct SwitchMapSignalReq
+{
+    PoseIntialMethodSignalType     method;
+    uint64    stationID;
+    double x;
+    double y;
+    double theta;
+};
+
+struct SwitchMapSignalRsp
+{
+    boolean                status;
+};
+
+struct StationPointReq
+{
+    uint64    stationID;
+};
+
+struct StationPointrsp
+{
+    boolean  status;
+    double x;
+    double y;
+    double theta;
+};
+

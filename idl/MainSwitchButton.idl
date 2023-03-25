@@ -1,0 +1,25 @@
+enum Request
+{
+    cmd_turn_off,
+    cmd_turn_on,
+    cmd_turn_getstatus,
+    cmd_e_brake,
+    cmd_changelane,
+    cmd_reverse_on,
+    cmd_Drive_out
+};
+
+struct MainSwitchButtonReq
+{
+    Request                cmd;
+    uint64                 call_routeID;
+    uint64                 call_stationID;
+    uint64                 call_starting_routeID;
+    uint64                 call_starting_stationID;
+};
+
+struct MainSwitchButtonRsp
+{
+    boolean                status;
+};
+

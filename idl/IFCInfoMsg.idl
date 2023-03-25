@@ -1,0 +1,30 @@
+struct objectInfo
+{
+    uint8 id;
+    uint8 objType;
+    float heading;
+    float dx;
+    float dy;
+    float length;
+    float width;
+};
+
+struct laneInfo
+{
+    boolean isValid;
+    boolean   lineTypeIsDash;
+
+    float c0; // dY0_f;
+    float c1; // alpPsi_f;
+    float c2; // kapC0_f;
+    float c3; // kapDxC1_f;
+};
+
+struct IFCInfoMsg
+{
+    uint32 seq;
+
+    laneInfo lanes[4];
+
+    objectInfo objects[10];
+};

@@ -1,0 +1,17 @@
+#include "Timestamp.idl"
+
+struct Localization
+{
+    uint32    seq;
+
+    Timestamp  stamp;
+
+    uint8     status;
+
+    double    longitude;
+    double    latitude;
+    double    altitude;
+    double    headingAngle;
+    double    pitchAngle;
+    double    rollAngle;
+};

@@ -1,0 +1,35 @@
+
+struct CanFrame
+{
+    uint32  ID;
+    uint32  DLC;
+    uint8   DB[8];
+};
+
+struct CanChannel
+{
+    sequence<CanFrame>  canFrames;
+};
+
+struct CanMsgs
+{
+    uint32                  seq;
+    sequence<CanChannel>     canChannels;
+};
+
+
+struct vehicleControlSignalToMcu
+{
+    uint8 m_VclDrvModRqst;
+    uint8 m_PakBrkRqst;
+    float m_BrkPressureTgt;
+    uint8 m_IDUFltIndOn;
+    uint8 m_AutoSteerMod;
+    float m_AutoSteerAngl;
+    uint8 m_AutoVehDrvMod;
+    uint8 m_AutoVehShift;
+    uint8 m_VCUCtrl1Reserved2; //light
+    uint8 m_AutoVehBrakReqRe;
+    float m_AutoVehVeloc;
+    uint8 m_AutoVehBrakRe;
+};

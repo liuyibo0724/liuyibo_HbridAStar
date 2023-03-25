@@ -1,0 +1,38 @@
+#include "Timestamp.idl"
+struct CornerPositionInfo
+{
+	float x;
+	float y;
+};
+
+struct UltrasonicObjectInfo
+{
+	uint16 has_object;	// 0: no exist object 1: exist object
+	uint16 ul_state;	// 0 : normal 1: abnormal
+	uint16 ul_distance; // 20~1000 cm
+	uint32 dummy;
+};
+
+struct FusionInfo
+{
+	uint16 id_uw;			 // The No. of object
+	uint8 classification_ub; // The category of object
+	float height_uw;		 // The height of object
+	float width_uw;			 // The width of object
+	float length_uw;			   // The length of object
+	float rotate_angle;
+	float dxv_sw;				   // The longitudinal distance of object to ego vehicle coordinate
+	float dyv_sw;				   // The lateral distance of object to ego vehicle coordinate
+	float vxv_sw;				   // The longitudinal velocity of object to ego vehicle coordinate
+	float vyv_sw;				   // The lateral velocity of object to ego vehicle coordinate
+	CornerPositionInfo corners[4]; // (x,y) four corners of bbox. The distribution is counterclockwise.
+};
+
+struct FusionData
+{
+	uint32 seq;
+	Timestamp stamp;
+	uint32 number_msfobject_uw;
+	FusionInfo msfObj_st[128];
+	UltrasonicObjectInfo ultrasonic_object_info[3]; // The information of ultrasonic object (left front right)
+};

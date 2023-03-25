@@ -1,0 +1,35 @@
+
+struct E100
+{
+    float    vehicleSpeedRequest;
+    float    MCpressRequest;
+    boolean  vehicleSpeedRequestEnable;
+    boolean  MCpressRequestEnable;   
+
+    boolean  isyError;
+    boolean  TooManyRestarts;
+    boolean  vehicleStartTimeOut;
+    boolean  isVehicleBackWard;
+};
+
+struct Controller
+{
+    float PlanSpeed;
+    float Timer4vehicleStarting;
+    float axvAimKpRequest;
+    float axvAimKiRequest;
+    float numHillstart;
+    float MCpressKiRequest;
+    boolean vehicleStartDefeat;
+    boolean isVehicleBackWardK1;
+    boolean vehicleStarting;
+    boolean decToStopRequest;
+};
+
+struct LongitudinalControlMsg
+{
+    uint32              seq;    //recommended for easy debug
+    boolean             running;
+    E100                e100Request;
+    Controller          locController;
+};

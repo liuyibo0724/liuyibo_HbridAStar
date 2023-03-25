@@ -1,0 +1,24 @@
+enum RunningStatus
+{
+    normal_driving,
+    ready_reverse,
+    reversing,
+    driving_out
+
+};
+struct RouteStationSelectReq
+{
+    boolean changeLane_status;
+    // boolean ready4reverse_status;
+    // boolean reverse_status;
+    // boolean driveout_status;
+    RunningStatus running_status;
+    uint64 routeID;
+    uint64 stationID;
+};
+
+struct RouteStationSelectRsp
+{
+    boolean                status;
+};
+

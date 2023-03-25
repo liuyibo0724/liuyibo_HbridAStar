@@ -1,0 +1,21 @@
+
+struct Coordinate
+{
+    double     x;
+    double     y;
+    double     z;
+};
+
+struct RoutePlanLink
+{
+    int64                   id;
+    int8      		        travelDirection;
+    sequence<Coordinate, 81>    geometry;
+};
+
+struct RouteData
+{
+    uint32                     seq;
+
+    sequence<RoutePlanLink, 10>    routePlanLinkList;
+};

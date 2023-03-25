@@ -1,0 +1,14 @@
+struct DiagnosisReq
+{
+    uint32 errorcode;
+};
+
+struct DiagnosisRsp
+{
+    boolean iserrorexit;
+};
+
+struct DiagnosisStatus
+{
+    uint32 code;
+};

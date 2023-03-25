@@ -1,0 +1,16 @@
+struct LocPose
+{
+    double  x;
+    double  y;
+    double  theta;
+};
+
+struct LocInitSignalReq
+{
+    LocPose    pose;
+};
+
+struct LocInitSignalRsp
+{
+    boolean   status;
+};

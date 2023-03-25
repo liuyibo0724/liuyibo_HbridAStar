@@ -1,0 +1,55 @@
+/**
+ * @file PlanningStatus.idl
+ * @author ganxin  (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-06-06
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+#include "GuidanceMsgs.idl"
+#include "DmkPlannerMsgs.idl"
+
+
+struct FocusObjInfoStruct {
+    uint32 uid;
+    float objdist_y;
+    float objdist_x;
+    float objdist_theta;
+    float objdist_vx;
+    float objdist_vy;
+    float objdist_v;
+    CautionLevelState obj_max_caution_Level;
+};
+struct ObstaclesInfoStruct{
+     boolean is_need_stop_for_give_way;
+     boolean is_obj_crossing;
+     boolean is_stop_wait;
+     boolean is_need_ebrake;
+     boolean is_need_changelane4obs;
+     boolean is_car_intargetlane;
+
+};
+struct EgoVehicleInfoStruct{
+     boolean isyerror;
+     boolean f_isstarterror;
+     boolean is_in_stop_station;
+     boolean is_approach_station;
+     boolean is_in_tmp_station;
+     boolean is_in_factory;
+     boolean is_in_curve;
+     boolean is_car_in_protected;
+     GuidanceStatus egoGuidanceStatus;
+
+};
+struct PlanningStatusInfo {
+    uint32          seq;
+    boolean is_can_signal_success;
+    boolean is_key_signal_success;
+    RuningDirection currentRunDirection;
+    ComponentsFailureStruct componentsFailure;
+    FocusObjInfoStruct  focusobjinfo;
+    ObstaclesInfoStruct  obstaclesInfo;
+    EgoVehicleInfoStruct egoVehicleInfo;
+};

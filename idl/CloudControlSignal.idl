@@ -1,0 +1,31 @@
+
+enum CloudControlSignalType
+{
+    NO_CMD,
+    POWER_ON,
+    POWER_OFF,
+    RESET,
+    PAUSE,
+    EMERGENCY_STOP,
+    WEB_CONTROL
+};
+
+struct webControlSignal
+{
+    boolean trun_on;
+    uint8 gear;
+    float brake;
+    float speed;    //unit: m/s
+    float steer; //unit degree
+};
+struct CloudControlSignalReq
+{
+    CloudControlSignalType               cmd;
+
+    webControlSignal webControlSignal_st;
+};
+
+struct CloudControlSignalRsp
+{
+    boolean                status;
+};

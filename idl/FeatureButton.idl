@@ -1,0 +1,41 @@
+
+enum other_Request
+{
+    //打开、关闭双闪
+    cmd_turn_on_hazard,
+    cmd_turn_off_hazard,
+    
+    //打开、关闭雨刮
+    cmd_turn_on_windscreen_wiper,
+    cmd_turn_off_windscreen_wiper,
+    
+    //打开、关闭近光灯
+    cmd_turn_on_low_beam,
+    cmd_turn_off_low_beam,
+
+
+    //打开、关闭远光灯
+    cmd_turn_on_high_beam,
+    cmd_turn_off_high_beam,
+    
+    //锁车
+    cmd_lock_car,
+    
+    //升窗、降窗
+    cmd_rising_window,
+    cmd_drop_window,
+    
+    //障碍物误检
+    cmd_turn_on_false_detection_of_obstacles
+};
+
+struct FeatureButtonReq
+{
+    other_Request        cmd;
+
+};
+
+struct FeatureButtonRsp
+{
+    boolean                status;
+};

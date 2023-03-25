@@ -1,0 +1,84 @@
+//#include "Timestamp.idl"
+#include "ObjectInfoArray.idl"
+#include "GuidanceMsgs.idl"
+#include "RouteDataMsgs.idl"
+// struct CornerPositionInfo_lanelet
+// {
+// 	float x;
+// 	float y;
+// };
+
+// struct UltrasonicObjectInfo_lanelet
+// {
+// 	uint16 has_object;	// 0: no exist object 1: exist object
+// 	uint16 ul_state;	// 0 : normal 1: abnormal
+// 	uint16 ul_distance; // 20~1000 cm
+// 	uint32 dummy;
+// };
+
+enum LinePosition {
+	none,
+	Left,
+	Right,
+	Current
+};
+
+struct FusionInfo_lanelet
+{
+	FusionInfo fusionobjdata;
+	boolean  is_in_specialregion;
+	boolean  is_in_junction;
+	boolean  is_in_factory;
+	boolean  is_in_curve;
+	boolean  is_in_ramp;
+	boolean  is_in_crosswalk;
+	boolean  reverse1;
+	LinePosition line_position;
+	float    lane_angle_global; //参考角度
+};
+
+struct FusionData_lanelet
+{
+	uint32 seq;
+	Timestamp stamp;
+	uint32 number_msfobject_uw;
+	FusionInfo_lanelet msfObj_st[128];
+	UltrasonicObjectInfo ultrasonic_object_info[3]; // The information of ultrasonic object (left front right)
+};
+
+
+struct Guidance_Roi
+{
+    uint32                     seq;
+    sequence<GuidancePoint, 20>    guidancePointList;
+};
+
+struct RouteData_lanlet
+{
+    uint32                     seq;
+
+    sequence<RoutePlanLink, 10>    routePlanLinkList;
+};
+
+enum Direction
+{
+    GO_AHEAD_,
+    TURN_LEFT_,
+    TURN_RIGHT_,
+    REVERSE_,
+    RUNINGDIRECTION_NUM_
+};
+
+struct Lanelet_Data
+{
+	uint32                     seq;
+	Direction			       direction;//车道线尽头方向
+	boolean 				   CanChangelane; //是否可以变道
+	boolean 				   Destination;   //是否到达目的地
+	boolean                    CloseToFactory;//是否接近厂区
+	boolean                    UseLanelet;//使用车道线作为行车轨迹
+	FusionData_lanelet         objprocessbylanelet;
+	Guidance_Roi               roiguidance;
+	RouteData_lanlet           routedatalanelet;
+	double                     target_speed;
+};

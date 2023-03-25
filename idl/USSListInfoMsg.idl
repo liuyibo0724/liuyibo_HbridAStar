@@ -1,0 +1,12 @@
+struct USSContent
+{
+    uint8 status;
+    uint16 distance;
+};
+
+struct USSListInfoMsg
+{
+    uint32 seq;
+    
+    USSContent USSList[6];
+};

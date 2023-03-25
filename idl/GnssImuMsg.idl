@@ -1,0 +1,29 @@
+#include "Timestamp.idl"
+
+struct GnssImuMsg
+{
+    uint32     seq;
+
+    Timestamp  stamp;
+    double     GPSTime;
+    double     heading; 
+    double     pitch;
+    double     roll;
+    uint8      status;
+    double     latitude;
+    double     longitude;
+    double     altitude; 
+    double     vehicleNorthSpeed;
+    double     vehicleEarthSpeed;
+    double     vehicleGroundSpeed;
+    double     accX;
+    double     accY;
+    double     accZ;
+    double     gyroX;
+    double     gyroY;
+    double     gyroZ;
+    uint16     locationState;
+    uint16     directionState;
+    uint16     starNumbers;                             
+    
+};

@@ -1,0 +1,20 @@
+
+enum BCMControlSignalType
+{
+    WindscreenWiper_OFF,
+    WindscreenWiper_Low,
+    WindscreenWiper_High,
+    Window_NoCmd,
+    Window_Rose,
+    Window_Fall
+};
+
+struct BCMControlSignalReq
+{
+    BCMControlSignalType               cmd;
+};
+
+struct BCMControlSignalRsp
+{
+    boolean                status;
+};

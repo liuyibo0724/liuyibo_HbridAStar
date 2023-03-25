@@ -1,0 +1,14 @@
+#include "Timestamp.idl"
+
+struct Msg2
+{
+    Timestamp           time;
+    uint32              seq;
+    uint8               array1[3];
+    sequence<float>     vector1;
+    string              signal1;
+    uint8               signal2;
+    uint16              signal3;
+    uint32              signal4;
+    uint64              signal5;
+};

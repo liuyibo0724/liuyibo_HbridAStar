@@ -1,0 +1,24 @@
+#include "Timestamp.idl"
+
+struct SysdVelodynePoint
+{
+    uint16                       offset_time;      // offset time relative to the base time unit:us
+    uint8                        reflectivity;     // reflectivity, 0~255
+    uint16                       ring;             // ring, 0~15
+    uint16                       azimuth;          // azimuth, uint:angle*100
+    float                        x;                // X axis, unit:m
+    float                        y;                // Y axis, unit:m
+    float                        z;                // Z axis, unit:m
+};
+
+
+struct VelodyneMsgs
+{
+    uint32                                  seq;
+    Timestamp                               stamp;
+    uint32                                  msg_sequence_number;
+    double                                  timebase;                         // The time of first point
+    uint32                                  point_num;                        // Total number of pointclouds
+    sequence<SysdVelodynePoint,60000>       velodynePoints;                   // Pointcloud data
+    // SysdVelodynePoint                       velodynePoints[30000];                   // Pointcloud data
+};

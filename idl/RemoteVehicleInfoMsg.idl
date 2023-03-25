@@ -1,0 +1,12 @@
+
+struct RemoteVehicleInfoMsg
+{
+    uint32 seq;
+    boolean   kbdcontrolsignal;
+    boolean   automicDrivesignal;
+    float  loc_vset;
+    float  lac_vset;
+    float  gear;
+    boolean  Ebrake;
+    boolean  emergencyStop;
+};

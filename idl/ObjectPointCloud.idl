@@ -1,0 +1,8 @@
+struct PointCloudOutput
+{
+    uint32 seq;
+    uint16 vaildPointCount;
+    int16 pointArr[30000];
+};
+
+

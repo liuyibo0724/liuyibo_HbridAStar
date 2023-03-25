@@ -1,0 +1,23 @@
+/**
+ * @file ActionDecisionMsg.idl
+ * @author ganxin (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-06-06
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+#include "RouteStationSelect.idl"
+#include "PlanningStatus.idl"
+
+
+struct ActionPlannerPublishInfo {
+    uint32          seq;
+    Actions         currentAction;
+    RunningStatus   runningStatus;
+    RuningDirection currentRunDirection;
+    VehicleStatesStruct vehStates;
+    TransStatesStruct transStates;
+    VehicleButtonStruct vehiclebutton;
+};

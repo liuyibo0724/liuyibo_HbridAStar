@@ -1,0 +1,23 @@
+
+struct LacDebug
+{
+    float   actualSteerAngle;
+    boolean activeFlag;
+    boolean triggerFlag;
+    float   predictX;
+    float   predictY;
+    float   predictVx;
+    float   predictIndex;
+    float   egoY1;
+    float   egoY2;
+    float   error;
+    float   steerAngleKpRequest;
+    float   fntWhlAngleRequest;
+};
+
+struct LateralControlMsg
+{
+    uint32   seq;    //recommended for easy debug
+    float    steerAngleRequest;
+    LacDebug lacDebugMsg;    
+};
