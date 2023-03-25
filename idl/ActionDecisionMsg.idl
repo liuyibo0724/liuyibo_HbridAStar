@@ -14,7 +14,7 @@
 
 struct ActionPlannerPublishInfo {
     uint32          seq;
-    Actions         currentAction;
+    States         currentAction;
     RunningStatus   runningStatus;
     RuningDirection currentRunDirection;
     VehicleStatesStruct vehStates;
