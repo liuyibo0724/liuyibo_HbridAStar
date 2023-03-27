@@ -69,7 +69,7 @@ public:
     //将节点加入closed集
     void close() { this->c = true; }
     //重置节点，擦除open和closed标签
-    void reaet() { this->o = false; this->c = false; }
+    void reset() { this->o = false; this->c = false; }
     //发现节点
     void discover() { this->d = true; }
     //设置父节点
@@ -84,7 +84,7 @@ public:
     //更新已经付出的代价g
     void updateG() { g += singleMoveCost(this->pred); }
     //更新启发代价H
-    void updateH(Node2D goal) { h = singleMoveCost(&goal); }
+    void updateH(Node2D &goal) { h = singleMoveCost(&goal); }
 
     //4.计算符重载类函数
     //重载等号
