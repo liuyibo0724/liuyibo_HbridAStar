@@ -7,10 +7,10 @@
 
 namespace HybridAStar
 {
-    class CollisionDetetion
+    class CollisionDetection
     {
     public:
-        CollisionDetetion(unsigned char* data, int width, int height);  //构造函数
+        CollisionDetection(unsigned char* data, int width, int height);  //构造函数
         //1.连通性检查函数
         bool isNodeTraversable(const Node2D* node);    //2D结点可否通行
         bool isNodeTraversable(const Node3D* node);    //3D结点可否通行

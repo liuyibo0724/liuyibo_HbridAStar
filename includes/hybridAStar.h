@@ -15,11 +15,11 @@ namespace HybridAStar
         ~hybridAStar();
         //hybridAStar搜索路径的核心规划器，返回3D点列
         //（注意scale的意义不明也许是缩放尺度记得修改）
-        Node3D* search_planner(Node3D &start, Node3D &goal, double scale = 0.5)
+        Node3D* search_planner(Node3D &start, Node3D &goal, double scale = 0.5);
         //传统aStar规划器返回2D末点的已付出代价G
         //（注意scale的意义不明也许是缩放尺度记得修改）
         double aStar(Node2D &start, Node2D &goal, double scale = 1);
-        void interpolate(const ReedsShepp::pos *from, double pec,
+        void interpolate(const ReedsShepp::pos *from, double t,
                          ReedsShepp::pos *state) const; //RS路径插值
         //后半程是否用RS曲线射入goal成功
         bool isShootSuccess(){ return m_shootSuccess; }

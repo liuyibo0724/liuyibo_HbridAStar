@@ -16,6 +16,11 @@
         "atomic": "cpp",
         "sstream": "cpp",
         "array": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "set": "cpp",
+        "iostream": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp",
+        "type_traits": "cpp"
     }
 }

@@ -356,7 +356,7 @@ namespace HybridAStar
             interpolate(&s,*path,t,&p);
             Node2D pt((int)(p.x),(int)(p.y),0,0, nullptr);
             pt.setIdx(map->getWidthSize());
-            if(!map->isTraversable(&pt))
+            if(!map->isNodeTraversable(&pt))
             {
                 return false;
             }

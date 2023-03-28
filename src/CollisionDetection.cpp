@@ -20,7 +20,7 @@ inline bool isInMap(int x, int y)
     { return x >= 0 && x < m_width && y >= 0 && y < m_height }
 
 //由位姿生成对应的collisionLookup亚格子碰撞查询队列
-void HybridAStar::CollisionDetetion::setCollisionLookup(
+void HybridAStar::CollisionDetection::setCollisionLookup(
     double x, 
     double y, 
     double t)
@@ -68,7 +68,7 @@ void HybridAStar::CollisionDetetion::setCollisionLookup(
 }
 
 //构造函数
-HybridAStar::CollisionDetetion::CollisionDetetion(
+HybridAStar::CollisionDetection::CollisionDetection(
     unsigned char* data, 
     int width, 
     int height)  
@@ -80,7 +80,7 @@ HybridAStar::CollisionDetetion::CollisionDetetion(
 }
 
 //2D节点可否通行
-bool HybridAStar::CollisionDetetion::isNodeTraversable(const Node2D* node)
+bool HybridAStar::CollisionDetection::isNodeTraversable(const Node2D* node)
 {
     //取得网格坐标（整数）
     int x = node->getX;
@@ -90,7 +90,7 @@ bool HybridAStar::CollisionDetetion::isNodeTraversable(const Node2D* node)
 }
 
 //3D节点可否通行
-bool HybridAStar::CollisionDetetion::isNodeTraversable(const Node3D* node)
+bool HybridAStar::CollisionDetection::isNodeTraversable(const Node3D* node)
 {
     //取得网格坐标（整数）
     double x = node->getX;
@@ -100,7 +100,7 @@ bool HybridAStar::CollisionDetetion::isNodeTraversable(const Node3D* node)
 }
 
 //某位姿可否通行
-bool HybridAStar::CollisionDetetion::isConfigTraversable(double x, double y, double t)
+bool HybridAStar::CollisionDetection::isConfigTraversable(double x, double y, double t)
 {
     this->collisionLookup.clear();  //清空collisionLookup集合
     //由位姿生成对应的collisionLookup亚格子碰撞查询队列
@@ -113,7 +113,7 @@ bool HybridAStar::CollisionDetetion::isConfigTraversable(double x, double y, dou
 }
 
 //读入新图
-void HybridAStar::CollisionDetetion::updateMap(unsigned char* data, int width, int height)
+void HybridAStar::CollisionDetection::updateMap(unsigned char* data, int width, int height)
 {
     delete m_map;
     m_width = width;
