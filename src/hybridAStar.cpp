@@ -94,7 +94,7 @@ double HybridAstar::hybridAStar::aStar(Node2D &start, Node2D &goal, double scale
                         nSucc.updateH(goal);    //计算启发代价H
                         nSucc.open();           //nSucc置入open集
                         m_nodes2D[iSucc] = nSucc; //取代或更新原m_nodes2D[iSucc]
-                        m_nodes2D[iSucc].setPred(&m_nodes2D[iPred]);   //设置父节点指针为&nPred
+                        m_nodes2D[iSucc].setPred(&m_nodes2D[iPred]);   //设置父节点指针为&m_nodes2D[iPred]
                         open.insert(m_nodes2D[iSucc]);      //置入open集
                         delete node2D_tmp;
                     }
@@ -113,9 +113,9 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
 {
     int width = m_map->getWidth();
     int height = m_map->getHeight();
-    int goal_id = goal.setIdx(m_map->getWidth(), m_map->getHeight());   //拿到goal的Idx
+    int goal_id = goal.setIdx(width, height);   //拿到goal的Idx
     if(!m_map->isNodeTraversable(&goal)){ return nullptr; }     //若goal不可通行返回空指针
-    int iPred, iSucc;   //当前节点和子节点的Idx
+    int iPred, iSucc, iPred_tmp;   //当前节点和子节点的Idx
     double newG;    //新_已付出代价
     for(int i = 0; i < m_map->getSize() * param::headings; i ++) m_nodes3D[i].reset();  //open和close集全部置空
     int iterations = 0;     //迭代计数
@@ -161,7 +161,7 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
                 if(m_RS.isTraversable(&nPred, &m_RS_path, m_map))
                 {
                     m_shootSuccess = true;  //RS射入成功
-                    nPred_tmp_ptr = &nPred; //将nPred的地址暂存在nPred_tmp_ptr中
+                    nPred_tmp_ptr = &m_nodes3D[iPred]; //将nPred的地址暂存在nPred_tmp_ptr中
                     goal.setPred(nPred_tmp_ptr);
                     bool fix[4] = {false};  //判别组间是否变档的bool数组，变档则置为true
                     for(int i = 1; i < 5; i ++)
@@ -206,15 +206,12 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
                         }
                         double angle2 = p.angle - 0.5 * M_PI;
                         if(fabs(angle - angle2) > 0.2)
-                        {
-                            auto tmp_node =  new Node3D(p.x, p.y, angle - 0.5*M_PI, -1, -1, nPred_tmp_ptr, prim);
-                            nPred_tmp_ptr = tmp_node;
-                        }
+                            nPred_tmp_ptr =  new Node3D(p.x, p.y, angle - 0.5*M_PI, -1, -1, &m_nodes3D[iPred_tmp], prim);
                         else
-                        {
-                            auto tmp_node =  new Node3D(p.x, p.y, angle + 0.5*M_PI, 1, 1, nPred_tmp_ptr, prim);
-                            nPred_tmp_ptr = tmp_node;
-                        }
+                            nPred_tmp_ptr =  new Node3D(p.x, p.y, angle + 0.5*M_PI, 1, 1, &m_nodes3D[iPred_tmp], prim);
+                        iPred_tmp = nPred_tmp_ptr->setIdx(width, height);   //拿到nPred_tmp_ptr的Idx
+                        m_nodes3D[iPred_tmp] = *(nPred_tmp_ptr);            //将new出来的插值点数据置入m_nodes3D[]中
+                        delete nPred_tmp_ptr;                                    //释放空间防止内存泄露
                     }
                     goal.setPred(nPred_tmp_ptr);
                     return &goal;
@@ -223,7 +220,9 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
             //充实open集6向搜索
             for(int i = 0; i < Node3D::dir; i ++)
             {
-                node3D_tmp = nPred.createSuccessor(i, 1 / scale);   //i向步进1/scale搜索子节点
+                //i向步进1/scale搜索子节点
+                //！！！注意！！！：使用m_nodes3D[iPred]前向搜索，保证父节点指针指向m_nodes3D[]中的元素
+                node3D_tmp = m_nodes3D[iPred].createSuccessor(i, 1 / scale);   
                 nSucc = *node3D_tmp;
                 iSucc = nSucc.setIdx(width, height);    //拿到子节点Idx
                 //网格范围检测、节点通行性检测
@@ -254,12 +253,15 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
                             open.insert(m_nodes3D[iSucc]);  //置入open集
                             delete node3D_tmp;
                         }
+                        else delete node3D_tmp;
                     }
+                    else delete node3D_tmp;
                 }
+                else delete node3D_tmp;
             }
         }
     }
-    return nullptr;
+    return nullptr;     //路径搜索失败返回空指针
 }
 
 //RS路径插值
@@ -267,4 +269,26 @@ void hybridAStar::interpolate(const ReedsShepp::pos *from, double t,
                          ReedsShepp::pos *state) const
 {
     m_RS.interpolate(from, m_RS_path, t, state);
+}
+
+//更新启发代价H
+void hybridAStar::updateH(Node3D &start, const Node3D &goal)
+{
+    double RSCost = 0, AStarCost = 0;    //RS曲线代价和传统A*代价
+    double offset = 0;                              //start和goal的偏置
+    double s_x = start.getX();
+    double s_y = start.getY();
+    double g_x = goal.getX();
+    double g_y = goal.getY();
+    /* 1.ReedsShepp曲线代价 */
+    ReedsShepp::pos start_pt(s_x, s_y, start.getT());
+    ReedsShepp::pos goal_pt(g_x, g_y, goal.getT());
+    RSCost = (double)m_RS.distance(start_pt, goal_pt);  //返回RS曲线长度
+    /* 2.传统A*距离代价 */
+    offset = sqrt(pow((s_x - (double)((int)s_x)) - (g_x - (double)((int)g_x)) , 2.) +
+                  pow((s_x - (double)((int)s_x)) - (g_x - (double)((int)g_x)) , 2.));
+    Node2D start2d((int)s_x, (int)s_y, 0, 0, nullptr);
+    Node2D goal2d((int)g_x, (int)g_y, 0, 0, nullptr);
+    AStarCost = aStar(start2d, goal2d, 1) - offset;  //aStar规划结果减去offset返回两点A*代价
+    start.setH(std::max(RSCost, AStarCost));         //取两者最大值当作新H
 }

@@ -21,6 +21,8 @@
         "iostream": "cpp",
         "chrono": "cpp",
         "functional": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "iterator": "cpp",
+        "cmath": "cpp"
     }
 }
