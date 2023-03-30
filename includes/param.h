@@ -62,6 +62,8 @@ namespace param
     //改变方向惩罚（运动图元由<3到>2）[#]
     static const double penaltyCOD = 50.0;
     static const double dubinsShotDistance = 100.0;
+    //障碍物最大惩罚距离
+    static const double obsPenaMax = 10.0;
 }
 
 #endif //HYBRID_ASTAR_PARAM_H
