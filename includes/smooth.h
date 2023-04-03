@@ -48,22 +48,24 @@ namespace HybridAStar
     {
     public:
         Smoother(){};                                   //构造函数
-        void smoothPath(std::vector<Node3D> &path);     //核心轨迹平滑函数
-        void tracePath(Node3D *node, int i = 0, std::vector<Node3D> &path = std::vector<Node3D>()); //顺藤摸瓜找到轨迹点列
+        void smoothPath(CollisionDetection &collisionMap);     //核心轨迹平滑函数
+        void tracePath(Node3D *node, int i = 0, std::vector<Node3D> path = std::vector<Node3D>()); //顺藤摸瓜找到轨迹点列
         std::vector<Node3D> getPath(){ return m_path; } //返回点列
         Vector2D obstacleTerm(Vector2D xi);             //障碍物项
-        Vector2D curvatureTerm(Vector2D xi0, Vector2D xi1, Vector2D xi2);   //曲率项
+        Vector2D curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, Vector2D x_ip1, Vector2D x_ip2);   //曲率项
         Vector2D smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2);   //顺滑项
         // Vector2D voronoiTerm(Vector2D xi);              //voronoi项
         bool isOnGrid(Vector2D xi)
             return xi.x >= 0 && xi.x < height && xi.y >= 0 && xi.y < width; //xi点是否在图像范围
     private:
+        //碰撞图
+        CollisionDetection m_collisionMap;
         //惩罚边界
         double kappaMax = 1. / (param::rmin * 1.1);     //最大曲率
         double obsMax = param::obsPenaMax;              //障碍物惩罚的最大距离
         double voronoiMax = param::obsPenaMax;          //影响voronoi场的最大距离
         //权重系数
-        double fallRate = 0.1;                          //梯度更新衰减率
+        double alpha = 0.1;                          //梯度更新衰减率
         double wObstacle = 0.1;                         //障碍物项权重
         double wCurvature = 0.1;                        //曲率项权重
         double wSmoothness = 0.5;                       //顺滑项权重

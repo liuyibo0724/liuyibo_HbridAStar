@@ -29,7 +29,7 @@ namespace HybridAStar
         void updateH(Node3D &start, const Node3D &goal);
         Node2D *m_nodes2D{};
         Node3D *m_nodes3D{};
-        CollisionDetetion *m_map{};
+        CollisionDetection *m_map{};
         ReedsShepp m_RS{10};
         ReedsShepp::ReedsSheppPath m_RS_path;
         bool m_shootSuccess;
