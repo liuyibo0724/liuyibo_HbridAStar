@@ -1,7 +1,7 @@
 #ifndef HYBRID_ASTAR_NODE_H
 #define HYBRID_ASTAR_NODE_H
 #include <cmath>
-#include <corecrt_math_defines.h>
+// #include <corecrt_math_defines.h>
 #include "param.h"
 
 namespace HybridAStar

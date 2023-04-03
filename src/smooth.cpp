@@ -3,19 +3,40 @@
 using namespace HybridAStar;
 
 //方向Prim是否为前进区间
-inline bool isAdv(int prim) return prim < 3 && prim >= 0;
+inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 
 //判断是否为交点（内联）
-bool isCrop(std::vector<Node3D> path, int i)
+// bool isCrop(std::vector<Node3D> path, int i)
+// {
+//     if(path[i].getPrim == -1) return false;
+//     else if(path[i].getPrim == -2) return true;
+//     bool revp2Adv = isAdv(path[i - 2].getPrim()) ? true : false;
+//     bool revp1Adv = isAdv(path[i - 1].getPrim()) ? true : false;
+//     bool selfpAdv = isAdv(path[i].getPrim()) ? true : false;
+//     bool prep1Adv = isAdv(path[i + 1].getPrim()) ? true : false;
+//     bool prep2Adv = isAdv(path[i + 2].getPrim()) ? true : false;
+//     if(revp2Adv != revp1Adv || revp1Adv != selfpAdv || selfpAdv != prep1Adv || prep1Adv != prep2Adv)
+//     {
+//         return true;
+//     }
+//     return false;
+// }
+inline bool isCusp(std::vector<Node3D> path, int i)
 {
-    if(path[i].getPrim == -1) return false;
-    else if(path[i].getPrim == -2) return true;
-    bool revp2Adv = isAdv(path[i - 2].getPrim()) ? true : false;
-    bool revp1Adv = isAdv(path[i - 1].getPrim()) ? true : false;
-    bool selfpAdv = isAdv(path[i].getPrim()) ? true : false;
-    bool prep1Adv = isAdv(path[i + 1].getPrim()) ? true : false;
-    bool prep2Adv = isAdv(path[i + 2].getPrim()) ? true : false;
-    if(revp2Adv != revp1Adv || revp1Adv != selfpAdv || selfpAdv != prep1Adv || prep1Adv != prep2Adv)
+    if(path[i].getPrim() == -1)
+    {
+        return false;
+    }
+    else if(path[i].getPrim() == -2)
+    {
+        return true;
+    }
+    bool revim2 = path[i - 2].getPrim() > 3 ? true : false;
+    bool revim1 = path[i - 1].getPrim() > 3 ? true : false;
+    bool revi   = path[i].getPrim() > 3 ? true : false;
+    bool revip1 = path[i + 1].getPrim() > 3 ? true : false;
+    //  bool revip2 = path[i + 2].getPrim() > 3 ? true : false;
+    if (revim2 != revim1 || revim1 != revi || revi != revip1)
     {
         return true;
     }
@@ -36,7 +57,7 @@ Vector2D Smoother::curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, V
   if (delta_x_im1.length() > 0 && delta_x_i.length() > 0 && delta_x_ip1.length() > 0 && delta_x_ip2.length() > 0) {
     // the angular change at the node
     auto compute_kappa = [](const Vector2D& delta_x_0, const Vector2D& delta_x_1, float& delta_phi, float& kappa) {
-        delta_phi = std::acos(Helper::clamp(delta_x_0.dot(delta_x_1) / (delta_x_0.length() * delta_x_1.length()), -1, 1));
+        delta_phi = std::acos(clamp(delta_x_0.dot(delta_x_1) / (delta_x_0.length() * delta_x_1.length()), -1, 1));
         kappa = delta_phi / delta_x_0.length();
     };
     float delta_phi_im1, kappa_im1;
@@ -129,7 +150,7 @@ void Smoother::tracePath(Node3D *node, int i, std::vector<Node3D> path)
 {
     if(node == nullptr)
     {
-        this->path = path;
+        this->m_path = path;
         return;
     }
     i ++;
@@ -138,11 +159,11 @@ void Smoother::tracePath(Node3D *node, int i, std::vector<Node3D> path)
 }
 
 //核心轨迹平滑函数
-void Smoother::smoothPath(CollisionDetection &collisionMap)
+void Smoother::smoothPath(DynamicVoronoi& voronoi)
 {
-    this->m_collisionMap = collisionMap;
-    this->width = m_collisionMap.getWidth();
-    this->height = m_collisionMap.getHeight();
+    this->voronoi = voronoi;
+    this->width = voronoi.getSizeX();
+    this->height = voronoi.getSizeY();
     int iterations = 0;
     int maxIterations = 500;    //最大迭代次数
     int pathLength = m_path.size(); //路径总长度

@@ -5,9 +5,13 @@
 #include <vector>
 #include <iostream>
 #include "node.h"
+#include "dynamicVoronoi.h"
 
 namespace HybridAStar
 {
+    static inline float clamp(float n, float lower, float upper) {
+        return std::max(lower, std::min(n, upper));
+    }
     //2D向量类
     class Vector2D
     {
@@ -25,9 +29,9 @@ namespace HybridAStar
         //向量长度平方
         double sqrlength() const { return x * x + y * y; }
         //向量点乘
-        double dot(const Vector2D &cpr) { return x * cpr.x + y * cpr.y; }
+        double dot(const Vector2D &cpr) const { return x * cpr.x + y * cpr.y; }
         //求与某向量正交的分量
-        inline Vector2D ort(Vector2D &cpr)
+        inline Vector2D ort(const Vector2D &cpr) const
         {
             Vector2D tmpSelf(this->x, this->y);
             Vector2D result = tmpSelf - cpr * tmpSelf.dot(cpr) / cpr.sqrlength();
@@ -48,7 +52,7 @@ namespace HybridAStar
     {
     public:
         Smoother(){};                                   //构造函数
-        void smoothPath(CollisionDetection &collisionMap);     //核心轨迹平滑函数
+        void smoothPath(DynamicVoronoi& voronoi);     //核心轨迹平滑函数
         void tracePath(Node3D *node, int i = 0, std::vector<Node3D> path = std::vector<Node3D>()); //顺藤摸瓜找到轨迹点列
         std::vector<Node3D> getPath(){ return m_path; } //返回点列
         Vector2D obstacleTerm(Vector2D xi);             //障碍物项
@@ -56,13 +60,13 @@ namespace HybridAStar
         Vector2D smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2);   //顺滑项
         // Vector2D voronoiTerm(Vector2D xi);              //voronoi项
         bool isOnGrid(Vector2D xi)
-            return xi.x >= 0 && xi.x < height && xi.y >= 0 && xi.y < width; //xi点是否在图像范围
+            { return xi.getX() >= 0 && xi.getX() < height && xi.getY() >= 0 && xi.getY() < width; } //xi点是否在图像范围
     private:
         //碰撞图
-        CollisionDetection m_collisionMap;
+        DynamicVoronoi voronoi;
         //惩罚边界
         double kappaMax = 1. / (param::rmin * 1.1);     //最大曲率
-        double obsMax = param::obsPenaMax;              //障碍物惩罚的最大距离
+        double obsDMax = param::obsPenaMax;              //障碍物惩罚的最大距离
         double voronoiMax = param::obsPenaMax;          //影响voronoi场的最大距离
         //权重系数
         double alpha = 0.1;                          //梯度更新衰减率

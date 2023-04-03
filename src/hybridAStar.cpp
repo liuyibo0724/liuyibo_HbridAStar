@@ -289,6 +289,6 @@ void hybridAStar::updateH(Node3D &start, const Node3D &goal)
                   pow((s_x - (double)((int)s_x)) - (g_x - (double)((int)g_x)) , 2.));
     Node2D start2d((int)s_x, (int)s_y, 0, 0, nullptr);
     Node2D goal2d((int)g_x, (int)g_y, 0, 0, nullptr);
-    AStarCost = aStar(start2d, goal2d, 1) - offset;  //aStar规划结果减去offset返回两点A*代价
+    AStarCost = aStar(start2d, goal2d, 0.2) - offset;  //aStar规划结果减去offset返回两点A*代价
     start.setH(std::max(RSCost, AStarCost));         //取两者最大值当作新H
 }
