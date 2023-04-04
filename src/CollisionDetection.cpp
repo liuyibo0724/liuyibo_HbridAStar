@@ -16,22 +16,22 @@ inline param::relPos mkRelPos(double x, double y)
 }
 
 //是否在图中
-inline bool isInMap(int x, int y)
-    { return x >= 0 && x < m_width && y >= 0 && y < m_height }
+inline bool HybridAStar::CollisionDetection::isInMap(int x, int y)
+    { return x >= 0 && x < m_width && y >= 0 && y < m_height; }
 
 //由位姿生成对应的collisionLookup亚格子碰撞查询队列
 void HybridAStar::CollisionDetection::setCollisionLookup(
-    double x, 
-    double y, 
-    double t)
+    float x, 
+    float y, 
+    float t)
 {
-    double dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
+    float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
     param::relPos pos_list[4];
     pos_list[0] = mkRelPos(x + dx*sin(t) + dy*cos(t), y - dx*cos(t) + dy*sin(t));
     pos_list[1] = mkRelPos(x + dx*sin(t) - dy*cos(t), y - dx*cos(t) - dy*sin(t));
     pos_list[2] = mkRelPos(x - dx*sin(t) - dy*cos(t), y + dx*cos(t) - dy*sin(t));
     pos_list[3] = mkRelPos(x - dx*sin(t) + dy*cos(t), y + dx*cos(t) + dy*sin(t));
-    double minX = pos_list[0].x, minY = pos_list[0].y, 
+    float minX = pos_list[0].x, minY = pos_list[0].y, 
             maxX = pos_list[0].x, maxY = pos_list[0].y;      //四个边角点的坐标极值
     for(int i = 1; i < 4; i ++)
     {
@@ -75,37 +75,37 @@ HybridAStar::CollisionDetection::CollisionDetection(
 {
     this->m_map = new unsigned char[width * height];
     memcpy(m_map, data, width * height * sizeof(unsigned char));
-    this->m_width = whidth;
+    this->m_width = width;
     this->m_height = height;
 }
 
 //2D节点可否通行
-bool HybridAStar::CollisionDetection::isNodeTraversable(const Node2D* node)
+bool HybridAStar::CollisionDetection::isNodeTraversable(Node2D* node)
 {
     //取得网格坐标（整数）
-    int x = node->getX;
-    int y = node->getY;
+    int x = node->getX();
+    int y = node->getY();
     if(x < 0 ||x >= m_width || y < 0 || y >= m_height) return false;
-    return m_map[node->getIdx] > 250;   //只要单网格够亮就算可通行，无需看周围网格
+    return m_map[node->getIdx()] > 250;   //只要单网格够亮就算可通行，无需看周围网格
 }
 
 //3D节点可否通行
-bool HybridAStar::CollisionDetection::isNodeTraversable(const Node3D* node)
+bool HybridAStar::CollisionDetection::isNodeTraversable(Node3D* node)
 {
     //取得网格坐标（整数）
-    double x = node->getX;
-    double y = node->getY;
+    double x = node->getX();
+    double y = node->getY();
     if(x < 0 ||x >= m_width || y < 0 || y >= m_height) return false;
     return m_map[(int)x * m_width + (int)y] > 250;   //只要单网格够亮就算可通行，无需看周围网格
 }
 
 //某位姿可否通行
-bool HybridAStar::CollisionDetection::isConfigTraversable(double x, double y, double t)
+bool HybridAStar::CollisionDetection::isConfigTraversable(float x, float y, float t)
 {
     this->collisionLookup.clear();  //清空collisionLookup集合
     //由位姿生成对应的collisionLookup亚格子碰撞查询队列
-    HybridAStar::CollisionDetetion::setCollisionLookup(x, y, t);
-    for(auto ptr = this->collisionLookup.begin(); ptr < this->collisionLookup.end(); ptr ++)
+    HybridAStar::CollisionDetection::setCollisionLookup(x, y, t);
+    for(auto ptr = this->collisionLookup.begin(); ptr != this->collisionLookup.end(); ptr ++)
     {
         if(m_map[ptr->x * m_width + ptr->y] < 250) return false;
     }

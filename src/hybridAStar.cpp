@@ -28,7 +28,7 @@ public:
 };
 
 //构造函数
-hybridAStar::hybridAStar(CollisionDetetion *map) : m_map(map)
+hybridAStar::hybridAStar(CollisionDetection *map) : m_map(map)
 {
     m_nodes2D = new Node2D[map->getSize()];
     m_nodes3D = new Node3D[map->getSize() * param::headings];
@@ -43,7 +43,7 @@ hybridAStar::~hybridAStar()
 
 //传统aStar规划器返回2D末点的已付出代价G
 //（注意scale的意义不明也许是缩放尺度记得修改）
-double HybridAstar::hybridAStar::aStar(Node2D &start, Node2D &goal, double scale = 1)
+float HybridAStar::hybridAStar::aStar(Node2D &start, Node2D &goal, float scale)
 {
     int width = m_map->getWidth();
     int height = m_map->getHeight();
@@ -52,7 +52,7 @@ double HybridAstar::hybridAStar::aStar(Node2D &start, Node2D &goal, double scale
     int iPred, iSucc;   //当前点和子节点的Idx
     Node2D nPred, nSucc;  //当前点和子节点对象
     Node2D *node2D_tmp = nullptr;
-    double newG;    //新_已付出代价
+    float newG;    //新_已付出代价
     for(int i = 0; i < m_map->getSize(); i ++)  m_nodes2D[i].reset();   //open和close集全部置空
     std::set<HybridAStar::Node2D, CompareNode2D> open;  //定义open集
     start.updateH(goal);    //start到goal的欧式距离
@@ -109,7 +109,7 @@ double HybridAstar::hybridAStar::aStar(Node2D &start, Node2D &goal, double scale
 
 //hybridAStar搜索路径的核心规划器，返回3D点列
 //（注意scale的意义不明也许是缩放尺度记得修改）
-Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, double scale = 0.5)
+Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, float scale)
 {
     int width = m_map->getWidth();
     int height = m_map->getHeight();
@@ -146,8 +146,8 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
             m_nodes3D[iPred].close();   //标记为close
             open.erase(nPred);          //从open集种删除
             //检查：当前节点是否是goal或是否到达最大迭代次数
-            if(nPred == goal || iteration > param::iterations)
-                { goal.setPred(&m_nodes3D[iPred]); return &m_nodes3D[iPred] }
+            if(nPred == goal || iterations > param::iterations)
+                { goal.setPred(&m_nodes3D[iPred]); return &m_nodes3D[iPred]; }
             double current_distance = (nPred.getX() - goal.getX())
                                         * (nPred.getX() - goal.getX())
                                         + (nPred.getY() - goal.getY())
@@ -247,7 +247,7 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
                             {
                                 nSucc.setPred(nPred.getPred());
                             }
-                            if(nSucc.getPred() == nSucc) std::cout << "looping";    //原地踏步
+                            if(*(nSucc.getPred()) == nSucc) std::cout << "looping";    //原地踏步
                             nSucc.open();   //子节点标记为open
                             m_nodes3D[iSucc] = nSucc;   //存入m_nodes3D[]中
                             open.insert(m_nodes3D[iSucc]);  //置入open集
@@ -265,28 +265,28 @@ Node3D* HybridAstar::hybridAStar::search_planner(Node3D &start, Node3D &goal, do
 }
 
 //RS路径插值
-void hybridAStar::interpolate(const ReedsShepp::pos *from, double t,
+void hybridAStar::interpolate(const ReedsShepp::pos *from, float t,
                          ReedsShepp::pos *state) const
 {
     m_RS.interpolate(from, m_RS_path, t, state);
 }
 
 //更新启发代价H
-void hybridAStar::updateH(Node3D &start, const Node3D &goal)
+void hybridAStar::updateH(Node3D &start, Node3D &goal)
 {
-    double RSCost = 0, AStarCost = 0;    //RS曲线代价和传统A*代价
-    double offset = 0;                              //start和goal的偏置
-    double s_x = start.getX();
-    double s_y = start.getY();
-    double g_x = goal.getX();
-    double g_y = goal.getY();
+    float RSCost = 0, AStarCost = 0;    //RS曲线代价和传统A*代价
+    float offset = 0;                              //start和goal的偏置
+    float s_x = start.getX();
+    float s_y = start.getY();
+    float g_x = goal.getX();
+    float g_y = goal.getY();
     /* 1.ReedsShepp曲线代价 */
     ReedsShepp::pos start_pt(s_x, s_y, start.getT());
     ReedsShepp::pos goal_pt(g_x, g_y, goal.getT());
-    RSCost = (double)m_RS.distance(start_pt, goal_pt);  //返回RS曲线长度
+    RSCost = (float)m_RS.distance(start_pt, goal_pt);  //返回RS曲线长度
     /* 2.传统A*距离代价 */
-    offset = sqrt(pow((s_x - (double)((int)s_x)) - (g_x - (double)((int)g_x)) , 2.) +
-                  pow((s_x - (double)((int)s_x)) - (g_x - (double)((int)g_x)) , 2.));
+    offset = sqrt(pow((s_x - (float)((int)s_x)) - (g_x - (float)((int)g_x)) , 2.) +
+                  pow((s_x - (float)((int)s_x)) - (g_x - (float)((int)g_x)) , 2.));
     Node2D start2d((int)s_x, (int)s_y, 0, 0, nullptr);
     Node2D goal2d((int)g_x, (int)g_y, 0, 0, nullptr);
     AStarCost = aStar(start2d, goal2d, 0.2) - offset;  //aStar规划结果减去offset返回两点A*代价

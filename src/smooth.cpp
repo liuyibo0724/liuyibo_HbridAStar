@@ -169,7 +169,7 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
     int pathLength = m_path.size(); //路径总长度
     std::vector<Node3D> newPath = m_path;
 
-    double totalWeight = wSmoothness + wCurvature + wVoronoi + wObstacle;   //四项权重
+    float totalWeight = wSmoothness + wCurvature + wVoronoi + wObstacle;   //四项权重
 
     while(iterations < maxIterations)
     {

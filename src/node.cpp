@@ -2,11 +2,11 @@
 using namespace HybridAStar;
 
 //正则化位姿指向角度
-static inline double normalizeHeadingRad(double t)
+static inline float normalizeHeadingRad(float t)
 {
     if(std::abs(t) >= 2.*M_PI)
     {
-        double sign_2M_MPI = t / std::abs(t) * 2. * M_PI;
+        float sign_2M_MPI = t / std::abs(t) * 2. * M_PI;
         while(std::abs(t) < 2.*M_PI)
             t -= sign_2M_MPI;
     }
@@ -14,10 +14,10 @@ static inline double normalizeHeadingRad(double t)
 }
 
 //Node2D创建子结点
-Node2D* Node2D::createSuccessor(const int i, double inv_scale)
+Node2D* Node2D::createSuccessor(const int i, float inv_scale)
 {
-    int xSucc = x + (int)((double)Node2D::dx[i] * inv_scale);
-    int ySucc = y + (int)((double)Node2D::dy[i] * inv_scale);
+    int xSucc = x + (int)((float)Node2D::dx[i] * inv_scale);
+    int ySucc = y + (int)((float)Node2D::dy[i] * inv_scale);
     return new Node2D(xSucc, ySucc, g, 0, this);
 }
 
@@ -59,9 +59,9 @@ bool Node3D::operator == (const Node3D &comparator) const
 }
 
 //Node3D创建子结点
-Node3D* Node3D::createSuccessor(const int i, double inv_scale)
+Node3D* Node3D::createSuccessor(const int i, float inv_scale)
 {
-    double xSucc, ySucc, tSucc;
+    float xSucc, ySucc, tSucc;
     //若子结点向前
     if(i < 3)
     {

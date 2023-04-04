@@ -11,7 +11,7 @@ class Node2D
 {
 public:
     //参数构造函数
-    Node2D(int x, int y, double g, double h, Node2D* pred)
+    Node2D(int x, int y, float g, float h, Node2D* pred)
     {
         this->x = x;
         this->y = y;
@@ -32,11 +32,11 @@ public:
     //查询y坐标
     int getY() const { return y; }
     //查询已经付出的代价
-    double getG() const { return g; }
+    float getG() const { return g; }
     //查询启发代价
-    double getH() const { return h; }
+    float getH() const { return h; }
     //查询总代价
-    double getC() const { return g + h; }
+    float getC() const { return g + h; }
     //查询2D索引值
     int getIdx() const { return idx; }
     //查询是否在open集中
@@ -59,9 +59,9 @@ public:
     //设置y坐标
     void setY(const int &y) { this->y = y; }
     //设置已经付出的代价
-    void setG(const double &g) { this->g = g; }
+    void setG(const float &g) { this->g = g; }
     //设置启发代价
-    void setH(const double &h) { this->h = h; }
+    void setH(const float &h) { this->h = h; }
     //设置2D索引值
     int setIdx(const int &width) { this->idx = this->y*width + this->x; return idx; } //x, y顺序有疑问已修改
     //将节点加入open集
@@ -101,22 +101,22 @@ public:
 
     //5.创建某方向上的子结点
     //创建子结点
-    Node2D* createSuccessor(const int i, double inv_scale);
+    Node2D* createSuccessor(const int i, float inv_scale);
     //可能的方向
     static const int dir = 8;
     //x方向可能的移动步长
-    const int dx[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+    int dx[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
     //y方向可能的移动步长
-    const int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+    int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
 private:
     //坐标
     int x;
     int y;
     //已经付出的代价
-    double g;
+    float g;
     //启发代价
-    double h;
+    float h;
     //2D索引值
     int idx;
     //是否在open集中
@@ -133,7 +133,7 @@ class Node3D
 {
 public:
     //参数构造函数
-    Node3D(double x, double y, double t, double g, double h, Node3D* pred, int prim = 0)
+    Node3D(float x, float y, float t, float g, float h, Node3D* pred, int prim = 0)
     {
         this->x = x;
         this->y = y;
@@ -151,30 +151,30 @@ public:
 
     //1.查询类函数：
     //查询坐标和姿态角
-    double getX() { return x; }
-    double getY() { return y; }
-    double getT() { return t; }
+    float getX() const { return x; }
+    float getY() const { return y; }
+    float getT() const { return t; }
     //查询已经付出的和启发代价
-    double getG() { return g; }
-    double getH() { return h; }
+    float getG() const { return g; }
+    float getH() const { return h; }
     //查询总代价
-    double getC() { return g + h; }
+    float getC() const { return g + h; }
     //查询3D索引值
-    int getIdx() { return idx; }
+    int getIdx() const { return idx; }
     //查询节点相关联的运动基元数
-    int getPrim() { return prim; }
+    int getPrim() const { return prim; }
     //查询是否在open集
-    bool isOpen() { return o; }
+    bool isOpen() const { return o; }
     //查询是否在closed集中
-    bool isClosed() { return c; }
+    bool isClosed() const { return c; }
     //查询是否可以通过解析方法求得解
     bool isSolvable(const Node3D &goal) const
     {
         int cout = 0;
         for(int i = 0; i < 10; i ++)
         {
-            double dx = std::abs(x - goal.x) / static_cast<double>(i);
-            double dy = std::abs(y - goal.y) / static_cast<double>(i);
+            double dx = std::abs(x - goal.x) / static_cast<float>(i);
+            double dy = std::abs(y - goal.y) / static_cast<float>(i);
             if(std::pow(dx, 2) + std::pow(dy, 2) < param::dubinsShotDistance)
                 ++cout;
         }
@@ -194,12 +194,12 @@ public:
     //设置节点相关运动基元数
     void setPrim(int p) { this->prim = p; }
     //设置坐标和姿态角
-    void setX(double x) { this->x = x; }
-    void setY(double y) { this->y = y; }
-    void setT(double t) { this->t = t; }
+    void setX(float x) { this->x = x; }
+    void setY(float y) { this->y = y; }
+    void setT(float t) { this->t = t; }
     //设置已经付出的和启发代价
-    void setG(double g) { this->g = g; }
-    void setH(double h) { this->h = h; }
+    void setG(float g) { this->g = g; }
+    void setH(float h) { this->h = h; }
     //设置3D索引值
     int setIdx(int width, int height)
     {
@@ -234,25 +234,25 @@ public:
 
     //5.创建某方向上子结点
     //创建子结点
-    Node3D* createSuccessor(const int i, double inv_scale);
+    Node3D* createSuccessor(const int i, float inv_scale);
     //创建子结点方向数量
     static const int dir = 6;
     //x可能的移动步长
-    const double dx[3] = { 0.7068582,   0.705224,   0.705224 };
+    float dx[3] = { 0.7068582,   0.705224,   0.705224 };
     //y可能的移动步长
-    const double dy[3] = { 0,        -0.0415893,     0.0415893 };
+    float dy[3] = { 0,        -0.0415893,     0.0415893 };
     //t可能的移动步长
-    const double dt[3] = { 0,         0.1178097,    -0.1178097 };
+    float dt[3] = { 0,         0.1178097,    -0.1178097 };
 
 private:
     //坐标
-    double x;
-    double y;
-    double t;   //车辆姿态角度
+    float x;
+    float y;
+    float t;   //车辆姿态角度
     //已经付车的代价
-    double g;
+    float g;
     //启发代价
-    double h;
+    float h;
     //3D索引值
     int idx;
     //是否在open集中

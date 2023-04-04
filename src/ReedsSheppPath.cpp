@@ -355,7 +355,7 @@ namespace HybridAStar
             ReedsShepp::pos s(start->getX(),start->getY(),start->getT());
             interpolate(&s,*path,t,&p);
             Node2D pt((int)(p.x),(int)(p.y),0,0, nullptr);
-            pt.setIdx(map->getWidthSize());
+            pt.setIdx(map->getWidth());
             if(!map->isNodeTraversable(&pt))
             {
                 return false;

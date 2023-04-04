@@ -22,6 +22,10 @@ int main()
     hybridAStar planer(&map_data);
     Node3D start(8, 8, 0, 0, 0, nullptr);
     Node3D goal(160 * 2.5, 160 * 2.5, 1.5 * M_PI, 0, 0, nullptr);
+
+    //生图展示
+    cv::imshow("raw_pic",map_color);
+    cv::waitKey(0);
     
     //hybridAStar粗搜索
     auto nSolution = planer.search_planner(start, goal, 0.2);
