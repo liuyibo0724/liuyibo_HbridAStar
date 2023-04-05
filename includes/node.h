@@ -7,6 +7,18 @@
 namespace HybridAStar
 {
 
+//正则化位姿指向角度
+static inline float normalizeHeadingRad(float t)
+{
+    if(std::abs(t) >= 2.*M_PI || t < 0)
+    {
+        float sign_2M_MPI = t / std::abs(t) * 2. * M_PI;
+        while(std::abs(t) >= 2.*M_PI || t < 0)
+            t -= sign_2M_MPI;
+    }
+    return t;
+}
+
 class Node2D
 {
 public:
@@ -133,7 +145,7 @@ class Node3D
 {
 public:
     //参数构造函数
-    Node3D(float x, float y, float t, float g, float h, Node3D* pred, int prim = 0)
+    Node3D(float x, float y, float t, float g, float h, Node3D* pred, int prim = 0, int pIdx = -1)
     {
         this->x = x;
         this->y = y;
@@ -145,6 +157,7 @@ public:
         this->o = false;
         this->c = false;
         this->idx = -1;
+        this->pIdx = pIdx;
     }
     //默认构造函数
     Node3D(): Node3D(0, 0, 0, 0, 0, nullptr) {}
@@ -188,7 +201,7 @@ public:
         && (int)(t / param::deltaHeadingRad) < param::headings;
     }
     //查询父节点
-    Node3D* getPred() { return pred; }
+    Node3D* getPred() const { return this->pred; }
 
     //2.设置类函数
     //设置节点相关运动基元数
@@ -243,6 +256,10 @@ public:
     float dy[3] = { 0,        -0.0415893,     0.0415893 };
     //t可能的移动步长
     float dt[3] = { 0,         0.1178097,    -0.1178097 };
+    //父节点
+    Node3D* pred;
+    //父节点Idx
+    int pIdx;
 
 private:
     //坐标
@@ -261,8 +278,7 @@ private:
     bool c;
     //节点的运动基元
     int prim;
-    //父节点
-    Node3D* pred;
+   
 };
 
 }

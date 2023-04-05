@@ -12,16 +12,16 @@ int main()
     cv::Mat map_gray
          = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map1.png", cv::IMREAD_GRAYSCALE);
     int inv_resolution = 1;
-    cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/10, map_gray.rows/10));   //缩小黑白图片
+    cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/25, map_gray.rows/25));   //缩小黑白图片
 
     cv::Mat map_color
          = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map1.png");
-    cv::resize(map_color, map_color, cv::Size(map_color.cols/10, map_color.rows/10));   //缩小彩色图片
+    cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
     
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);
     hybridAStar planer(&map_data);
-    Node3D start(8, 8, 0, 0, 0, nullptr);
-    Node3D goal(160 * 2.5, 160 * 2.5, 1.5 * M_PI, 0, 0, nullptr);
+    Node3D start(8, 8, 0.4 * M_PI, 0, 0, nullptr);
+    Node3D goal(160 * 1, 220 * 1, 1.5 * M_PI, 0, 0, nullptr);
 
     //生图展示
     cv::imshow("raw_pic",map_color);
@@ -30,16 +30,7 @@ int main()
     //hybridAStar粗搜索
     auto nSolution = planer.search_planner(start, goal, 0.2);
     auto tmp_show = nSolution;
-    while(tmp_show != nullptr)
-    {
-        int x = (int)tmp_show->getX()*inv_resolution;
-        int y = (int)tmp_show->getY()*inv_resolution;
-        if(tmp_show->getPred() != nullptr) cv::line(map_color,cv::Point(y,x),cv::Point(tmp_show->getPred()->getY(),
-                                    tmp_show->getPred()->getX()),cv::Scalar(0,0,255));
-        tmp_show = tmp_show->getPred();
-    }
-    cv::imshow("rawHybridAStar_result",map_color);
-    cv::waitKey(0);
+
 
     //绘制voronoi图
     DynamicVoronoi voronoi;
@@ -58,18 +49,43 @@ int main()
 
     //轨迹光顺
     Smoother smoother;
-    smoother.tracePath(nSolution);
+    
+    Node3D tmp_node = *nSolution;
+    while(tmp_node.pIdx != -1)
+    {
+        float x = tmp_node.getX();
+        float y = tmp_node.getY();
+        float t = tmp_node.getT();
+        int prim = tmp_node.getPrim();
+        smoother.m_path.push_back(Node3D(x, y, t, 0, 0, nullptr, prim));
+
+        tmp_node = planer.m_nodes3D[tmp_node.pIdx];
+    }
+    //轨迹光顺前画线
+    for(int j = 0; j < smoother.m_path.size() - 1; j ++)
+    {
+        cv::line(map_color, cv::Point(smoother.m_path[j].getY(), smoother.m_path[j].getX()),
+                            cv::Point(smoother.m_path[j + 1].getY(), smoother.m_path[j + 1].getX()), cv::Scalar(0, 0, 255));
+    }
+    std::cout << "smoother.m_path.size() = " << smoother.m_path.size() << std::endl;
+    cv::imshow("smooth_beform",map_color);
+    cv::waitKey(0);
+
+    // smoother.tracePath(tmp_show);
     smoother.smoothPath(voronoi);
     auto smooth_path = smoother.getPath();
-    for(auto pt:smooth_path)
+    //轨迹光顺后画线
+    for(int j = 0; j < smooth_path.size() - 1; j ++)
     {
-        int x = (int)pt.getX();
-        int y = (int)pt.getY();
-        if(pt.getPred() != nullptr) cv::line(map_color, cv::Point(y, x), cv::Point(pt.getPred()->getY(),
-                                pt.getPred()->getX()), cv::Scalar(255, 0, 0));
+        cv::line(map_color, cv::Point(smooth_path[j].getY(), smooth_path[j].getX()),
+                            cv::Point(smooth_path[j + 1].getY(), smooth_path[j + 1].getX()), cv::Scalar(255, 0, 0));
     }
+    std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
     cv::imshow("smooth_result",map_color);
     cv::waitKey(0);
+
+    for(int i = 0; i < map_color.rows; i ++) delete[] binMap[i];    //释放内存binMap
+    delete[] binMap;                                                //释放内存binMap
 
     return 0;
 }

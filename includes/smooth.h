@@ -45,7 +45,7 @@ namespace HybridAStar
         double x;
         double y;
     };
-    inline Vector2D operator * (double k, const Vector2D &cpr){ return (k * cpr); }
+    inline Vector2D operator * (double k, const Vector2D &cpr){ return (cpr * k); }
 
     //轨迹平滑器类
     class Smoother
@@ -61,6 +61,8 @@ namespace HybridAStar
         // Vector2D voronoiTerm(Vector2D xi);              //voronoi项
         bool isOnGrid(Vector2D xi)
             { return xi.getX() >= 0 && xi.getX() < height && xi.getY() >= 0 && xi.getY() < width; } //xi点是否在图像范围
+        //待平滑路径
+        std::vector<Node3D> m_path;
     private:
         //碰撞图
         DynamicVoronoi voronoi;
@@ -77,8 +79,7 @@ namespace HybridAStar
         //地图尺寸
         int width;
         int height;
-        //待平滑路径
-        std::vector<Node3D> m_path;
+        
     };
 }
 

@@ -60,6 +60,16 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "condition_variable": "cpp",
+        "hash_map": "cpp",
+        "future": "cpp",
+        "mutex": "cpp",
+        "valarray": "cpp",
+        "alignedvector3": "cpp",
+        "fft": "cpp",
+        "nonlinearoptimization": "cpp",
+        "openglsupport": "cpp",
+        "*.inc": "cpp"
     }
 }

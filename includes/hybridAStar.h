@@ -23,16 +23,19 @@ namespace HybridAStar
                          ReedsShepp::pos *state) const; //RS路径插值
         //后半程是否用RS曲线射入goal成功
         bool isShootSuccess(){ return m_shootSuccess; }
+        Node3D *m_nodes3D{};
 
     private:
         //更新启发代价H
         void updateH(Node3D &start, Node3D &goal);
         Node2D *m_nodes2D{};
-        Node3D *m_nodes3D{};
+        
         CollisionDetection *m_map{};
-        ReedsShepp m_RS{10};
+        ReedsShepp m_RS{30};
         ReedsShepp::ReedsSheppPath m_RS_path;
         bool m_shootSuccess;
+        
+
     };
 }
 #endif      //HYBRID_ASTAR_HYBRIDASTAR_H

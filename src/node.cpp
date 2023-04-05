@@ -1,17 +1,7 @@
 #include "node.h"
 using namespace HybridAStar;
 
-//正则化位姿指向角度
-static inline float normalizeHeadingRad(float t)
-{
-    if(std::abs(t) >= 2.*M_PI)
-    {
-        float sign_2M_MPI = t / std::abs(t) * 2. * M_PI;
-        while(std::abs(t) < 2.*M_PI)
-            t -= sign_2M_MPI;
-    }
-    return t;
-}
+
 
 //Node2D创建子结点
 Node2D* Node2D::createSuccessor(const int i, float inv_scale)

@@ -146,16 +146,29 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
 }
 
 //找到轨迹点列
+// void Smoother::tracePath(Node3D *node, int i, std::vector<Node3D> path)
+// {
+//     if(node == nullptr)
+//     {
+//         this->m_path = path;
+//         return;
+//     }
+//     i ++;
+//     path.push_back(*node);
+//     tracePath(node->getPred(), i, path);
+// }
 void Smoother::tracePath(Node3D *node, int i, std::vector<Node3D> path)
 {
-    if(node == nullptr)
+    while(node != nullptr)
     {
-        this->m_path = path;
-        return;
+        float x = node->getX();
+        float y = node->getY();
+        float t = node->getT();
+        path.push_back(Node3D(x, y, t, 0, 0, nullptr, 0));
+        auto tmp_ptr = node->pred;
+        node = tmp_ptr;
     }
-    i ++;
-    path.push_back(*node);
-    tracePath(node->getPred(), i, path);
+    this->m_path = path;
 }
 
 //核心轨迹平滑函数
