@@ -171,10 +171,10 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                     int seg_num = 0;    //5段中第几段路线
                     auto seg_length = (float)abs(m_RS_path.length_[0]);    //已遍历过子段长度和
                     bool last_fix = false;  //最新一个fix
-                    for(int i = 1; i < m_RS_path.length() * 2 - 1; i ++)
+                    for(int i = 1; i < m_RS_path.length() * 5 - 1; i ++)
                     {
                         int prim = -1;  //默认只和1段有关
-                        float t = (float)i / (m_RS_path.length() * 2);    //t表示整个RS曲线百分比
+                        float t = (float)i / (m_RS_path.length() * 5);    //t表示整个RS曲线百分比
                         ReedsShepp::pos p;
                         ReedsShepp::pos st(goal.getPred()->getX(), 
                                            goal.getPred()->getY(), 
@@ -193,27 +193,13 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                             seg_length += (float)abs(m_RS_path.length_[seg_num]);
                         }
                         if(last_fix && prim != -2){ prim = -2; last_fix = false; }  //针对新段第一段
-                        ReedsShepp::pos p1;     //设置p的微扰偏移点p1
-                        float t1 = (float)(i + 0.1) / (m_RS_path.length() * 2);    //t1表示p1点百分比
+                        ReedsShepp::pos p1;     //设置p的微扰偏移点p1, p2
+                        float t1 = (float)(i + 0.1) / (m_RS_path.length() * 5);    //t1表示p1点百分比
                         interpolate(&st, t1, &p1);
-                        float d_x = (-p1.x + p.x);     //p与p1的x差值
-                        float angle = atan2(d_x, (p1.y - p.y));
+                        float d_x = (p1.x - p.x);     //p与p1的x差值
+                        float d_y = (p1.y - p.y);
+                        float angle = atan2(d_y, d_x);
                         angle = HybridAStar::normalizeHeadingRad(angle);
-
-                        // float angle = atan(d_x / (p1.y - p.y));    //负互补角
-                        // if(d_x > 0)
-                        // {
-                        //     if(angle < 0) angle += M_PI;
-                        // }
-                        // else
-                        // {
-                        //     if(angle > 0) angle -= M_PI;
-                        // }
-                        // double angle2 = p.angle - 0.5 * M_PI;
-                        // if(fabs(angle - angle2) > 0.2)
-                        //     nPred_tmp_ptr =  new Node3D(p.x, p.y, angle - 0.5*M_PI, -1, -1, &m_nodes3D[iPred_tmp], prim);
-                        // else
-                        //     nPred_tmp_ptr =  new Node3D(p.x, p.y, angle + 0.5*M_PI, 1, 1, &m_nodes3D[iPred_tmp], prim);
                         
                         nPred_tmp_ptr =  new Node3D(p.x, p.y, angle, -1, -1, &m_nodes3D[iPred_tmp], prim, iPred_tmp);
                         iPred_tmp = nPred_tmp_ptr->setIdx(width, height);   //拿到nPred_tmp_ptr的Idx
@@ -235,7 +221,8 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                 nSucc = *node3D_tmp;
                 iSucc = nSucc.setIdx(width, height);    //拿到子节点Idx
                 //网格范围检测、节点通行性检测
-                if(nSucc.isOnGrid(width, height) && m_map->isNodeTraversable(&nSucc))
+                // if(nSucc.isOnGrid(width, height) && m_map->isNodeTraversable(&nSucc))
+                if(nSucc.isOnGrid(width, height) && m_map->isConfigTraversable(nSucc.getX(), nSucc.getY(), nSucc.getT()))
                 {
                     //未在close集中，且和父节点共格点可能需要更新
                     if(!m_nodes3D[iSucc].isClosed() || iPred == iSucc)

@@ -7,16 +7,17 @@
 namespace HybridAStar
 {
 
-//正则化位姿指向角度
-static inline float normalizeHeadingRad(float t)
+//正则化位姿指向角度（废函数无法使用）
+inline float normalizeHeadingRad(float t)
 {
-    if(std::abs(t) >= 2.*M_PI || t < 0)
+    float result = t;
+    while(1)
     {
-        float sign_2M_MPI = t / std::abs(t) * 2. * M_PI;
-        while(std::abs(t) >= 2.*M_PI || t < 0)
-            t -= sign_2M_MPI;
+        if(result < 0) result += 2.f * M_PI;
+        if(result > 2.f * M_PI) result -= 2.f * M_PI;
+        if(result >= 0 && result < 2.f * M_PI) break;
     }
-    return t;
+    return result;
 }
 
 class Node2D
@@ -75,7 +76,7 @@ public:
     //设置启发代价
     void setH(const float &h) { this->h = h; }
     //设置2D索引值
-    int setIdx(const int &width) { this->idx = this->y*width + this->x; return idx; } //x, y顺序有疑问已修改
+    int setIdx(const int &width) { this->idx = this->x*width + this->y; return idx; } //x, y顺序有疑问已修改
     //将节点加入open集
     void open() { this->o = true; }
     //将节点加入closed集
@@ -218,7 +219,7 @@ public:
     {
         this->idx = 
             (int)(t / param::deltaHeadingRad) * width * height
-            + (int)(y) * width + (int)(x);
+            + (int)(x) * width + (int)(y);
         return idx;
     }
     //将节点加入open集

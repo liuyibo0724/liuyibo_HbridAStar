@@ -6,26 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../includes/CollisionDetection.h
-math.h
--
-string.h
--
-vector
--
-set
--
-node.h
-../includes/node.h
-
-../includes/ReedsSheppPath.h
-boost/math/constants/constants.hpp
--
-CollisionDetection.h
-../includes/CollisionDetection.h
-node.h
-../includes/node.h
-
 ../includes/dynamicVoronoi.h
 stdlib.h
 -
@@ -37,14 +17,6 @@ cmath
 -
 queue
 -
-
-../includes/hybridAStar.h
-node.h
-../includes/node.h
-CollisionDetection.h
-../includes/CollisionDetection.h
-ReedsSheppPath.h
-../includes/ReedsSheppPath.h
 
 ../includes/node.h
 cmath
@@ -71,30 +43,6 @@ node.h
 ../includes/node.h
 dynamicVoronoi.h
 ../includes/dynamicVoronoi.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/CollisionDetection.cpp
-CollisionDetection.h
-/home/liuyibo/liuyibo_HbridAStar/src/CollisionDetection.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.cpp
-ReedsSheppPath.h
-/home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.cpp
-math.h
--
-iostream
--
-boost/heap/binomial_heap.hpp
--
-set
--
-hybridAStar.h
-/home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/node.cpp
-node.h
-/home/liuyibo/liuyibo_HbridAStar/src/node.h
 
 /home/liuyibo/liuyibo_HbridAStar/src/smooth.cpp
 smooth.h

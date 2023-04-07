@@ -6,37 +6,19 @@ using namespace HybridAStar;
 inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 
 //判断是否为交点（内联）
-// bool isCrop(std::vector<Node3D> path, int i)
-// {
-//     if(path[i].getPrim == -1) return false;
-//     else if(path[i].getPrim == -2) return true;
-//     bool revp2Adv = isAdv(path[i - 2].getPrim()) ? true : false;
-//     bool revp1Adv = isAdv(path[i - 1].getPrim()) ? true : false;
-//     bool selfpAdv = isAdv(path[i].getPrim()) ? true : false;
-//     bool prep1Adv = isAdv(path[i + 1].getPrim()) ? true : false;
-//     bool prep2Adv = isAdv(path[i + 2].getPrim()) ? true : false;
-//     if(revp2Adv != revp1Adv || revp1Adv != selfpAdv || selfpAdv != prep1Adv || prep1Adv != prep2Adv)
-//     {
-//         return true;
-//     }
-//     return false;
-// }
 inline bool isCusp(std::vector<Node3D> path, int i)
 {
+    if(i < 2 || i > path.size() - 3) return true;   //增加一条序列首尾为焦点
     if(path[i].getPrim() == -1)
-    {
         return false;
-    }
     else if(path[i].getPrim() == -2)
-    {
         return true;
-    }
-    bool revim2 = path[i - 2].getPrim() > 3 ? true : false;
-    bool revim1 = path[i - 1].getPrim() > 3 ? true : false;
-    bool revi   = path[i].getPrim() > 3 ? true : false;
-    bool revip1 = path[i + 1].getPrim() > 3 ? true : false;
-    //  bool revip2 = path[i + 2].getPrim() > 3 ? true : false;
-    if (revim2 != revim1 || revim1 != revi || revi != revip1)
+    bool revim2 = isAdv(path[i - 2].getPrim()) ? true : false;
+    bool revim1 = isAdv(path[i - 1].getPrim()) ? true : false;
+    bool revi   = isAdv(path[i].getPrim()) ? true : false;
+    bool revip1 = isAdv(path[i + 1].getPrim()) ? true : false;
+    bool revip2 = isAdv(path[i + 2].getPrim()) ? true : false;
+    if (revim2 != revim1 || revim1 != revi || revi != revip1 || revip1 != revip2)
     {
         return true;
     }
@@ -131,7 +113,7 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
     int x = (int)xi.getX();
     int y = (int)xi.getY();
     // if the node is within the map
-    if (x < width && x >= 0 && y < height && y >= 0)
+    if (x < height && x >= 0 && y < width && y >= 0)
     {
         //从当前点xi到最近障碍点的向量
         Vector2D obsVct(xi.getX() - voronoi.data[(int)xi.getX()][(int)xi.getY()].obstX,
@@ -178,45 +160,81 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
     this->width = voronoi.getSizeX();
     this->height = voronoi.getSizeY();
     int iterations = 0;
-    int maxIterations = 500;    //最大迭代次数
+    int maxIterations = param::smoothMaxIterations;    //最大迭代次数
     int pathLength = m_path.size(); //路径总长度
     std::vector<Node3D> newPath = m_path;
 
+    int sta, end;
+    std::vector<std::pair<int, int>> segm_nums;     //注意！添加分割下标对
+    for(int i = 2; i < pathLength - 2; i ++)
+    {
+        if(isCusp(newPath, i - 1) && !isCusp(newPath, i))
+        {
+            sta = i;
+            for(int j = sta; j < pathLength - 2; j ++)
+            {
+                if(!isCusp(newPath, j) && isCusp(newPath, j + 1))
+                {
+                    end = j;
+                    segm_nums.push_back(std::make_pair(sta, end));
+                    i = j + 1;
+                    break;
+                }
+            }
+        }
+    }
+
     float totalWeight = wSmoothness + wCurvature + wVoronoi + wObstacle;   //四项权重
 
-    while(iterations < maxIterations)
+    for(auto ptr = segm_nums.begin(); ptr < segm_nums.end(); ptr ++)
     {
-        for(int i = 2; i < pathLength - 2; i ++)
+        sta = (*ptr).first;
+        end = (*ptr).second;
+        iterations = 0;
+        while(iterations < maxIterations)
         {
-            float H = newPath[i].getH();
-            //后面2个点，当前点，前面2个点
-            Vector2D xim2(newPath[i - 2].getX(), newPath[i - 2].getY());
-            Vector2D xim1(newPath[i - 1].getX(), newPath[i - 1].getY());
-            Vector2D xi(newPath[i].getX(), newPath[i].getY());
-            Vector2D xip1(newPath[i + 1].getX(), newPath[i + 1].getY());
-            Vector2D xip2(newPath[i + 2].getX(), newPath[i + 2].getY());
-            Vector2D correction;
+            for(int i = sta; i <= end; i ++)
+            {
+                //后面2个点，当前点，前面2个点
+                Vector2D xim2(newPath[i - 2].getX(), newPath[i - 2].getY());
+                Vector2D xim1(newPath[i - 1].getX(), newPath[i - 1].getY());
+                Vector2D xi(newPath[i].getX(), newPath[i].getY());
+                Vector2D xip1(newPath[i + 1].getX(), newPath[i + 1].getY());
+                Vector2D xip2(newPath[i + 2].getX(), newPath[i + 2].getY());
+                Vector2D correction;
 
-            if (isCusp(newPath, i)) { continue; }//若为交点，不做平滑
+                correction = correction - obstacleTerm(xi);
+                if (!isOnGrid(xi + correction)) continue;   //假如校正方向超出当前监视的网格范围，不做处理
 
-            correction = correction - obstacleTerm(xi);
-            if (!isOnGrid(xi + correction)) continue;   //假如校正方向超出当前监视的网格范围，不做处理
+                correction = correction - smoothnessTerm(xim2, xim1, xi, xip1, xip2);
+                if (!isOnGrid(xi + correction)) continue;
 
-            correction = correction - smoothnessTerm(xim2, xim1, xi, xip1, xip2);
-            if (!isOnGrid(xi + correction)) continue;
+                correction = correction - curvatureTerm(xim2, xim1, xi, xip1, xip2);
+                if (!isOnGrid(xi + correction)) continue; 
 
-            correction = correction - curvatureTerm(xim2, xim1, xi, xip1, xip2);
-            if (!isOnGrid(xi + correction)) continue; 
-
-            auto update = alpha * correction/totalWeight;
-            xi = xi + update;
-            newPath[i].setX(xi.getX());
-            newPath[i].setY(xi.getY());
-
-            Vector2D Dxi = xi - xim1;
-            newPath[i - 1].setT(std::atan2(Dxi.getY(), Dxi.getX()));
+                auto update = alpha * correction/totalWeight;
+                xi = xi + update;
+                newPath[i].setX(xi.getX());
+                newPath[i].setY(xi.getY());
+            }
+            iterations ++;
+        }    
+    }
+    for(int i = 2; i < pathLength; i ++)
+    {
+        Vector2D xim1(newPath[i - 1].getX(), newPath[i - 1].getY());
+        Vector2D xi(newPath[i].getX(), newPath[i].getY());
+        Vector2D Dxi = xi - xim1;
+        float angle = std::atan2(Dxi.getY(), Dxi.getX());
+        angle = HybridAStar::normalizeHeadingRad(angle);
+        float absDelta_T = abs(angle - newPath[i - 2].getT());
+        if(absDelta_T < 0.5f * M_PI || absDelta_T > 1.5f * M_PI) newPath[i - 1].setT(angle);
+        else
+        {
+            angle -= M_PI;
+            angle = HybridAStar::normalizeHeadingRad(angle);
+            newPath[i - 1].setT(angle);
         }
-        iterations ++;
     }
     m_path = newPath;
 }

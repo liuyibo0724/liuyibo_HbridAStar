@@ -31,7 +31,7 @@ namespace HybridAStar
         Node2D *m_nodes2D{};
         
         CollisionDetection *m_map{};
-        ReedsShepp m_RS{30};
+        ReedsShepp m_RS{40};
         ReedsShepp::ReedsSheppPath m_RS_path;
         bool m_shootSuccess;
         

@@ -15,7 +15,6 @@ namespace HybridAStar
         //1.连通性检查函数
         bool isNodeTraversable(Node2D* node);    //2D结点可否通行
         bool isNodeTraversable(Node3D* node);    //3D结点可否通行
-        bool isConfigTraversable(float x, float y, float t);     //某位姿可否通行
         inline bool isInMap(int x, int y);       //点是否在图中
         //2.设置类函数
         void updateMap(unsigned char* data, int width, int height);     //读入新图
@@ -24,6 +23,9 @@ namespace HybridAStar
         int getSize() const { return m_width * m_height; }      //图像素数
         int getWidth() const { return m_width; }    //查询图宽度
         int getHeight() const { return m_height; }  //查询图高度
+        param::poseConfig getCollisionLookup() const { return collisionLookup; }     //查询collisionLookup
+        //4.包括车身尺寸和位姿的通过性检验
+        bool isConfigTraversable(float x, float y, float t);     //某位姿可否通行
     private:
         int m_width;    //图网格宽度
         int m_height;   //图网格高度

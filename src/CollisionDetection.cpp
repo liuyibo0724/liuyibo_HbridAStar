@@ -17,7 +17,7 @@ inline param::relPos mkRelPos(double x, double y)
 
 //是否在图中
 inline bool HybridAStar::CollisionDetection::isInMap(int x, int y)
-    { return x >= 0 && x < m_width && y >= 0 && y < m_height; }
+    { return x >= 0 && x < m_height && y >= 0 && y < m_width; }
 
 //由位姿生成对应的collisionLookup亚格子碰撞查询队列
 void HybridAStar::CollisionDetection::setCollisionLookup(
@@ -27,10 +27,10 @@ void HybridAStar::CollisionDetection::setCollisionLookup(
 {
     float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
     param::relPos pos_list[4];
-    pos_list[0] = mkRelPos(x + dx*sin(t) + dy*cos(t), y - dx*cos(t) + dy*sin(t));
-    pos_list[1] = mkRelPos(x + dx*sin(t) - dy*cos(t), y - dx*cos(t) - dy*sin(t));
-    pos_list[2] = mkRelPos(x - dx*sin(t) - dy*cos(t), y + dx*cos(t) - dy*sin(t));
-    pos_list[3] = mkRelPos(x - dx*sin(t) + dy*cos(t), y + dx*cos(t) + dy*sin(t));
+    pos_list[0] = mkRelPos(x + dx*sin(t) + param::front2Rate*dy*cos(t), y - dx*cos(t) + param::front2Rate*dy*sin(t));
+    pos_list[1] = mkRelPos(x + dx*sin(t) - param::rear2Rate*dy*cos(t), y - dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[2] = mkRelPos(x - dx*sin(t) - param::rear2Rate*dy*cos(t), y + dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[3] = mkRelPos(x - dx*sin(t) + param::front2Rate*dy*cos(t), y + dx*cos(t) + param::front2Rate*dy*sin(t));
     float minX = pos_list[0].x, minY = pos_list[0].y, 
             maxX = pos_list[0].x, maxY = pos_list[0].y;      //四个边角点的坐标极值
     for(int i = 1; i < 4; i ++)
@@ -52,7 +52,7 @@ void HybridAStar::CollisionDetection::setCollisionLookup(
                     mkRelPos(pos_list[(k + 1)%4].x - pos_list[k].x
                     , pos_list[(k + 1)%4].y - pos_list[k].y);
                 param::relPos temp_pos = 
-                    mkRelPos(x - pos_list[k].x, y - pos_list[k].y);
+                    mkRelPos(i - pos_list[k].x, j - pos_list[k].y);
                 if(!isPosRVec(temp_vec, temp_pos)) break;
                 ++ count;
             }
@@ -62,6 +62,9 @@ void HybridAStar::CollisionDetection::setCollisionLookup(
                 if(isInMap(i - 1, j)) this->collisionLookup.insert(mkRelPos(i - 1, j));
                 if(isInMap(i, j - 1)) this->collisionLookup.insert(mkRelPos(i, j - 1));
                 if(isInMap(i, j)) this->collisionLookup.insert(mkRelPos(i, j));
+                if(isInMap(i + 1, j + 1)) this->collisionLookup.insert(mkRelPos(i + 1, j + 1));
+                if(isInMap(i + 1, j)) this->collisionLookup.insert(mkRelPos(i + 1, j));
+                if(isInMap(i, j + 1)) this->collisionLookup.insert(mkRelPos(i, j + 1));
             }
         }
     }
@@ -85,7 +88,7 @@ bool HybridAStar::CollisionDetection::isNodeTraversable(Node2D* node)
     //取得网格坐标（整数）
     int x = node->getX();
     int y = node->getY();
-    if(x < 0 ||x >= m_width || y < 0 || y >= m_height) return false;
+    if(x < 0 ||x >= m_height || y < 0 || y >= m_width) return false;
     return m_map[node->getIdx()] > 250;   //只要单网格够亮就算可通行，无需看周围网格
 }
 
@@ -95,7 +98,7 @@ bool HybridAStar::CollisionDetection::isNodeTraversable(Node3D* node)
     //取得网格坐标（整数）
     double x = node->getX();
     double y = node->getY();
-    if(x < 0 ||x >= m_width || y < 0 || y >= m_height) return false;
+    if(x < 0 ||x >= m_height || y < 0 || y >= m_width) return false;
     return m_map[(int)x * m_width + (int)y] > 250;   //只要单网格够亮就算可通行，无需看周围网格
 }
 
@@ -107,10 +110,11 @@ bool HybridAStar::CollisionDetection::isConfigTraversable(float x, float y, floa
     HybridAStar::CollisionDetection::setCollisionLookup(x, y, t);
     for(auto ptr = this->collisionLookup.begin(); ptr != this->collisionLookup.end(); ptr ++)
     {
-        if(m_map[ptr->x * m_width + ptr->y] < 250) return false;
+        if(isInMap(ptr->x, ptr->y) && m_map[ptr->x * m_width + ptr->y] < 250) return false;
     }
     return true;
 }
+
 
 //读入新图
 void HybridAStar::CollisionDetection::updateMap(unsigned char* data, int width, int height)

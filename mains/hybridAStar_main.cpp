@@ -10,21 +10,21 @@ using namespace HybridAStar;
 int main()
 {
     cv::Mat map_gray
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map1.png", cv::IMREAD_GRAYSCALE);
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map3.png", cv::IMREAD_GRAYSCALE);
     int inv_resolution = 1;
     cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/25, map_gray.rows/25));   //缩小黑白图片
 
     cv::Mat map_color
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map1.png");
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map3.png");
     cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
     
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);
     hybridAStar planer(&map_data);
-    Node3D start(8, 8, 0.4 * M_PI, 0, 0, nullptr);
-    Node3D goal(160 * 1, 220 * 1, 1.5 * M_PI, 0, 0, nullptr);
+    Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
+    Node3D goal(300 * 1, 60 * 1, 1.0 * M_PI, 0, 0, nullptr);
 
     //生图展示
-    cv::imshow("raw_pic",map_color);
+    cv::imshow("raw_pic",map_gray);
     cv::waitKey(0);
     
     //hybridAStar粗搜索
@@ -55,6 +55,7 @@ int main()
     {
         float x = tmp_node.getX();
         float y = tmp_node.getY();
+        // float t = (tmp_node.getT() < 0) ? (tmp_node.getT() + 2.f * M_PI) : tmp_node.getT();
         float t = tmp_node.getT();
         int prim = tmp_node.getPrim();
         smoother.m_path.push_back(Node3D(x, y, t, 0, 0, nullptr, prim));
@@ -77,9 +78,26 @@ int main()
     //轨迹光顺后画线
     for(int j = 0; j < smooth_path.size() - 1; j ++)
     {
-        cv::line(map_color, cv::Point(smooth_path[j].getY(), smooth_path[j].getX()),
-                            cv::Point(smooth_path[j + 1].getY(), smooth_path[j + 1].getX()), cv::Scalar(255, 0, 0));
+        // cv::line(map_color, cv::Point(smooth_path[j].getY(), smooth_path[j].getX()),
+        //                     cv::Point(smooth_path[j + 1].getY(), smooth_path[j + 1].getX()), cv::Scalar(255, 0, 0));
+        map_color.at<cv::Vec3b>(smooth_path[j].getX(), smooth_path[j].getY()) = {255, 0, 0};
+
+        float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
+        cv::Point pos_list[4];
+        float t = smooth_path[j].getT();
+        pos_list[0] = cv::Point(smooth_path[j].getY() - dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) + param::front2Rate*dy*cos(t));
+        pos_list[1] = cv::Point(smooth_path[j].getY() - dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) - param::rear2Rate*dy*cos(t));
+        pos_list[2] = cv::Point(smooth_path[j].getY() + dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) - param::rear2Rate*dy*cos(t));
+        pos_list[3] = cv::Point(smooth_path[j].getY() + dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) + param::front2Rate*dy*cos(t));  //画车框
+        for(int i = 0; i < 4; i ++) cv::line(map_color, pos_list[i], pos_list[(i + 1)%4], cv::Scalar(0, 0, 0));
+        // cv::line(map_color,cv::Point(smooth_path[j].getY(),smooth_path[j].getX()),
+        //                     cv::Point(smooth_path[j].getY()+40*sinf(t),smooth_path[j].getX()+40*cos(t)),cv::Scalar(0,0,0));  //画指向线
     }
+
+    auto CollisionLookup = map_data.getCollisionLookup();
+    for(auto ptr = CollisionLookup.begin(); ptr != CollisionLookup.end(); ptr ++)
+        if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 255, 0};  //画碰撞检测区域
+    
     std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
     cv::imshow("smooth_result",map_color);
     cv::waitKey(0);

@@ -77,9 +77,9 @@ namespace HybridAStar
         void visualize(const char* filename = "result.ppm");//将当前的距离地图和voronoi diagram写进ppm文件里
 
         //! returns the horizontal size of the workspace/map
-        unsigned int getSizeX() {return sizeX;}//返回地图横向size
+        unsigned int getSizeX() {return sizeX;}//返回地图X向size
         //! returns the vertical size of the workspace/map
-        unsigned int getSizeY() {return sizeY;}//返回地图纵向size
+        unsigned int getSizeY() {return sizeY;}//返回地图Y向size
 
         // was private, changed to public for obstX, obstY
     public:

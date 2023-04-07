@@ -70,6 +70,8 @@
         "fft": "cpp",
         "nonlinearoptimization": "cpp",
         "openglsupport": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "adolcforward": "cpp",
+        "tensorsymmetry": "cpp"
     }
 }

@@ -72,8 +72,8 @@ namespace HybridAStar
         float voronoiMax = param::obsPenaMax;          //影响voronoi场的最大距离
         //权重系数
         float alpha = 0.1;                          //梯度更新衰减率
-        float wObstacle = 0.1;                         //障碍物项权重
-        float wCurvature = 0.1;                        //曲率项权重
+        float wObstacle = 0.01;//0.1;                         //障碍物项权重
+        float wCurvature = 0.2;//0.1;                        //曲率项权重
         float wSmoothness = 0.5;                       //顺滑项权重
         float wVoronoi = 0;                            //voronoi项权重
         //地图尺寸

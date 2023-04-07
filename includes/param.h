@@ -8,13 +8,17 @@
 namespace param
 {
     //hybrid_astar的planner的最大搜索迭代数[#]
-    static const int iterations = 50000;
+    static const int iterations = 100000;
     //自车padding宽度[m]
-    static const float padding = 0.15;
+    static const float padding = 1.5;  //0.15;
     //自车宽度（KIWI_EV)[m]
-    static const double width = 1.655 + 2.*padding;
+    static const double width =  33;   //1.655 + 2.*padding;
     //自车长度（KIWI_EV）[m]
-    static const double length = 2.894 + 2.*padding;
+    static const double length =  58;  //2.894 + 2.*padding;
+    //阿克曼中心距离前端比例*2
+    static const float front2Rate = 1.6;
+    //阿克曼中心距离后端比例*2
+    static const float rear2Rate = 0.4;
     //最小转弯半径（需适配，先按照RS算法方便设为1）[m]
     static const float rmin = 1.;
     //航向角离散数[#]
@@ -58,12 +62,14 @@ namespace param
     //转向惩罚[#]
     static const float penaltyTurning = 1.05;
     //倒车惩罚（运动图元>2）[#]
-    static const float penaltyReversing = 25.0;
+    static const float penaltyReversing = 2.5;  //25.0;
     //改变方向惩罚（运动图元由<3到>2）[#]
-    static const float penaltyCOD = 50.0;
+    static const float penaltyCOD = 5;  //50.0;
     static const float dubinsShotDistance = 100.0;
     //障碍物最大惩罚距离
-    static const float obsPenaMax = 10.0;
+    static const float obsPenaMax = 60.0;
+    //光顺最大迭代次数
+    static const int smoothMaxIterations = 500;
 }
 
 #endif //HYBRID_ASTAR_PARAM_H
