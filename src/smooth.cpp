@@ -121,7 +121,7 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
 
         // the closest obstacle is closer than desired correct the path for that
         if (obsDst < obsDMax) {
-            return gradient = wObstacle * 2 * (obsDst - obsDMax) * obsVct / obsDst;
+            return gradient = wObstacle * 2 * (1.f - pow(obsDMax / obsDst, 0.2)) * obsVct;//(obsDst - obsDMax) * obsVct / obsDst;
         }
     }
     return gradient;//有潜在风险，前面没有赋值
@@ -196,11 +196,11 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
             for(int i = sta; i <= end; i ++)
             {
                 //后面2个点，当前点，前面2个点
-                Vector2D xim2(newPath[i - 2].getX(), newPath[i - 2].getY());
-                Vector2D xim1(newPath[i - 1].getX(), newPath[i - 1].getY());
+                Vector2D xim2(newPath[std::max(sta - 1, i - 2)].getX(), newPath[std::max(sta - 1, i - 2)].getY());
+                Vector2D xim1(newPath[std::max(sta - 1, i - 1)].getX(), newPath[std::max(sta - 1, i - 1)].getY());
                 Vector2D xi(newPath[i].getX(), newPath[i].getY());
-                Vector2D xip1(newPath[i + 1].getX(), newPath[i + 1].getY());
-                Vector2D xip2(newPath[i + 2].getX(), newPath[i + 2].getY());
+                Vector2D xip1(newPath[std::min(end + 1, i + 1)].getX(), newPath[std::min(end + 1, i + 1)].getY());
+                Vector2D xip2(newPath[std::min(end + 1, i + 2)].getX(), newPath[std::min(end + 1, i + 2)].getY());
                 Vector2D correction;
 
                 correction = correction - obstacleTerm(xi);

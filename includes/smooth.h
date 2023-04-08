@@ -67,13 +67,13 @@ namespace HybridAStar
         //碰撞图
         DynamicVoronoi voronoi;
         //惩罚边界
-        float kappaMax = 1. / (param::rmin * 1.1);     //最大曲率
+        float kappaMax = 1. / (param::rmin * 2.5);//1.1);     //最大曲率
         float obsDMax = param::obsPenaMax;              //障碍物惩罚的最大距离
         float voronoiMax = param::obsPenaMax;          //影响voronoi场的最大距离
         //权重系数
         float alpha = 0.1;                          //梯度更新衰减率
         float wObstacle = 0.01;//0.1;                         //障碍物项权重
-        float wCurvature = 0.2;//0.1;                        //曲率项权重
+        float wCurvature = 0.4;//0.1;                        //曲率项权重
         float wSmoothness = 0.5;                       //顺滑项权重
         float wVoronoi = 0;                            //voronoi项权重
         //地图尺寸

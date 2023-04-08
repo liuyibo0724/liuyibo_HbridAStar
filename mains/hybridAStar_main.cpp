@@ -21,7 +21,7 @@ int main()
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);
     hybridAStar planer(&map_data);
     Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(300 * 1, 60 * 1, 1.0 * M_PI, 0, 0, nullptr);
+    Node3D goal(150 * 1, 360 * 1, 1.5 * M_PI, 0, 0, nullptr);
 
     //生图展示
     cv::imshow("raw_pic",map_gray);
@@ -65,8 +65,9 @@ int main()
     //轨迹光顺前画线
     for(int j = 0; j < smoother.m_path.size() - 1; j ++)
     {
-        cv::line(map_color, cv::Point(smoother.m_path[j].getY(), smoother.m_path[j].getX()),
-                            cv::Point(smoother.m_path[j + 1].getY(), smoother.m_path[j + 1].getX()), cv::Scalar(0, 0, 255));
+        map_color.at<cv::Vec3b>(smoother.m_path[j].getX(), smoother.m_path[j].getY()) = {0, 0, 255};
+        // cv::line(map_color, cv::Point(smoother.m_path[j].getY(), smoother.m_path[j].getX()),
+        //                     cv::Point(smoother.m_path[j + 1].getY(), smoother.m_path[j + 1].getX()), cv::Scalar(0, 0, 255));
     }
     std::cout << "smoother.m_path.size() = " << smoother.m_path.size() << std::endl;
     cv::imshow("smooth_beform",map_color);
@@ -85,18 +86,18 @@ int main()
         float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
         cv::Point pos_list[4];
         float t = smooth_path[j].getT();
-        pos_list[0] = cv::Point(smooth_path[j].getY() - dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) + param::front2Rate*dy*cos(t));
-        pos_list[1] = cv::Point(smooth_path[j].getY() - dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) - param::rear2Rate*dy*cos(t));
-        pos_list[2] = cv::Point(smooth_path[j].getY() + dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) - param::rear2Rate*dy*cos(t));
-        pos_list[3] = cv::Point(smooth_path[j].getY() + dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) + param::front2Rate*dy*cos(t));  //画车框
-        for(int i = 0; i < 4; i ++) cv::line(map_color, pos_list[i], pos_list[(i + 1)%4], cv::Scalar(0, 0, 0));
+        // pos_list[0] = cv::Point(smooth_path[j].getY() - dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) + param::front2Rate*dy*cos(t));
+        // pos_list[1] = cv::Point(smooth_path[j].getY() - dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() + dx*sin(t) - param::rear2Rate*dy*cos(t));
+        // pos_list[2] = cv::Point(smooth_path[j].getY() + dx*cos(t) - param::rear2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) - param::rear2Rate*dy*cos(t));
+        // pos_list[3] = cv::Point(smooth_path[j].getY() + dx*cos(t) + param::front2Rate*dy*sin(t), smooth_path[j].getX() - dx*sin(t) + param::front2Rate*dy*cos(t));  //画车框
+        // for(int i = 0; i < 4; i ++) cv::line(map_color, pos_list[i], pos_list[(i + 1)%4], cv::Scalar(0, 0, 0));
         // cv::line(map_color,cv::Point(smooth_path[j].getY(),smooth_path[j].getX()),
         //                     cv::Point(smooth_path[j].getY()+40*sinf(t),smooth_path[j].getX()+40*cos(t)),cv::Scalar(0,0,0));  //画指向线
     }
 
     auto CollisionLookup = map_data.getCollisionLookup();
-    for(auto ptr = CollisionLookup.begin(); ptr != CollisionLookup.end(); ptr ++)
-        if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 255, 0};  //画碰撞检测区域
+    // for(auto ptr = CollisionLookup.begin(); ptr != CollisionLookup.end(); ptr ++)
+    //     if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 255, 0};  //画碰撞检测区域
     
     std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
     cv::imshow("smooth_result",map_color);
