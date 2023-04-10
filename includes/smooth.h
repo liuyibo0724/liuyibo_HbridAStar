@@ -58,7 +58,7 @@ namespace HybridAStar
         Vector2D obstacleTerm(Vector2D xi);             //障碍物项
         Vector2D curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, Vector2D x_ip1, Vector2D x_ip2);   //曲率项
         Vector2D smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2);   //顺滑项
-        // Vector2D voronoiTerm(Vector2D xi);              //voronoi项
+        Vector2D voronoiTerm(Vector2D xi);              //voronoi项
         bool isOnGrid(Vector2D xi)
             { return xi.getX() >= 0 && xi.getX() < height && xi.getY() >= 0 && xi.getY() < width; } //xi点是否在图像范围
         //待平滑路径
@@ -74,7 +74,7 @@ namespace HybridAStar
         float alpha = 0.1;                          //梯度更新衰减率
         float wObstacle = 0.01;//0.1;                         //障碍物项权重
         float wCurvature = 0.4;//0.1;                        //曲率项权重
-        float wSmoothness = 0.5;                       //顺滑项权重
+        float wSmoothness = 0.2;                       //顺滑项权重
         float wVoronoi = 0;                            //voronoi项权重
         //地图尺寸
         int width;

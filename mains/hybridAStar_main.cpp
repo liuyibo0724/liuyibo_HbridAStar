@@ -21,7 +21,7 @@ int main()
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);
     hybridAStar planer(&map_data);
     Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(150 * 1, 360 * 1, 1.5 * M_PI, 0, 0, nullptr);
+    Node3D goal(300 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
 
     //生图展示
     cv::imshow("raw_pic",map_gray);
@@ -46,6 +46,7 @@ int main()
     }   //转化为二值地图
     voronoi.initializeMap(map_color.rows, map_color.cols, binMap);
     voronoi.update();
+    voronoi.prune();
 
     //轨迹光顺
     Smoother smoother;

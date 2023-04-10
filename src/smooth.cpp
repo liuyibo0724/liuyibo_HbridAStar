@@ -8,22 +8,33 @@ inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 //判断是否为交点（内联）
 inline bool isCusp(std::vector<Node3D> path, int i)
 {
-    if(i < 2 || i > path.size() - 3) return true;   //增加一条序列首尾为焦点
-    if(path[i].getPrim() == -1)
-        return false;
-    else if(path[i].getPrim() == -2)
-        return true;
-    bool revim2 = isAdv(path[i - 2].getPrim()) ? true : false;
-    bool revim1 = isAdv(path[i - 1].getPrim()) ? true : false;
-    bool revi   = isAdv(path[i].getPrim()) ? true : false;
-    bool revip1 = isAdv(path[i + 1].getPrim()) ? true : false;
-    bool revip2 = isAdv(path[i + 2].getPrim()) ? true : false;
-    if (revim2 != revim1 || revim1 != revi || revi != revip1 || revip1 != revip2)
-    {
-        return true;
-    }
-    return false;
+    if(i == 0 || i == path.size() - 1) return true;
+    Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());
+    Vector2D xi(path[i].getX(), path[i].getY());
+    Vector2D xip1(path[i + 1].getX(), path[i + 1].getY());
+    Vector2D vec1 = xi - xim1;
+    Vector2D vec2 = xip1 - xi;
+    return vec1.dot(vec2) < 0;
+
 }
+// inline bool isCusp(std::vector<Node3D> path, int i)
+// {
+//     if(i < 2 || i > path.size() - 3) return true;   //增加一条序列首尾为焦点
+//     if(path[i].getPrim() == -1)
+//         return false;
+//     else if(path[i].getPrim() == -2)
+//         return true;
+//     bool revim2 = isAdv(path[i - 2].getPrim()) ? true : false;
+//     bool revim1 = isAdv(path[i - 1].getPrim()) ? true : false;
+//     bool revi   = isAdv(path[i].getPrim()) ? true : false;
+//     bool revip1 = isAdv(path[i + 1].getPrim()) ? true : false;
+//     bool revip2 = isAdv(path[i + 2].getPrim()) ? true : false;
+//     if (revim2 != revim1 || revim1 != revi || revi != revip1 || revip1 != revip2)
+//     {
+//         return true;
+//     }
+//     return false;
+// }
 
 //曲率项
 Vector2D Smoother::curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, Vector2D x_ip1, Vector2D x_ip2) 
@@ -101,6 +112,7 @@ Vector2D Smoother::curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, V
 //光顺项
 Vector2D Smoother::smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2) {
     return wSmoothness * (xim2 - 4 * xim1 + 6 * xi - 4 * xip1 + xip2);
+    // return wSmoothness * (-4) * (xip1 - 2*xi + xim1);
 }
 
 //障碍物项
@@ -125,6 +137,46 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
         }
     }
     return gradient;//有潜在风险，前面没有赋值
+}
+
+// voronoi项
+Vector2D Smoother::voronoiTerm(Vector2D xi) {
+  Vector2D gradient;
+  //    alpha > 0 = falloff rate
+  //    dObs(x,y) = distance to nearest obstacle
+  //    dEge(x,y) = distance to nearest edge of the GVD
+  //    voronoiMax= maximum distance for the cost to be applicable
+  // distance to the closest obstacle
+  float obsDst = voronoi.getDistance(xi.getX(), xi.getY());
+  // distance to the closest voronoi edge
+  float edgDst; //todo
+  // the vector determining where the obstacle is
+  Vector2D obsVct(xi.getX() - voronoi.data[(int)xi.getX()][(int)xi.getY()].obstX,
+                    xi.getY() - voronoi.data[(int)xi.getX()][(int)xi.getY()].obstY);
+  // the vector determining where the voronoi edge is
+  Vector2D edgVct; //todo
+  //calculate the distance to the closest obstacle from the current node
+  //obsDist =  voronoiDiagram.getDistance(node->getX(),node->getY())
+
+  if (obsDst < voronoiMax) {
+    //calculate the distance to the closest GVD edge from the current node
+    // the node is away from the optimal free space area
+    if (edgDst > 0) {
+      float PobsDst_Pxi; //todo = obsVct / obsDst;
+      float PedgDst_Pxi; //todo = edgVct / edgDst;
+      float PvorPtn_PedgDst = alpha * obsDst * std::pow(obsDst - voronoiMax, 2) / (std::pow(voronoiMax, 2)
+                              * (obsDst + alpha) * std::pow(edgDst + obsDst, 2));
+
+      float PvorPtn_PobsDst = (alpha * edgDst * (obsDst - voronoiMax) * ((edgDst + 2 * voronoiMax + alpha)
+                               * obsDst + (voronoiMax + 2 * alpha) * edgDst + alpha * voronoiMax))
+                              / (std::pow(voronoiMax, 2) * std::pow(obsDst + alpha, 2) * std::pow(obsDst + edgDst, 2));
+      gradient = wVoronoi * PvorPtn_PobsDst * PobsDst_Pxi + PvorPtn_PedgDst * PedgDst_Pxi;
+
+      return gradient;
+    }
+    return gradient;
+  }
+return gradient;
 }
 
 //找到轨迹点列
@@ -166,12 +218,12 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
 
     int sta, end;
     std::vector<std::pair<int, int>> segm_nums;     //注意！添加分割下标对
-    for(int i = 2; i < pathLength - 2; i ++)
+    for(int i = 1; i < pathLength - 1; i ++)
     {
         if(isCusp(newPath, i - 1) && !isCusp(newPath, i))
         {
             sta = i;
-            for(int j = sta; j < pathLength - 2; j ++)
+            for(int j = sta; j < pathLength - 1; j ++)
             {
                 if(!isCusp(newPath, j) && isCusp(newPath, j + 1))
                 {
