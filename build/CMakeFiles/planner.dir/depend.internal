@@ -14,6 +14,8 @@ CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o
  /home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.cpp
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o
  ../includes/dynamicVoronoi.h
+ ../includes/param.h
+ ../includes/vec2i.h
  /home/liuyibo/liuyibo_HbridAStar/src/dynamicVoronoi.cpp
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o
  ../includes/CollisionDetection.h
@@ -31,4 +33,5 @@ CMakeFiles/planner.dir/src/smooth.cpp.o
  ../includes/node.h
  ../includes/param.h
  ../includes/smooth.h
+ ../includes/vec2i.h
  /home/liuyibo/liuyibo_HbridAStar/src/smooth.cpp

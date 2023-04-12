@@ -9,6 +9,7 @@ CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o
  ../includes/node.h
  ../includes/param.h
  ../includes/smooth.h
+ ../includes/vec2i.h
  /home/liuyibo/liuyibo_HbridAStar/mains/hybridAStar_main.cpp
  /usr/local/include/opencv4/opencv2/calib3d.hpp
  /usr/local/include/opencv4/opencv2/core.hpp

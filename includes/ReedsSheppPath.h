@@ -2,6 +2,7 @@
 #define HYBRID_ASTAR_REEDSSHEPPPATH_H
 
 #include <boost/math/constants/constants.hpp>
+#include <set>
 #include "CollisionDetection.h"
 #include "node.h"
 
@@ -50,6 +51,19 @@ namespace HybridAStar
         void interpolate(const pos *from, const ReedsSheppPath &path, double t,
                     pos *state) const;
         bool isTraversable(Node3D* start,ReedsShepp::ReedsSheppPath *path,CollisionDetection *map) const;
+
+        //自定义ReedsSheppPath升序排列比较
+        class RSPathLength_ascen
+        {
+        public:
+            bool operator()(const ReedsSheppPath &p1, const ReedsSheppPath &p2) const
+            {
+                return p1.length() < p2.length();
+            }
+        };
+        //搜索出的全套RS曲线族
+        std::set<ReedsSheppPath, RSPathLength_ascen> RSCurves_Set;
+
     private:
         float rho_;
 

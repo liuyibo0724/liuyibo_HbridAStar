@@ -21,6 +21,8 @@ node.h
 ../includes/ReedsSheppPath.h
 boost/math/constants/constants.hpp
 -
+set
+-
 CollisionDetection.h
 ../includes/CollisionDetection.h
 node.h
@@ -33,12 +35,22 @@ stdio.h
 -
 limits.h
 -
+iostream
+-
 cmath
 -
 queue
 -
+unordered_map
+-
+vec2i.h
+../includes/vec2i.h
+param.h
+../includes/param.h
 
 ../includes/hybridAStar.h
+vector
+-
 node.h
 ../includes/node.h
 CollisionDetection.h
@@ -65,17 +77,23 @@ cmath
 -
 vector
 -
-iostream
--
 node.h
 ../includes/node.h
 dynamicVoronoi.h
 ../includes/dynamicVoronoi.h
+vec2i.h
+../includes/vec2i.h
+
+../includes/vec2i.h
+cmath
+-
 
 /home/liuyibo/liuyibo_HbridAStar/mains/hybridAStar_main.cpp
 CollisionDetection.h
 /home/liuyibo/liuyibo_HbridAStar/mains/CollisionDetection.h
 opencv2/opencv.hpp
+-
+cmath
 -
 node.h
 /home/liuyibo/liuyibo_HbridAStar/mains/node.h

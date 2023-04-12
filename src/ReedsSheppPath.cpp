@@ -94,6 +94,7 @@ namespace HybridAStar
     }
     ReedsShepp::ReedsSheppPath ReedsShepp::plan(double x, double y, double phi)
     {
+        RSCurves_Set.clear();   //每次plan前清空RS曲线族set
         ReedsSheppPath path;
         CSC(x, y, phi, path);
         CCC(x, y, phi, path);
@@ -109,42 +110,50 @@ namespace HybridAStar
         if (LpRmSmLm(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[4], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[4], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[5], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[5], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
 
         if (LpRmSmRm(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[8], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[8], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[9], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[9], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
 
@@ -153,41 +162,51 @@ namespace HybridAStar
         if (LpRmSmLm(xb, yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[6], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(-xb, yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[6], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(xb, -yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[7], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmLm(-xb, -yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[7], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
 
         if (LpRmSmRm(xb, yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[10], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(-xb, yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[10], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(xb, -yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[11], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSmRm(-xb, -yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
+        {
             path = ReedsSheppPath(reedsSheppPathType[11], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
     }
 
     void ReedsShepp::CCCC(double x, double y, double phi, ReedsShepp::ReedsSheppPath &path)
@@ -196,41 +215,51 @@ namespace HybridAStar
         if (LpRupLumRm(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[2], t, u, -u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRupLumRm(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[2], -t, -u, u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRupLumRm(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[3], t, u, -u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRupLumRm(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[3], -t, -u, u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
 
         if (LpRumLumRp(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[2], t, u, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRumLumRp(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[2], -t, -u, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRumLumRp(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[3], t, u, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRumLumRp(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + 2. * fabs(u) + fabs(v)))  // timeflip + reflect
+        {
             path = ReedsSheppPath(reedsSheppPathType[3], -t, -u, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
     }
 
     void ReedsShepp::CCC(double x, double y, double phi, ReedsShepp::ReedsSheppPath &path)
@@ -239,21 +268,25 @@ namespace HybridAStar
         if (LpRmL(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[0], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[0], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[1], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[1], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
 
@@ -262,20 +295,26 @@ namespace HybridAStar
         if (LpRmL(xb, yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[0], v, u, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(-xb, yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[0], -v, -u, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(xb, -yb, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[1], v, u, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmL(-xb, -yb, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
+        {
             path = ReedsSheppPath(reedsSheppPathType[1], -v, -u, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
     }
 
     void ReedsShepp::CSC(double x, double y, double phi, ReedsShepp::ReedsSheppPath &path)
@@ -284,40 +323,50 @@ namespace HybridAStar
         if (LpSpLp(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[14], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpLp(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[14], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpLp(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[15], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpLp(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[15], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpRp(x, y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))
         {
             path = ReedsSheppPath(reedsSheppPathType[12], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpRp(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[12], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpRp(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[13], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpSpRp(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
+        {
             path = ReedsSheppPath(reedsSheppPathType[13], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
     }
 
     void ReedsShepp::CCSCC(double x, double y, double phi, ReedsShepp::ReedsSheppPath &path)
@@ -327,23 +376,29 @@ namespace HybridAStar
         {
             path = ReedsSheppPath(reedsSheppPathType[16], t, -.5 * pi, u,
                                                         -.5 * pi, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSLmRp(-x, y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip
         {
             path = ReedsSheppPath(reedsSheppPathType[16], -t, .5 * pi, -u,
                                                         .5 * pi, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSLmRp(x, -y, -phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // reflect
         {
             path = ReedsSheppPath(reedsSheppPathType[17], t, -.5 * pi, u,
                                                         -.5 * pi, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
             Lmin = L;
         }
         if (LpRmSLmRp(-x, -y, phi, t, u, v) && Lmin > (L = fabs(t) + fabs(u) + fabs(v)))  // timeflip + reflect
+        {
             path = ReedsSheppPath(reedsSheppPathType[17], -t, .5 * pi, -u,
                                                         .5 * pi, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
     }
 
     bool ReedsShepp::isTraversable(Node3D* start,ReedsShepp::ReedsSheppPath *path, CollisionDetection *map) const

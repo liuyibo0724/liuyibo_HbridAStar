@@ -8,6 +8,7 @@ CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../includes/hybridA
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../includes/node.h
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../includes/param.h
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../includes/smooth.h
+CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../includes/vec2i.h
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: ../mains/hybridAStar_main.cpp
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: /usr/local/include/opencv4/opencv2/calib3d.hpp
 CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.o: /usr/local/include/opencv4/opencv2/core.hpp

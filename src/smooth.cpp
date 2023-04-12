@@ -8,7 +8,7 @@ inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 //判断是否为交点（内联）
 inline bool isCusp(std::vector<Node3D> path, int i)
 {
-    if(i == 0 || i == path.size() - 1) return true;
+    if(i == 0 || i == (path.size() - 1)) return true;
     Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());
     Vector2D xi(path[i].getX(), path[i].getY());
     Vector2D xip1(path[i + 1].getX(), path[i + 1].getY());
@@ -17,6 +17,16 @@ inline bool isCusp(std::vector<Node3D> path, int i)
     return vec1.dot(vec2) < 0;
 
 }
+
+//交点附近缩放因子
+inline float CuspScaling(int i)
+{
+    if(i < 0) return 0.;
+    if(i > 4) return 1.;
+    float result = -(float)i * ((float)i - 8.);
+    return result;
+
+} 
 // inline bool isCusp(std::vector<Node3D> path, int i)
 // {
 //     if(i < 2 || i > path.size() - 3) return true;   //增加一条序列首尾为焦点
@@ -110,9 +120,15 @@ Vector2D Smoother::curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, V
 }
 
 //光顺项
-Vector2D Smoother::smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2) {
+Vector2D Smoother::smoothnessTerm(Vector2D xim2, Vector2D xim1, Vector2D xi, Vector2D xip1, Vector2D xip2) 
+{
     return wSmoothness * (xim2 - 4 * xim1 + 6 * xi - 4 * xip1 + xip2);
-    // return wSmoothness * (-4) * (xip1 - 2*xi + xim1);
+}
+
+//新光顺项
+Vector2D Smoother::smoothnessNewTerm(Vector2D xim1, Vector2D xi, Vector2D xip1)
+{
+    return wSmoothness * (-4) * (xip1 - 2*xi + xim1);
 }
 
 //障碍物项
@@ -142,36 +158,24 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
 // voronoi项
 Vector2D Smoother::voronoiTerm(Vector2D xi) {
   Vector2D gradient;
-  //    alpha > 0 = falloff rate
-  //    dObs(x,y) = distance to nearest obstacle
-  //    dEge(x,y) = distance to nearest edge of the GVD
-  //    voronoiMax= maximum distance for the cost to be applicable
-  // distance to the closest obstacle
-  float obsDst = voronoi.getDistance(xi.getX(), xi.getY());
-  // distance to the closest voronoi edge
-  float edgDst; //todo
-  // the vector determining where the obstacle is
+  float obsDst = voronoi.getDistance((int)xi.getX(), (int)xi.getY());
+  double edgDst = 0.0; //todo
   Vector2D obsVct(xi.getX() - voronoi.data[(int)xi.getX()][(int)xi.getY()].obstX,
                     xi.getY() - voronoi.data[(int)xi.getX()][(int)xi.getY()].obstY);
-  // the vector determining where the voronoi edge is
-  Vector2D edgVct; //todo
-  //calculate the distance to the closest obstacle from the current node
-  //obsDist =  voronoiDiagram.getDistance(node->getX(),node->getY())
+  Vec2i closest_edge_pt = voronoi.GetClosestVoronoiEdgePoint(xi, edgDst);
+  Vector2D edgVct(xi.getX() - closest_edge_pt.x(), xi.getY() - closest_edge_pt.y()); //todo
 
-  if (obsDst < voronoiMax) {
-    //calculate the distance to the closest GVD edge from the current node
-    // the node is away from the optimal free space area
+  if (obsDst < voronoiMax && obsDst > 1e-6) {
     if (edgDst > 0) {
-      float PobsDst_Pxi; //todo = obsVct / obsDst;
-      float PedgDst_Pxi; //todo = edgVct / edgDst;
-      float PvorPtn_PedgDst = alpha * obsDst * std::pow(obsDst - voronoiMax, 2) / (std::pow(voronoiMax, 2)
-                              * (obsDst + alpha) * std::pow(edgDst + obsDst, 2));
+      Vector2D PobsDst_Pxi = obsVct / obsDst;
+      Vector2D PedgDst_Pxi = edgVct / edgDst;
+      float PvorPtn_PedgDst = (alpha / alpha + obsDst) *
+                              (pow(obsDst - voronoiMax, 2) / pow(voronoiMax, 2)) * (obsDst / pow(obsDst + edgDst, 2));
 
-      float PvorPtn_PobsDst = (alpha * edgDst * (obsDst - voronoiMax) * ((edgDst + 2 * voronoiMax + alpha)
-                               * obsDst + (voronoiMax + 2 * alpha) * edgDst + alpha * voronoiMax))
-                              / (std::pow(voronoiMax, 2) * std::pow(obsDst + alpha, 2) * std::pow(obsDst + edgDst, 2));
-      gradient = wVoronoi * PvorPtn_PobsDst * PobsDst_Pxi + PvorPtn_PedgDst * PedgDst_Pxi;
-
+      float PvorPtn_PobsDst = (alpha / (alpha + obsDst)) *
+                              (edgDst / (edgDst + obsDst)) * ((obsDst - voronoiMax) / pow(voronoiMax, 2))
+                              * (-(obsDst - voronoiMax) / (alpha + obsDst) - (obsDst - voronoiMax) / (obsDst + edgDst) + 2);
+      gradient = 5. * wVoronoi * (PvorPtn_PobsDst * PobsDst_Pxi + PvorPtn_PedgDst * PedgDst_Pxi);
       return gradient;
     }
     return gradient;
@@ -209,8 +213,8 @@ void Smoother::tracePath(Node3D *node, int i, std::vector<Node3D> path)
 void Smoother::smoothPath(DynamicVoronoi& voronoi)
 {
     this->voronoi = voronoi;
-    this->width = voronoi.getSizeX();
-    this->height = voronoi.getSizeY();
+    this->height = voronoi.getSizeX();
+    this->width = voronoi.getSizeY();
     int iterations = 0;
     int maxIterations = param::smoothMaxIterations;    //最大迭代次数
     int pathLength = m_path.size(); //路径总长度
@@ -254,15 +258,20 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
                 Vector2D xip1(newPath[std::min(end + 1, i + 1)].getX(), newPath[std::min(end + 1, i + 1)].getY());
                 Vector2D xip2(newPath[std::min(end + 1, i + 2)].getX(), newPath[std::min(end + 1, i + 2)].getY());
                 Vector2D correction;
+                float CuspScale = CuspScaling(std::min(abs(i - sta), abs(i - end)));    //交点附近缩放因子
 
-                correction = correction - obstacleTerm(xi);
+                correction = correction - CuspScale * obstacleTerm(xi);
                 if (!isOnGrid(xi + correction)) continue;   //假如校正方向超出当前监视的网格范围，不做处理
 
-                correction = correction - smoothnessTerm(xim2, xim1, xi, xip1, xip2);
-                if (!isOnGrid(xi + correction)) continue;
-
-                correction = correction - curvatureTerm(xim2, xim1, xi, xip1, xip2);
+                correction = correction - CuspScale * smoothnessTerm(xim2, xim1, xi, xip1, xip2);
+                // correction = correction - smoothnessNewTerm(xim1, xi, xip1);
                 if (!isOnGrid(xi + correction)) continue; 
+
+                correction = correction - CuspScale * curvatureTerm(xim2, xim1, xi, xip1, xip2);
+                if (!isOnGrid(xi + correction)) continue; 
+
+                correction = correction - CuspScale * voronoiTerm(xi);
+                if (!isOnGrid(xi + correction)) continue;
 
                 auto update = alpha * correction/totalWeight;
                 xi = xi + update;

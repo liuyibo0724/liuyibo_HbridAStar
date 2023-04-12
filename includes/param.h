@@ -21,6 +21,8 @@ namespace param
     static const float rear2Rate = 0.4;
     //最小转弯半径（需适配，先按照RS算法方便设为1）[m]
     static const float rmin = 1.;
+    //RS曲线半径缩放因子
+    static const float RS_Scaling = 40.;
     //航向角离散数[#]
     static const int headings = 120;
     //航向角离散步长（度）[°]

@@ -111,10 +111,12 @@ float HybridAStar::hybridAStar::aStar(Node2D &start, Node2D &goal, float scale)
 //（注意scale的意义不明也许是缩放尺度记得修改）
 Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, float scale)
 {
+    int m_nodes3D_size = m_map->getSize() * param::headings;    //记录m_nodes3D[]中的点个数
+    Node3D *m_nodes3D_tmp = new Node3D[m_nodes3D_size];         //new出临时m_nodes3D_tmp[]用于深拷贝
     int width = m_map->getWidth();
     int height = m_map->getHeight();
     int goal_id = goal.setIdx(width, height);   //拿到goal的Idx
-    if(!m_map->isNodeTraversable(&goal)){ return nullptr; }     //若goal不可通行返回空指针
+    if(!m_map->isNodeTraversable(&goal)){ delete[] m_nodes3D_tmp; return nullptr; }     //若goal不可通行返回空指针
     int iPred, iSucc, iPred_tmp;   //当前节点和子节点的Idx
     float newG;    //新_已付出代价
     for(int i = 0; i < m_map->getSize() * param::headings; i ++) m_nodes3D[i].reset();  //open和close集全部置空
@@ -147,7 +149,7 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
             open.erase(nPred);          //从open集种删除
             //检查：当前节点是否是goal或是否到达最大迭代次数
             if(nPred == goal || iterations > param::iterations)
-                { goal.setPred(&m_nodes3D[iPred]); goal.pIdx = iPred; return &m_nodes3D[iPred]; }
+                { goal.setPred(&m_nodes3D[iPred]); goal.pIdx = iPred; delete[] m_nodes3D_tmp; return &m_nodes3D[iPred]; }
             float current_distance = (nPred.getX() - goal.getX())
                                         * (nPred.getX() - goal.getX())
                                         + (nPred.getY() - goal.getY())
@@ -155,61 +157,85 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
             //如果当前距离进入总距离的后半程，开始RS射
             if(current_distance < 0.5 * sta2goa_distance)
             {
-                m_RS_path = m_RS.plan(ReedsShepp::pos(nPred.getX(), nPred.getY(), nPred.getT()),
+                m_RS.plan(ReedsShepp::pos(nPred.getX(), nPred.getY(), nPred.getT()),
                                       ReedsShepp::pos(goal.getX(), goal.getY(), goal.getT()));
-                //如果RS射成功
-                if(m_RS.isTraversable(&nPred, &m_RS_path, m_map))
+                
+                for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D_tmp[i] = m_nodes3D[i];   //深拷贝m_nodes3D[]暂存在m_nodes3D_tmp[]中
+                
+                for(auto RS_ptr = m_RS.RSCurves_Set.begin(); RS_ptr != m_RS.RSCurves_Set.end(); RS_ptr ++)
                 {
-                    m_shootSuccess = true;  //RS射入成功
-                    nPred_tmp_ptr = &m_nodes3D[iPred]; //将nPred的地址暂存在nPred_tmp_ptr中
-                    iPred_tmp = iPred;                 //注意！初始化oPred_tmp为iPred
-                    goal.setPred(nPred_tmp_ptr);
-                    goal.pIdx = iPred_tmp;
-                    bool fix[4] = {false};  //判别组间是否变档的bool数组，变档则置为true
-                    for(int i = 1; i < 5; i ++)
-                        if(m_RS_path.length_[i-1] * m_RS_path.length_[i] < 0) fix[i-1] = true;
-                    int seg_num = 0;    //5段中第几段路线
-                    auto seg_length = (float)abs(m_RS_path.length_[0]);    //已遍历过子段长度和
-                    bool last_fix = false;  //最新一个fix
-                    for(int i = 1; i < m_RS_path.length() * 7 - 1; i ++)
+                    for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
+                    m_RS_path = *RS_ptr;
+                    //如果RS射成功
+                    if(m_RS.isTraversable(&nPred, &m_RS_path, m_map))
                     {
-                        int prim = -1;  //默认只和1段有关
-                        float t = (float)i / (m_RS_path.length() * 7);    //t表示整个RS曲线百分比
-                        ReedsShepp::pos p;
-                        ReedsShepp::pos st(goal.getPred()->getX(), 
-                                           goal.getPred()->getY(), 
-                                           goal.getPred()->getT());     //以goal的临时父节点作为起点
-                        interpolate(&st, t, &p);    //插值
-                        //到达段间分界线时
-                        if(t > seg_length / m_RS_path.length())
+                        m_shootSuccess = true;  //RS射入成功
+                        nPred_tmp_ptr = &m_nodes3D[iPred]; //将nPred的地址暂存在nPred_tmp_ptr中
+                        iPred_tmp = iPred;                 //注意！初始化oPred_tmp为iPred
+                        goal.setPred(nPred_tmp_ptr);
+                        goal.pIdx = iPred_tmp;
+                        bool fix[4] = {false};  //判别组间是否变档的bool数组，变档则置为true
+                        for(int i = 1; i < 5; i ++)
+                            if(m_RS_path.length_[i-1] * m_RS_path.length_[i] < 0) fix[i-1] = true;
+                        int seg_num = 0;    //5段中第几段路线
+                        auto seg_length = (float)abs(m_RS_path.length_[0]);    //已遍历过子段长度和
+                        bool last_fix = false;  //最新一个fix
+                        for(int i = 1; i < m_RS_path.length() * 7 - 1; i ++)
                         {
-                            if(fix[seg_num])
+                            int prim = -1;  //默认只和1段有关
+                            float t = (float)i / (m_RS_path.length() * 7);    //t表示整个RS曲线百分比
+                            ReedsShepp::pos p;
+                            ReedsShepp::pos st(goal.getPred()->getX(), 
+                                               goal.getPred()->getY(), 
+                                               goal.getPred()->getT());     //以goal的临时父节点作为起点
+                            interpolate(&st, t, &p);    //插值
+                            //到达段间分界线时
+                            if(t > seg_length / m_RS_path.length())
                             {
-                                prim = -2;  //若段间变档则与2段有关
-                                nPred.setPrim(-2);
-                                last_fix = true;
+                                if(fix[seg_num])
+                                {
+                                    prim = -2;  //若段间变档则与2段有关
+                                    nPred.setPrim(-2);
+                                    last_fix = true;
+                                }
+                                seg_num ++;
+                                seg_length += (float)abs(m_RS_path.length_[seg_num]);
                             }
-                            seg_num ++;
-                            seg_length += (float)abs(m_RS_path.length_[seg_num]);
+                            if(last_fix && prim != -2){ prim = -2; last_fix = false; }  //针对新段第一段
+                            ReedsShepp::pos p1;     //设置p的微扰偏移点p1, p2
+                            float t1 = (float)(i + 0.1) / (m_RS_path.length() * 7);    //t1表示p1点百分比
+                            interpolate(&st, t1, &p1);
+                            float d_x = (p1.x - p.x);     //p与p1的x差值
+                            float d_y = (p1.y - p.y);
+                            float angle = atan2(d_y, d_x);
+                            angle = HybridAStar::normalizeHeadingRad(angle);
+
+                            nPred_tmp_ptr =  new Node3D(p.x, p.y, angle, -1, -1, &m_nodes3D[iPred_tmp], prim, iPred_tmp);
+                            iPred_tmp = nPred_tmp_ptr->setIdx(width, height);   //拿到nPred_tmp_ptr的Idx
+                            m_nodes3D[iPred_tmp] = *(nPred_tmp_ptr);            //将new出来的插值点数据置入m_nodes3D[]中
+                            delete nPred_tmp_ptr;                                    //释放空间防止内存泄露
                         }
-                        if(last_fix && prim != -2){ prim = -2; last_fix = false; }  //针对新段第一段
-                        ReedsShepp::pos p1;     //设置p的微扰偏移点p1, p2
-                        float t1 = (float)(i + 0.1) / (m_RS_path.length() * 7);    //t1表示p1点百分比
-                        interpolate(&st, t1, &p1);
-                        float d_x = (p1.x - p.x);     //p与p1的x差值
-                        float d_y = (p1.y - p.y);
-                        float angle = atan2(d_y, d_x);
-                        angle = HybridAStar::normalizeHeadingRad(angle);
+                        goal.setPred(nPred_tmp_ptr);
+                        goal.pIdx = iPred_tmp;
+                        m_nodes3D[goal_id] = goal;  //将目标点goal赋值入点列中
                         
-                        nPred_tmp_ptr =  new Node3D(p.x, p.y, angle, -1, -1, &m_nodes3D[iPred_tmp], prim, iPred_tmp);
-                        iPred_tmp = nPred_tmp_ptr->setIdx(width, height);   //拿到nPred_tmp_ptr的Idx
-                        m_nodes3D[iPred_tmp] = *(nPred_tmp_ptr);            //将new出来的插值点数据置入m_nodes3D[]中
-                        delete nPred_tmp_ptr;                                    //释放空间防止内存泄露
+                        //准备尾插进m_nodes3D_Set中
+                        std::vector<Node3D> m_nodes3D_SettTmp;
+                        Node3D tmp_node = m_nodes3D[goal_id];
+                        while(tmp_node.pIdx != -1)
+                        {
+                            float x = tmp_node.getX();
+                            float y = tmp_node.getY();
+                            float t = tmp_node.getT();
+                            int prim = tmp_node.getPrim();
+                            m_nodes3D_SettTmp.push_back(Node3D(x, y, t, 0, 0, nullptr, prim));    //轨迹溯源
+                            tmp_node = m_nodes3D[tmp_node.pIdx];
+                        }
+                        m_nodes3D_Set.push_back(m_nodes3D_SettTmp);     //加入保存成品点列的队列m_nodes3D_Set
                     }
-                    goal.setPred(nPred_tmp_ptr);
-                    goal.pIdx = iPred_tmp;
-                    return &goal;
                 }
+                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 8 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
+                else for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
             }
             //充实open集6向搜索
             for(int i = 0; i < Node3D::dir; i ++)
@@ -258,6 +284,7 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
             }
         }
     }
+    delete[] m_nodes3D_tmp;
     return nullptr;     //路径搜索失败返回空指针
 }
 

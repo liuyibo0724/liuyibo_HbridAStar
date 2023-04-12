@@ -13,6 +13,8 @@ CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/param.h
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../src/ReedsSheppPath.cpp
 
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../includes/dynamicVoronoi.h
+CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../includes/param.h
+CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../src/dynamicVoronoi.cpp
 
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/CollisionDetection.h
@@ -30,5 +32,6 @@ CMakeFiles/planner.dir/src/smooth.cpp.o: ../includes/dynamicVoronoi.h
 CMakeFiles/planner.dir/src/smooth.cpp.o: ../includes/node.h
 CMakeFiles/planner.dir/src/smooth.cpp.o: ../includes/param.h
 CMakeFiles/planner.dir/src/smooth.cpp.o: ../includes/smooth.h
+CMakeFiles/planner.dir/src/smooth.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/smooth.cpp.o: ../src/smooth.cpp
 

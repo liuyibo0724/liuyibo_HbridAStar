@@ -92,6 +92,8 @@ DynamicVoronoi::DynamicVoronoi()
     sqrt2 = sqrt(2.0);
     data = NULL;
     gridMap = NULL;
+    edge_points_.clear();
+    closest_edge_points_.clear();
 }
 
 DynamicVoronoi::~DynamicVoronoi()
@@ -634,4 +636,69 @@ DynamicVoronoi::markerMatchResult DynamicVoronoi::markerMatch(int x, int y) {
     }
 
     return pruned;
+}
+
+void DynamicVoronoi::CollectVoronoiEdgePoints()
+{
+    if(!edge_points_.empty()) {
+    edge_points_.clear();
+    closest_edge_points_.clear();
+  }
+  for(int y = sizeY-1; y >=0; y--){
+    for(int x = 0; x<sizeX; x++){
+      if(isVoronoi(x,y)){  //on the edge of Voronoi diagram
+        edge_points_.emplace_back(x, y);
+        closest_edge_points_.emplace(ComputeIndex(Vec2i(x,y)), std::make_pair(Vec2i(x,y), 0));
+      }
+    }
+  }
+}
+
+Vec2i DynamicVoronoi::GetClosestVoronoiEdgePoint(Vector2D xi, double& closest_dis) {
+  Vec2i closest_pt;
+  auto iter = closest_edge_points_.find(ComputeIndex(xi));
+  if (closest_edge_points_.find(ComputeIndex(xi)) != closest_edge_points_.end()) {
+    closest_pt = (*iter).second.first;
+    closest_dis = (*iter).second.second;
+    return closest_pt;
+  }
+
+  int closest_dis_sq = INT_MAX;
+  for(const auto& pt : edge_points_) {
+    int tmp_sq = pow((int)(xi.getX() - pt.x()), 2) + pow((int)(xi.getY() - pt.y()), 2);
+    if(tmp_sq < closest_dis_sq) {
+      closest_dis_sq = tmp_sq;
+      closest_pt = pt;
+    }
+  }
+  closest_dis = sqrt(static_cast<double>(closest_dis_sq));
+  closest_edge_points_.emplace(ComputeIndex(xi), std::make_pair(closest_pt, closest_dis));
+  return closest_pt;
+}
+
+std::string DynamicVoronoi::ComputeIndex(const Vec2i& pi) const {
+  return std::to_string(pi.x()) + "_" + std::to_string(pi.y());
+}
+
+std::string DynamicVoronoi::ComputeIndex(const Vector2D& pd) const {
+  return std::to_string(static_cast<int>(pd.getX())) + "_" + std::to_string(static_cast<int>(pd.getY()));
+}
+
+float DynamicVoronoi::voronoiField(int x, int y)
+{
+    if(x < 0 || x >= sizeX || y < 0 || y >= sizeY) return 0.;
+    else
+    {
+        float alpha = 0.1, voronoiMax = param::obsPenaMax;
+        float obsDst = this->getDistance(x, y);
+        double edgDst = 0.0; //todo
+        Vector2D xi(x, y);
+        
+        Vec2i closest_edge_pt = this->GetClosestVoronoiEdgePoint(xi, edgDst);
+        
+
+        float rhoV_x_y = (alpha / (alpha + obsDst)) * (edgDst / (edgDst + obsDst))
+                         * (pow(obsDst - voronoiMax, 2) / pow(voronoiMax, 2));
+        return rhoV_x_y;
+    }
 }

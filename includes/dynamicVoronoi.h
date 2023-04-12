@@ -3,13 +3,52 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <iostream>
 #include <cmath>
 #include <queue>
+#include <unordered_map>
+#include "vec2i.h"
+#include "param.h"
 #define MAXDIST 1000
 #define INTPOINT IntPoint
 
 namespace HybridAStar
 {
+    //2D向量类
+    class Vector2D
+    {
+    public:
+        inline Vector2D(const double x = 0, const double y = 0){ this->x = x; this->y = y; }//构造函数
+        // 计算符重载
+        inline Vector2D operator + (const Vector2D &cpr) const { return Vector2D(x + cpr.x, y + cpr.y); }
+        inline Vector2D operator - (const Vector2D &cpr) const { return Vector2D(x - cpr.x, y - cpr.y); }
+        inline Vector2D operator * (const double &k) const { return Vector2D(x * k, y * k); }
+        inline Vector2D operator / (const double &k) const { return Vector2D(x / k, y / k); }
+        inline Vector2D operator - () const { return Vector2D(-x, -y); }
+        friend std::ostream& operator << (std::ostream &os, const Vector2D &cpr) { os << "(" << cpr.x << ", " << cpr.y << ")"; return os; }
+        //向量长度
+        double length() const { return std::sqrt(std::pow(x, 2) + std::pow(y, 2)); }
+        //向量长度平方
+        double sqrlength() const { return x * x + y * y; }
+        //向量点乘
+        double dot(const Vector2D &cpr) const { return x * cpr.x + y * cpr.y; }
+        //求与某向量正交的分量
+        inline Vector2D ort(const Vector2D &cpr) const
+        {
+            Vector2D tmpSelf(this->x, this->y);
+            Vector2D result = tmpSelf - cpr * tmpSelf.dot(cpr) / cpr.sqrlength();
+            return result;
+        }
+        // 查询类函数
+        inline double getX() const { return x; }
+        inline double getY() const { return y; }
+
+    private:
+        double x;
+        double y;
+    };
+    inline Vector2D operator * (double k, const Vector2D &cpr){ return (cpr * k); }
+    
     class IntPoint
     {
     public:
@@ -66,6 +105,9 @@ namespace HybridAStar
         void update(bool updateRealDist = true);//根据环境变化更新距离地图和Voronoi Diagram
         //! prune the Voronoi diagram
         void prune();//对Voronoi diagram剪枝
+        void CollectVoronoiEdgePoints();//搜集voronoi边界点列
+        Vec2i GetClosestVoronoiEdgePoint(Vector2D xi, double& closest_dis); //得到voronoi边界点列
+        float voronoiField(int x, int y);   //计算voronoi场的值
 
         //! returns the obstacle distance at the specified location
         float getDistance(int x, int y);//返回(x,y)位置处的最近障碍的距离
@@ -136,6 +178,12 @@ namespace HybridAStar
 
         double sqrt2;
         //  dataCell** getData(){ return data; }
+        //voronoi边界点列
+        std::vector<Vec2i> edge_points_;
+        std::unordered_map<std::string, std::pair<Vec2i, float>> closest_edge_points_;
+        //计算Vec2d或Vec2i点索引
+        std::string ComputeIndex(const Vec2i& pi) const;
+        std::string ComputeIndex(const Vector2D& pd) const;
     };
 }
 
