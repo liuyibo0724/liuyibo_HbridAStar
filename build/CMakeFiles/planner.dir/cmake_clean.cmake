@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/planner.dir/src/BSpline.cpp.o"
   "CMakeFiles/planner.dir/src/CollisionDetection.cpp.o"
   "CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o"
   "CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o"

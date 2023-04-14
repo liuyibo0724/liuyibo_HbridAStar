@@ -163,6 +163,33 @@ mains/hybridAStar_main.cpp.s:
 	$(MAKE) -f CMakeFiles/testHybridAstar.dir/build.make CMakeFiles/testHybridAstar.dir/mains/hybridAStar_main.cpp.s
 .PHONY : mains/hybridAStar_main.cpp.s
 
+src/BSpline.o: src/BSpline.cpp.o
+
+.PHONY : src/BSpline.o
+
+# target to build an object file
+src/BSpline.cpp.o:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/BSpline.cpp.o
+.PHONY : src/BSpline.cpp.o
+
+src/BSpline.i: src/BSpline.cpp.i
+
+.PHONY : src/BSpline.i
+
+# target to preprocess a source file
+src/BSpline.cpp.i:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/BSpline.cpp.i
+.PHONY : src/BSpline.cpp.i
+
+src/BSpline.s: src/BSpline.cpp.s
+
+.PHONY : src/BSpline.s
+
+# target to generate assembly for a file
+src/BSpline.cpp.s:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/BSpline.cpp.s
+.PHONY : src/BSpline.cpp.s
+
 src/CollisionDetection.o: src/CollisionDetection.cpp.o
 
 .PHONY : src/CollisionDetection.o
@@ -338,6 +365,9 @@ help:
 	@echo "... mains/hybridAStar_main.o"
 	@echo "... mains/hybridAStar_main.i"
 	@echo "... mains/hybridAStar_main.s"
+	@echo "... src/BSpline.o"
+	@echo "... src/BSpline.i"
+	@echo "... src/BSpline.s"
 	@echo "... src/CollisionDetection.o"
 	@echo "... src/CollisionDetection.i"
 	@echo "... src/CollisionDetection.s"

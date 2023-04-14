@@ -14,6 +14,8 @@ namespace HybridAStar
         return std::max(lower, std::min(n, upper));
     }
     
+    //判断是否为交点（内联）
+    inline bool isCusp(std::vector<Node3D> path, int i);
 
     //轨迹平滑器类
     class Smoother

@@ -6,7 +6,7 @@ using namespace HybridAStar;
 inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 
 //判断是否为交点（内联）
-inline bool isCusp(std::vector<Node3D> path, int i)
+inline bool HybridAStar::isCusp(std::vector<Node3D> path, int i)
 {
     if(i == 0 || i == (path.size() - 1)) return true;
     Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());

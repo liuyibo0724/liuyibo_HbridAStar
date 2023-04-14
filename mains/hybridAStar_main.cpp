@@ -5,6 +5,7 @@
 #include "hybridAStar.h"
 #include "smooth.h"
 #include "dynamicVoronoi.h"
+#include "BSpline.h"
 
 using namespace HybridAStar;
 
@@ -131,6 +132,9 @@ int main()
     //轨迹光顺
     Smoother smoother;
 
+    //BSpline曲线拟合
+    BSpline::BSpline_referenceLine referenceLine;
+
     // for(auto ptr = planer.m_nodes3D_set.begin(); ptr < planer.m_nodes3D_set.end(); ptr ++)
     for(auto ptr = planer.m_nodes3D_Set.begin(); ptr < planer.m_nodes3D_Set.end(); ptr ++)
     {
@@ -164,14 +168,25 @@ int main()
             // drawCarProfile(map_color, smooth_path[j]);      //绘制车体轮廓
             // drawTangentLine(map_color, smooth_path[j]);     //画线段指向切线
         }
-        drawCollisionLookup(map_color, map_data, goal);               //画碰撞检测区域
+        // drawCollisionLookup(map_color, map_data, goal);               //画碰撞检测区域
 
         std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
         cv::imshow("smooth_result",map_color);
-        cv::waitKey(0);    
+        cv::waitKey(0);   
+
+        //BSpline拟合
+        referenceLine.clearRawPath();
+        referenceLine.clearBSplinePath();
+        referenceLine.setRawPath(smooth_path); 
+        referenceLine.fit();
+        auto BSplinePath = referenceLine.getBSplinePath();
+        for(int j = 0; j < BSplinePath.size() - 1; j ++)
+        {
+            map_color.at<cv::Vec3b>(BSplinePath[j].getX(), BSplinePath[j].getY()) = {0, 255, 0};
+        }
+        cv::imshow("BSpline_result",map_color);
+        cv::waitKey(0); 
     }
-    // for(int i = 0; i < map_color.rows; i ++) delete[] binMap[i];    //释放内存binMap
-    // delete[] binMap;                                                //释放内存binMap
 
     return 0;
 }

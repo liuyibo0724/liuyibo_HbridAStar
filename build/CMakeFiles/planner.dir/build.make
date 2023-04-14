@@ -135,6 +135,19 @@ CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liuyibo/liuyibo_HbridAStar/src/dynamicVoronoi.cpp -o CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.s
 
+CMakeFiles/planner.dir/src/BSpline.cpp.o: CMakeFiles/planner.dir/flags.make
+CMakeFiles/planner.dir/src/BSpline.cpp.o: ../src/BSpline.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/planner.dir/src/BSpline.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/BSpline.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/BSpline.cpp
+
+CMakeFiles/planner.dir/src/BSpline.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/planner.dir/src/BSpline.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liuyibo/liuyibo_HbridAStar/src/BSpline.cpp > CMakeFiles/planner.dir/src/BSpline.cpp.i
+
+CMakeFiles/planner.dir/src/BSpline.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/planner.dir/src/BSpline.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liuyibo/liuyibo_HbridAStar/src/BSpline.cpp -o CMakeFiles/planner.dir/src/BSpline.cpp.s
+
 # Object files for target planner
 planner_OBJECTS = \
 "CMakeFiles/planner.dir/src/node.cpp.o" \
@@ -142,7 +155,8 @@ planner_OBJECTS = \
 "CMakeFiles/planner.dir/src/CollisionDetection.cpp.o" \
 "CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o" \
 "CMakeFiles/planner.dir/src/smooth.cpp.o" \
-"CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o"
+"CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o" \
+"CMakeFiles/planner.dir/src/BSpline.cpp.o"
 
 # External object files for target planner
 planner_EXTERNAL_OBJECTS =
@@ -153,9 +167,10 @@ libplanner.a: CMakeFiles/planner.dir/src/CollisionDetection.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/smooth.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o
+libplanner.a: CMakeFiles/planner.dir/src/BSpline.cpp.o
 libplanner.a: CMakeFiles/planner.dir/build.make
 libplanner.a: CMakeFiles/planner.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX static library libplanner.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library libplanner.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/planner.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/planner.dir/link.txt --verbose=$(VERBOSE)
 

@@ -70,8 +70,12 @@ namespace param
     static const float dubinsShotDistance = 100.0;
     //障碍物最大惩罚距离
     static const float obsPenaMax = 60.0;
+    //最大允许速度（5 km/h）
+    static const float velocityMax = 1.388;
     //光顺最大迭代次数
     static const int smoothMaxIterations = 500;
+    //BSpline拟合阶次
+    static const int BSpline_order = 3;
 }
 
 #endif //HYBRID_ASTAR_PARAM_H

@@ -17,6 +17,7 @@ add_library(
         src/ReedsSheppPath.cpp
         src/smooth.cpp
         src/dynamicVoronoi.cpp
+        src/BSpline.cpp
 )
 
 add_executable(testHybridAstar mains/hybridAStar_main.cpp)

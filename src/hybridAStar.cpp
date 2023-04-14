@@ -231,10 +231,11 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                             m_nodes3D_SettTmp.push_back(Node3D(x, y, t, 0, 0, nullptr, prim));    //轨迹溯源
                             tmp_node = m_nodes3D[tmp_node.pIdx];
                         }
+                        m_nodes3D_SettTmp.push_back(start);             //最后插入start点
                         m_nodes3D_Set.push_back(m_nodes3D_SettTmp);     //加入保存成品点列的队列m_nodes3D_Set
                     }
                 }
-                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 8 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
+                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 2 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
                 else for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
             }
             //充实open集6向搜索

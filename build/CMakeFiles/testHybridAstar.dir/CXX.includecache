@@ -6,6 +6,20 @@
 
 #IncludeRegexTransform: 
 
+../includes/BSpline.h
+iostream
+-
+vector
+-
+cmath
+-
+param.h
+../includes/param.h
+dynamicVoronoi.h
+../includes/dynamicVoronoi.h
+node.h
+../includes/node.h
+
 ../includes/CollisionDetection.h
 math.h
 -
@@ -103,6 +117,8 @@ smooth.h
 /home/liuyibo/liuyibo_HbridAStar/mains/smooth.h
 dynamicVoronoi.h
 /home/liuyibo/liuyibo_HbridAStar/mains/dynamicVoronoi.h
+BSpline.h
+/home/liuyibo/liuyibo_HbridAStar/mains/BSpline.h
 
 /usr/local/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp
