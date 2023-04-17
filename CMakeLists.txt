@@ -18,6 +18,7 @@ add_library(
         src/smooth.cpp
         src/dynamicVoronoi.cpp
         src/BSpline.cpp
+        src/filter.cpp
 )
 
 add_executable(testHybridAstar mains/hybridAStar_main.cpp)

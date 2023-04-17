@@ -403,9 +403,9 @@ namespace HybridAStar
 
     bool ReedsShepp::isTraversable(Node3D* start,ReedsShepp::ReedsSheppPath *path, CollisionDetection *map) const
     {
-        for(int i = 0;i < path->length()*5;i ++)
+        for(int i = 0;i < path->length()*7;i ++)
         {
-            float t = (float)(i) / (float)(path->length()*5);
+            float t = (float)(i) / (float)(path->length()*7);
             ReedsShepp::pos p;
             ReedsShepp::pos s(start->getX(),start->getY(),start->getT());
             interpolate(&s,*path,t,&p);

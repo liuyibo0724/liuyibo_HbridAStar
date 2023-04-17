@@ -14,7 +14,7 @@ namespace param
     //自车宽度（KIWI_EV)[m]
     static const double width =  33;   //1.655 + 2.*padding;
     //自车长度（KIWI_EV）[m]
-    static const double length =  58;  //2.894 + 2.*padding;
+    static const double length =  58;  //2.894 + 2.*padding;    //  像素和距离换算比例为20
     //阿克曼中心距离前端比例*2
     static const float front2Rate = 1.6;
     //阿克曼中心距离后端比例*2

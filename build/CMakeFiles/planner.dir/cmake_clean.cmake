@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/planner.dir/src/CollisionDetection.cpp.o"
   "CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o"
   "CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o"
+  "CMakeFiles/planner.dir/src/filter.cpp.o"
   "CMakeFiles/planner.dir/src/hybridAStar.cpp.o"
   "CMakeFiles/planner.dir/src/node.cpp.o"
   "CMakeFiles/planner.dir/src/smooth.cpp.o"

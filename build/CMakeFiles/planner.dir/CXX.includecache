@@ -19,6 +19,8 @@ dynamicVoronoi.h
 ../includes/dynamicVoronoi.h
 node.h
 ../includes/node.h
+smooth.h
+../includes/smooth.h
 
 ../includes/dynamicVoronoi.h
 stdlib.h
@@ -53,6 +55,18 @@ vector
 -
 set
 -
+
+../includes/smooth.h
+cmath
+-
+vector
+-
+node.h
+../includes/node.h
+dynamicVoronoi.h
+../includes/dynamicVoronoi.h
+vec2i.h
+../includes/vec2i.h
 
 ../includes/vec2i.h
 cmath
