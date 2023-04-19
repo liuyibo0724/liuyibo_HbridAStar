@@ -67,12 +67,16 @@ param.h
 ../includes/hybridAStar.h
 vector
 -
+algorithm
+-
 node.h
 ../includes/node.h
 CollisionDetection.h
 ../includes/CollisionDetection.h
 ReedsSheppPath.h
 ../includes/ReedsSheppPath.h
+smooth.h
+../includes/smooth.h
 
 ../includes/node.h
 cmath

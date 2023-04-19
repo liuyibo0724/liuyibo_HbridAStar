@@ -31,9 +31,12 @@ CMakeFiles/planner.dir/src/filter.cpp.o
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o
  ../includes/CollisionDetection.h
  ../includes/ReedsSheppPath.h
+ ../includes/dynamicVoronoi.h
  ../includes/hybridAStar.h
  ../includes/node.h
  ../includes/param.h
+ ../includes/smooth.h
+ ../includes/vec2i.h
  /home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.cpp
 CMakeFiles/planner.dir/src/node.cpp.o
  ../includes/node.h

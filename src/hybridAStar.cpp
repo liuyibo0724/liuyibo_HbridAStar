@@ -235,7 +235,7 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                         m_nodes3D_Set.push_back(m_nodes3D_SettTmp);     //加入保存成品点列的队列m_nodes3D_Set
                     }
                 }
-                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 2 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
+                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 6 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
                 else for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
             }
             //充实open集6向搜索
@@ -318,4 +318,18 @@ void hybridAStar::updateH(Node3D &start, Node3D &goal)
     start.setH(std::max(RSCost, AStarCost));         //取两者最大值当作新H
 }
 
+bool HybridAStar::compareNode3DSet(std::vector<Node3D> &path1, std::vector<Node3D> &path2)
+{
+    int scores1 = -1, scores2 = -1;
+    for(int i = 0; i < path1.size(); i ++) if(isCusp(path1, i)) ++ scores1;
+    for(int i = 0; i < path2.size(); i ++) if(isCusp(path2, i)) ++ scores2;
+    scores1 = scores1 * 10 + path1.size();
+    scores2 = scores2 * 10 + path2.size();
+    return scores1 < scores2;
+}
 
+bool hybridAStar::sortNode3D_Set()
+{
+    std::sort(m_nodes3D_Set.begin(), m_nodes3D_Set.end(), HybridAStar::compareNode3DSet);
+    for(int i = 0; i < m_nodes3D_Set.size(); i ++) std::reverse(m_nodes3D_Set[i].begin(), m_nodes3D_Set[i].end());  //对每一个成品点列进行倒序排列
+}

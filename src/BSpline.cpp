@@ -57,7 +57,7 @@ void BSpline_referenceLine::fit()
                 int upper_halfOrder = order / 2 + order % 2;   //半阶次长度
 
                 HybridAStar::Vector2D vector2D_tmp;            //初始化临时2D向量
-                float T_tmp = 0.f;                             //初始化临时速度
+                float T_tmp = 0.f;                             //初始化临时角度
                 int j = -upper_halfOrder;
                 while(j <= upper_halfOrder)
                 {
@@ -70,7 +70,7 @@ void BSpline_referenceLine::fit()
                 HybridAStar::Node3D node3D_tmp(vector2D_tmp.getX(), vector2D_tmp.getY(), T_tmp, 0, 0, nullptr); //生成对应的拟合后节点
                 nodes3D_tmp.push_back(node3D_tmp);
             }
-            setBSplinePathVelocity(nodes3D_tmp);    //设置速度
+            setBSplinePathVelocity(nodes3D_tmp);    //设置速度并尾插进m_BSplinePath中
             nodes3D_tmp.clear();                    //清空nodes3D[]
         }
     }
@@ -79,28 +79,43 @@ void BSpline_referenceLine::fit()
 //设置拟合后曲线速度
 void BSpline_referenceLine::setBSplinePathVelocity(std::vector<HybridAStar::Node3D> &nodes3D_tmp)
 {
-    std::vector<std::pair<HybridAStar::Node3D, float>> m_BSplinePath_tmp;
-    float velocityMax = param::velocityMax * 20;                                        //读取最大速度限制
-    for(int i = 0; i < nodes3D_tmp.size(); i ++) m_BSplinePath_tmp.push_back(std::make_pair(nodes3D_tmp[i], velocityMax));  //初始化m_BSplinePath_tmp
-    float sumDis = 0.;                                                                  //总距离置为0
-    for(int i = 1; i < nodes3D_tmp.size(); i ++)
+    float revIdx;                                                                               //反转指数
+    if(m_BSplinePath.empty())                                                                   //若m_BSplinePath为空根据车头指向和运动指向初始化revIdx
     {
-        sumDis += sqrt(pow(nodes3D_tmp[i].getX() - nodes3D_tmp[i - 1].getX(), 2) + 
-                        pow(nodes3D_tmp[i].getY() - nodes3D_tmp[i - 1].getY(), 2));     //计算相邻点距离
+        auto pointDirect = HybridAStar::Vector2D(cos(nodes3D_tmp[0].getT()), sin(nodes3D_tmp[0].getT()));
+        auto moveDirect = HybridAStar::Vector2D(nodes3D_tmp[1].getX() - nodes3D_tmp[0].getX(), 
+                                                nodes3D_tmp[1].getY() - nodes3D_tmp[0].getY());
+        if(pointDirect.dot(moveDirect) >= 0) revIdx = 1.f;
+        else revIdx = -1.f;
+    }
+    else                                                                                        //否则根据与前段反转确定revIdx
+    {
+        if(m_BSplinePath[m_BSplinePath.size() - 2].second > 0) revIdx = -1.f;
+        else revIdx = 1.f;
+    }
+    
+    std::vector<std::pair<HybridAStar::Node3D, float>> m_BSplinePath_tmp;
+    float velocityMax = param::velocityMax * 20;                                               //读取最大速度限制
+    for(int i = 0; i < nodes3D_tmp.size(); i ++) m_BSplinePath_tmp.push_back(std::make_pair(nodes3D_tmp[i], revIdx * velocityMax));  //初始化m_BSplinePath_tmp
+    float sumDis = 0.;                                                                         //总距离置为0
+    for(int i = 0; i < nodes3D_tmp.size(); i ++)
+    {
+        sumDis += sqrt(pow(nodes3D_tmp[i + 1].getX() - nodes3D_tmp[i].getX(), 2) + 
+                        pow(nodes3D_tmp[i + 1].getY() - nodes3D_tmp[i].getY(), 2));            //计算相邻点距离
         if(sumDis > velocityMax) break;
         float ti = pow(sumDis / velocityMax, 1.f / 3.f);                                       //第i个节点的时间
-        float vi = velocityMax * ti * ti;                                                        //第i节点的速度
-        m_BSplinePath_tmp[i].second = vi;                                               //赋值第i个节点速度
+        float vi = velocityMax * ti * ti;                                                      //第i节点的速度绝对值
+        m_BSplinePath_tmp[i].second = vi * revIdx;                                                      //赋值第i个节点速度
     }
-    sumDis = 0;                                                                         //总距离重置为0
+    sumDis = 0;                                                                                //总距离重置为0
     for(int i = nodes3D_tmp.size() - 1; i >= 0; i --)
     {
         sumDis += sqrt(pow(nodes3D_tmp[i].getX() - nodes3D_tmp[i - 1].getX(), 2) + 
-                        pow(nodes3D_tmp[i].getY() - nodes3D_tmp[i - 1].getY(), 2));     //计算相邻点距离
+                        pow(nodes3D_tmp[i].getY() - nodes3D_tmp[i - 1].getY(), 2));            //计算相邻点距离
         if(sumDis > velocityMax) break;
         float ti = pow(sumDis / velocityMax, 1.f / 3.f);                                       //第i个节点的时间
-        float vi = velocityMax * ti * ti;                                                        //第i节点的速度
-        if(m_BSplinePath_tmp[i].second == velocityMax) m_BSplinePath_tmp[i].second = vi;       //赋值第i个节点速度
+        float vi = velocityMax * ti * ti;                                                      //第i节点的速度绝对值
+        if(abs(m_BSplinePath_tmp[i].second) > vi) m_BSplinePath_tmp[i].second = vi * revIdx;   //赋值第i个节点速度，并考虑反转指数revIdx
     }
     for(int i = 0; i < m_BSplinePath_tmp.size(); i ++) m_BSplinePath.push_back(m_BSplinePath_tmp[i]);
 }

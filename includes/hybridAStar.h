@@ -1,12 +1,15 @@
 #ifndef HYBRID_ASTAR_HYBRIDASTAR_H
 #define HYBRID_ASTAR_HYBRIDASTAR_H
 #include <vector>
+#include <algorithm>
 #include "node.h"
 #include "CollisionDetection.h"
 #include "ReedsSheppPath.h"
+#include "smooth.h"
 
 namespace HybridAStar
 {
+    bool compareNode3DSet(std::vector<Node3D> &path1, std::vector<Node3D> &path2);   //m_nodes3D_Set排序准则
     class hybridAStar
     {
     public:
@@ -27,6 +30,7 @@ namespace HybridAStar
         Node3D *m_nodes3D{};
 
         std::vector<std::vector<Node3D>> m_nodes3D_Set; //保存成品点列的队列
+        bool sortNode3D_Set();                          //对保存成品点列的队列进行自定义排序，排序准则长度和段数升序；并对每一个成品点列进行倒序排列
 
     private:
         //更新启发代价H

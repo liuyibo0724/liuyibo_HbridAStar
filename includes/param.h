@@ -19,6 +19,8 @@ namespace param
     static const float front2Rate = 1.6;
     //阿克曼中心距离后端比例*2
     static const float rear2Rate = 0.4;
+    //自车前后轴距离
+    static const float alxesDis = 40.4;
     //最小转弯半径（需适配，先按照RS算法方便设为1）[m]
     static const float rmin = 1.;
     //RS曲线半径缩放因子

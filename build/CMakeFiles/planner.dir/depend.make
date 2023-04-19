@@ -30,9 +30,12 @@ CMakeFiles/planner.dir/src/filter.cpp.o: ../src/filter.cpp
 
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/CollisionDetection.h
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/ReedsSheppPath.h
+CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/dynamicVoronoi.h
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/hybridAStar.h
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/node.h
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/param.h
+CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/smooth.h
+CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../src/hybridAStar.cpp
 
 CMakeFiles/planner.dir/src/node.cpp.o: ../includes/node.h

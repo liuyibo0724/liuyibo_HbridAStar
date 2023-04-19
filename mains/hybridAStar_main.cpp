@@ -125,6 +125,7 @@ int main()
     //hybridAStar粗搜索
     auto nSolution = planer.search_planner(start, goal, 0.2);
     auto tmp_show = nSolution;
+    planer.sortNode3D_Set();
 
     //DynamicVoronoi预处理
     DynamicVoronoi voronoi = DynamicVoronoi_Pretreat(map_gray, map_color);

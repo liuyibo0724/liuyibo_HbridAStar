@@ -64,7 +64,7 @@
  {
     uint32 seq;         //序列
     Timestamp stamp;    //时间戳
-    sequence<TrajectoryPoint, 500> discretizedTrajectory;   //boost库容器存放500个轨迹点
+    sequence<TrajectoryPoint, 1000> discretizedTrajectory;   //boost库容器存放500个轨迹点
     boolean isPlanSucceeded;    //是否规划成功
  };
 
