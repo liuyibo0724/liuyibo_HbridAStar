@@ -183,7 +183,11 @@ int main()
         auto BSplinePath = referenceLine.getBSplinePath();
         for(int j = 0; j < BSplinePath.size() - 1; j ++)
         {
-            map_color.at<cv::Vec3b>(BSplinePath[j].first.getX(), BSplinePath[j].first.getY()) = {0, (unsigned char)(255.f * BSplinePath[j].second / 28.f), 0};  //画速度大小
+            //前进绿色，停驻黑色，后退红色
+            cv::Vec3b color;
+            if(BSplinePath[j].second > 0) color = {0, (unsigned char)(255.f * BSplinePath[j].second / 28.f), 0};
+            else color = {0, 0, (unsigned char)(-255.f * BSplinePath[j].second / 28.f)};
+            map_color.at<cv::Vec3b>(BSplinePath[j].first.getX(), BSplinePath[j].first.getY()) = color;  //画速度大小
             // drawCarProfile(map_color, BSplinePath[j].first);      //绘制车体轮廓
         }
         cv::imshow("BSpline_result",map_color);
