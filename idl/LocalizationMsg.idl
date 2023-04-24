@@ -15,3 +15,11 @@ struct Localization
     double    pitchAngle;
     double    rollAngle;
 };
+
+struct Mapdata
+{
+    unsigned char* data;
+    int width;
+    int height;
+    bool isChanged;
+};

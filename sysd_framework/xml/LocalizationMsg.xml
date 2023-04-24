@@ -13,5 +13,11 @@
       <member name="pitchAngle" type="float64"/>
       <member name="rollAngle" type="float64"/>
     </struct>
+    <struct name="Mapdata">
+      <member name="data" type="unsigned char*"/>
+      <member name="width" type="int"/>
+      <member name="height" type="int"/>
+      <member name="isChanged" type="bool"/>
+    </struct>
   </type>
 </types>

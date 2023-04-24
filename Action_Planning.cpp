@@ -9,6 +9,8 @@ ActionPlanner::~ActionPlanner() { delete m_planner; } //析构函数
 bool ActionPlanner::init(unsigned char* data, int width, int height)
 {
     m_planner = new HybridAStar::planner(data, width, height);
+    m_width = width;
+    m_height = height;
     return true;
 }
 
@@ -71,13 +73,17 @@ void ActionPlanner::whichNode(std::vector<HybridAStar::Node3D> &BSplinePathFirst
 
 bool ActionPlanner::DDSMsgsOut()
 {
-    if(!isRunSuccess) return false;
-    auto firstBSplinePath = *(m_planner->getBSplinePath().begin());
-    whichNode(firstBSplinePath.first);  //找到哪个点匹配当前位置
-    outputDT.seq = pathIdx;             //赋值序列seq
-    if(pathIdx == -1)
+    //如果Run成功了那直接查点列序号
+    if(isRunSuccess)
     {
-        isRunSuccess = false;
+        auto firstBSplinePath = *(m_planner->getBSplinePath().begin());
+        whichNode(firstBSplinePath.first);  //找到哪个点匹配当前位置
+        outputDT.seq = pathIdx;             //赋值序列seq
+        if(pathIdx == -1) isRunSuccess = false;
+    }
+    //如果没有Run过或者Run过期了那就重新Run点列
+    if(!isRunSuccess)
+    {
         m_sta_goa.first = HybridAStar::Node3D(localization.longitude, localization.latitude, localization.headingAngle, 0, 0, nullptr,);    //更新起始点
         plan();     //重新规划
         firstBSplinePath = *(m_planner->getBSplinePath().begin());
@@ -87,7 +93,7 @@ bool ActionPlanner::DDSMsgsOut()
             outputDT.discretizedTrajectory[i].pathPoint.x = firstBSplinePath[i].first.getX();
             outputDT.discretizedTrajectory[i].pathPoint.y = firstBSplinePath[i].first.getY();
             outputDT.discretizedTrajectory[i].pathPoint.kappa = firstBSplinePath[i].first.getT();
-            outputDT.discretizedTrajectory[i].Vel = firstBSplinePath[i].first.getX();
+            outputDT.discretizedTrajectory[i].Vel = firstBSplinePath[i].second;
         }
         for(int i = 0; i < firstBSplinePath.size(); i ++)   //赋值车轮转向角theta
         {
@@ -131,14 +137,32 @@ bool ActionPlanner::DDSMsgsOut()
     return true;
 }
 
-void ActionPlanner::getInputMsgs(ActionPlannerInfo     &CurrentAPInfo,
-                                 EgoVehicleCanInfoMsg  &InputEVCanInfoMsg,
-                                 Localization          &Localization)
+void ActionPlanner::getInputMsgs(ActionPlannerInfo     *CurrentAPInfoPtr,
+                                 EgoVehicleCanInfoMsg  *InputEVCanInfoMsgPtr,
+                                 Localization          *LocalizationPtr)
 {
-    currentAPInfo = CurrentAPInfo;
-    inputEVCanInfoMsg = InputEVCanInfoMsg;
-    localization = Localization;
+    currentAPInfo = *CurrentAPInfoPtr;
+    inputEVCanInfoMsg = *InputEVCanInfoMsgPtr;
+    localization = *LocalizationPtr;
 }
 
-void ActionPlanner::getOutputDT(DiscretizedTrajectory &OutputDT)
-{ OutputDT = OutputDT; }
+// void ActionPlanner::getOutputDT(DiscretizedTrajectory &OutputDT)
+// { OutputDT = OutputDT; }
+
+bool ActionPlanner::run(HybridAStar::Node3D            start, 
+                        HybridAStar::Node3D            goal,
+                        ActionPlannerInfo              *CurrentAPInfoPtr,
+                        EgoVehicleCanInfoMsg           *InputEVCanInfoMsgPtr,
+                        Localization                   *LocalizationPtr)
+{
+    getInputMsgs(CurrentAPInfoPtr,
+                 InputEVCanInfoMsgPtr,
+                 LocalizationPtr);
+    setStartGoal(start, goal);
+    if(start.getX() < 0 || start.getX() > m_height
+       start.getY() < 0 || start.getY() > m_width
+       goal.getX() < 0 || goal.getX() > m_height
+       goal.getY() < 0 || goal.getY() > m_width) return false;
+    DDSMsgsOut();
+    return true;
+}

@@ -66,6 +66,30 @@ namespace actionPlanning
         }
 
         if(false == sysdGetNewestSignalTemplate(
+            inputSignal.start,
+            inputPin.start_in, timeout, oldestTimeStamp))
+        {
+            sysdPrintError("actionPlanning: start is null or too old!\n");
+            return false;
+        }
+
+        if(false == sysdGetNewestSignalTemplate(
+            inputSignal.goal,
+            inputPin.goal_in, timeout, oldestTimeStamp))
+        {
+            sysdPrintError("actionPlanning: goal is null or too old!\n");
+            return false;
+        }
+
+        if(false == sysdGetNewestSignalTemplate(
+            inputSignal.map,
+            inputPin.map_in, timeout, oldestTimeStamp))
+        {
+            sysdPrintError("actionPlanning: map is null or too old!\n");
+            return false;
+        }
+
+        if(false == sysdGetNewestSignalTemplate(
             inputSignal.objFusionData,
             inputPin.objFusionData_in, timeout, oldestTimeStamp))
         {
@@ -171,6 +195,27 @@ namespace actionPlanning
             return false;
         }
 
+        inputSignal.start = inputPin.start_in->getSyncedMsg(syncTime, syncTimeGap);
+        if(nullptr == inputSignal.start)
+        {
+            sysdPrintError("actionPlanning: Fail to sync start!\n");
+            return false;
+        }
+
+        inputSignal.goal = inputPin.goal_in->getSyncedMsg(syncTime, syncTimeGap);
+        if(nullptr == inputSignal.goal)
+        {
+            sysdPrintError("actionPlanning: Fail to sync goal!\n");
+            return false;
+        }
+
+        inputSignal.map = inputPin.map_in->getSyncedMsg(syncTime, syncTimeGap);
+        if(nullptr == inputSignal.map)
+        {
+            sysdPrintError("actionPlanning: Fail to sync map!\n");
+            return false;
+        }
+
         inputSignal.objFusionData = inputPin.objFusionData_in->getSyncedMsg(syncTime, syncTimeGap);
         if(nullptr == inputSignal.objFusionData)
         {
@@ -226,11 +271,11 @@ namespace actionPlanning
 
     inline bool interfaceTx(
         APOutputPin outputPin,
-        DiscretizedTrajectory *discretizedTrajectory,
-        EgoVehicleInfoMsg *egoVehicleInfoMsg)
+        DiscretizedTrajectory *discretizedTrajectory)
+        // , EgoVehicleInfoMsg *egoVehicleInfoMsg)
     {
         outputPin.discretizedTrajectory_out->send(*discretizedTrajectory);
-        outputPin.vehicleInfo_out->send(egoVehicleInfoMsg);
+        // outputPin.vehicleInfo_out->send(*egoVehicleInfoMsg);
 
         return true;
     }
