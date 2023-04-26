@@ -101,25 +101,35 @@ void drawCollisionLookup(cv::Mat &map_color, CollisionDetection &map_data, Node3
         if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 255, 0};  //画碰撞检测区域
 }
 
+//画碰撞检测区域
+void drawParkingSpaceProfile(cv::Mat &map_color, CollisionDetection &map_data, Node3D &goal)
+{
+    map_data.drawParkingSpaceOnMap(goal);
+    auto ParkingSpaceProfile = map_data.getParkingSpaceProfile();
+    for(auto ptr = ParkingSpaceProfile.begin(); ptr != ParkingSpaceProfile.end(); ptr ++)
+        if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 0, 0};  //画碰撞检测区域
+}
+
 int main()
 {
     cv::Mat map_gray
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map7.png", cv::IMREAD_GRAYSCALE);
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map8.png", cv::IMREAD_GRAYSCALE);
     int inv_resolution = 1;
     cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/25, map_gray.rows/25));   //缩小黑白图片
 
     cv::Mat map_color
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map7.png");
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map8.png");
     cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
-    
-    CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);
-    hybridAStar planer(&map_data);
+
     Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(300 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
+    Node3D goal(290 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
+    CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);                                  
+    // drawParkingSpaceProfile(map_color, map_data, goal);     //在map_gray上画车位边界线
+    hybridAStar planer(&map_data);
     int goalIdx = goal.setIdx(map_data.getWidth(), map_data.getHeight());   //拿到goal的idx索引
 
     //生图展示
-    cv::imshow("raw_pic",map_gray);
+    cv::imshow("raw_pic",map_color);
     cv::waitKey(0);
     
     //hybridAStar粗搜索

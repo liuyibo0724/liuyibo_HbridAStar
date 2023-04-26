@@ -166,3 +166,13 @@ bool ActionPlanner::run(HybridAStar::Node3D            start,
     DDSMsgsOut();
     return true;
 }
+
+void ActionPlanner::updateMap(unsigned char* data, int width, int height)
+{
+    m_planner->updateMap(unsigned char* data, int width, int height);
+    m_sta_goa = std::make_pair(HybridAStar::Node3D(), HybridAStar::Node3D());
+    isRunSuccess = false;
+
+    m_width = width;
+    m_height = height;
+}

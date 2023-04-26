@@ -23,6 +23,14 @@ namespace param
     static const float alxesDis = 40.4;
     //最小转弯半径（需适配，先按照RS算法方便设为1）[m]
     static const float rmin = 1.;
+    //车位宽度
+    static const float parkingSpaceWidth = 3 * 20;
+    //车位长度
+    static const float parkingSpaceLength = 3 * 20;
+    //阿克曼中心距离车位前端比例*2
+    static const float parkingFront2Rate = 1.;
+    //阿克曼中心距离车位后端比例*2
+    static const float parkingRear2Rate = 1.;
     //RS曲线半径缩放因子
     static const float RS_Scaling = 40.;
     //航向角离散数[#]
@@ -30,9 +38,9 @@ namespace param
     //航向角离散步长（度）[°]
     static const float deltaHeadingDeg = 360 / (double) headings;
     //航向角离散步长（弧度）[rad]
-    static const float deltaHeadingRad = 2.*M_PI / (double) headings;
+    static const float deltaHeadingRad = 2. * M_PI / (double) headings;
     //航向角离散步长负向（弧度）[rad]
-    static const float deltaHeadingNegRad = 2*M_PI - deltaHeadingRad;
+    static const float deltaHeadingNegRad = 2. * M_PI - deltaHeadingRad;
     //2D网格尺寸[m]
     static const float cellSize = 1.;
     //代价计算误差小余量[m]
@@ -66,9 +74,9 @@ namespace param
     //转向惩罚[#]
     static const float penaltyTurning = 1.05;
     //倒车惩罚（运动图元>2）[#]
-    static const float penaltyReversing = 2.5;  //25.0;
+    static const float penaltyReversing = 1.25;  //25.0;
     //改变方向惩罚（运动图元由<3到>2）[#]
-    static const float penaltyCOD = 5;  //50.0;
+    static const float penaltyCOD = 2.5;  //50.0;
     static const float dubinsShotDistance = 100.0;
     //障碍物最大惩罚距离
     static const float obsPenaMax = 60.0;

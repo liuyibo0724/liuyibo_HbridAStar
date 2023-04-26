@@ -24,14 +24,17 @@ namespace HybridAStar
         int getWidth() const { return m_width; }    //查询图宽度
         int getHeight() const { return m_height; }  //查询图高度
         param::poseConfig getCollisionLookup() const { return collisionLookup; }     //查询collisionLookup
+        param::poseConfig getParkingSpaceProfile() const { return parkingSpaceProfile; }     //查询collisionLookup
         //4.包括车身尺寸和位姿的通过性检验
         bool isConfigTraversable(float x, float y, float t);     //某位姿可否通行
+        bool drawParkingSpaceOnMap(Node3D goal);                 //由目标点在m_map中画出车位边界线
     private:
         int m_width;    //图网格宽度
         int m_height;   //图网格高度
         unsigned char* m_map;   //读入的图片信息
         //网格内特定姿态的碰撞查询清单（集合set格式）
         param::poseConfig collisionLookup;      //[param::positions * param::headings];
+        param::poseConfig parkingSpaceProfile;  //车位轮廓线位置集合
     };
 }
 

@@ -8,6 +8,50 @@ planner::planner(unsigned char* data, int width, int height)
     m_map_data = new CollisionDetection(data, width, height);
     m_planner = new hybridAStar(m_map_data);
     m_voronoi = new DynamicVoronoi();
+    m_smoother = new Smoother();
+    m_referenceLine = new BSpline::BSpline_referenceLine();
+
+    bool** binMap;  //二维数组
+    binMap = new bool*[height];
+    for(int x = 0; x < height; x ++) { binMap[x] = new bool[width]; }
+    for(int x = 0; x < height; x ++)
+    {
+        for(int y = 0; y < width; y ++)
+        {
+            binMap[x][y] = data[y + x * width] < 250;
+        }
+    }   //转化为二值地图
+    m_voronoi->initializeMap(height, width, binMap);
+    m_voronoi->update();
+    m_voronoi->prune();
+    m_voronoi->CollectVoronoiEdgePoints();
+    for(int i = 0; i < height; i ++) delete[] binMap[i];    //释放内存binMap
+    delete[] binMap;
+}
+
+//planner析构函数
+planner::~planner()
+{
+    delete m_map_data;
+    delete m_planner;
+    delete m_voronoi;
+    delete m_smoother;
+    delete m_referenceLine;
+}
+
+//更新地图
+void planner::updateMap(unsigned char* data, int width, int height)
+{
+    delete m_map_data;
+    delete m_planner;
+    delete m_voronoi;
+    delete m_smoother;
+    delete m_referenceLine;
+
+    m_map_data = new CollisionDetection(data, width, height);
+    m_planner = new hybridAStar(m_map_data);
+    m_voronoi = new DynamicVoronoi();
+    m_smoother = new Smoother();
     m_referenceLine = new BSpline::BSpline_referenceLine();
 
     bool** binMap;  //二维数组

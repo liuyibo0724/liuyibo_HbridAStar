@@ -16,7 +16,7 @@ namespace actionPlanning
         ~ActionPlanner() {}                                                      //析构函数
         bool init(unsigned char* data, int width, int height);                   //初始化
         bool setStartGoal(HybridAStar::Node3D start, HybridAStar::Node3D goal); 
-        void updateMap(unsigned char* data, int width, int height) { m_planner->updateMap(unsigned char* data, int width, int height); }    //更新地图
+        void updateMap(unsigned char* data, int width, int height);              //更新地图
         bool plan();                                                             //规划
         void whichNode(std::vector<HybridAStar::Node3D> &BSplinePathFirst);      //查找当前位置是在那个点上
         bool DDSMsgsOut();                                                       //将规划结果转换成DDS发布格式
@@ -24,7 +24,7 @@ namespace actionPlanning
                  HybridAStar::Node3D            goal,
                  ActionPlannerInfo              *CurrentAPInfoPtr,
                  EgoVehicleCanInfoMsg           *InputEVCanInfoMsgPtr,
-                 Localization                   *LocalizationPtr);                //运行核心函数
+                 Localization                   *LocalizationPtr);               //运行核心函数
         void getInputMsgs(ActionPlannerInfo     *CurrentAPInfoPtr,
                           EgoVehicleCanInfoMsg  *InputEVCanInfoMsgPtr,
                           Localization          *LocalizationPtr)                //传入所需信号

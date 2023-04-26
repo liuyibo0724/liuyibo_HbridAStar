@@ -19,6 +19,37 @@ inline param::relPos mkRelPos(double x, double y)
 inline bool HybridAStar::CollisionDetection::isInMap(int x, int y)
     { return x >= 0 && x < m_height && y >= 0 && y < m_width; }
 
+//由目标点在m_map中画出车位边界线
+bool HybridAStar::CollisionDetection::drawParkingSpaceOnMap(Node3D goal)
+{
+    this->parkingSpaceProfile.clear();
+    float x = goal.getX(), y = goal.getY(), t = goal.getT();
+    if(!isInMap((int)x, (int)y)) return false;
+    float dx = 0.5 * param::parkingSpaceWidth, dy = 0.5 * param::parkingSpaceLength;    //车位半宽度和半长度
+    param::relPos pos_list[4];
+    pos_list[0] = mkRelPos(x + dx*sin(t) + param::parkingFront2Rate*dy*cos(t), y - dx*cos(t) + param::parkingFront2Rate*dy*sin(t));
+    pos_list[1] = mkRelPos(x + dx*sin(t) - param::parkingRear2Rate*dy*cos(t), y - dx*cos(t) - param::parkingRear2Rate*dy*sin(t));
+    pos_list[2] = mkRelPos(x - dx*sin(t) - param::parkingRear2Rate*dy*cos(t), y + dx*cos(t) - param::parkingRear2Rate*dy*sin(t));
+    pos_list[3] = mkRelPos(x - dx*sin(t) + param::parkingFront2Rate*dy*cos(t), y + dx*cos(t) + param::parkingFront2Rate*dy*sin(t));
+    
+    for(int i = 0; i < 3; i ++)
+    {
+        for(int j = 0; j < 101; j ++)
+        {
+            float per = (float)j / 100.f;
+            int x_tmp = per * pos_list[i].x + (1.f - per) * pos_list[i + 1].x;
+            int y_tmp = per * pos_list[i].y + (1.f - per) * pos_list[i + 1].y;
+            if(isInMap(x_tmp, y_tmp)) parkingSpaceProfile.insert(mkRelPos(x_tmp, y_tmp));
+        }
+    }
+    //绘制车位边界线
+    for(auto ptr = parkingSpaceProfile.begin(); ptr != parkingSpaceProfile.end(); ptr ++)
+    {
+        m_map[ptr->x * m_width + ptr->y] = 0;
+    }
+    return true;
+}
+
 //由位姿生成对应的collisionLookup亚格子碰撞查询队列
 void HybridAStar::CollisionDetection::setCollisionLookup(
     float x, 
