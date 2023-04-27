@@ -8,7 +8,9 @@
 namespace param
 {
     //hybrid_astar的planner的最大搜索迭代数[#]
-    static const int iterations = 100000;
+    static const int iterations = 50000;
+    //开始RS搜索阈值比例
+    static const float RS_SearchPoint = 0.5;
     //自车padding宽度[m]
     static const float padding = 1.5;  //0.15;
     //自车宽度（KIWI_EV)[m]

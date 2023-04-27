@@ -197,7 +197,7 @@ public:
     //查询是否超出图网格范围
     bool isOnGrid(const int width, const int height) const
     {
-        return x >= 0 && x < width && y >= 0 && y < height
+        return x >= 0 && x < height && y >= 0 && y < width
         && (int)(t / param::deltaHeadingRad) >= 0
         && (int)(t / param::deltaHeadingRad) < param::headings;
     }

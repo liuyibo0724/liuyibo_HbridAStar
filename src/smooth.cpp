@@ -22,8 +22,8 @@ inline bool HybridAStar::isCusp(std::vector<Node3D> path, int i)
 inline float CuspScaling(int i)
 {
     if(i < 0) return 0.;
-    if(i > 4) return 1.;
-    float result = -(float)i * ((float)i - 8.);
+    if(i > 8) return 1.;
+    float result = -(float)i * ((float)i - 16.) / 64.f;
     return result;
 
 } 
@@ -45,6 +45,17 @@ inline float CuspScaling(int i)
 //     }
 //     return false;
 // }
+
+//计算旋转角小函数
+float HybridAStar::rotaAngle(Vector2D x_im1, Vector2D x_i, Vector2D x_ip1)
+{
+  const Vector2D& delta_x_i = x_i - x_im1;
+  const Vector2D& delta_x_ip1 = x_ip1 - x_i;
+
+  float rota_angle = std::asin(clamp(delta_x_i.cross(delta_x_ip1) / (delta_x_i.length() * delta_x_ip1.length()), -1, 1));
+
+  return rota_angle;
+}
 
 //曲率项
 Vector2D Smoother::curvatureTerm(Vector2D x_im2, Vector2D x_im1, Vector2D x_i, Vector2D x_ip1, Vector2D x_ip2) 
@@ -149,7 +160,7 @@ Vector2D Smoother::obstacleTerm(Vector2D xi)
 
         // the closest obstacle is closer than desired correct the path for that
         if (obsDst < obsDMax) {
-            return gradient = wObstacle * 2 * (1.f - pow(obsDMax / obsDst, 0.2)) * obsVct;//(obsDst - obsDMax) * obsVct / obsDst;
+            return gradient = wObstacle * 2 * (1.f - pow(obsDMax / obsDst, 0.1)) * obsVct;//(obsDst - obsDMax) * obsVct / obsDst;
         }
     }
     return gradient;//有潜在风险，前面没有赋值
@@ -247,6 +258,22 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
         sta = (*ptr).first;
         end = (*ptr).second;
         iterations = 0;
+        
+        bool voronoiKey = false, smoothKey = false;     //初始化voronoi系平滑项和smooth平滑项的钥匙
+        float rotaAngle_sum = 0.f, rotaAngle_abs = 0.f; //单段线转角总和和绝对值总和
+        for(int i = sta + 2; i <= end - 2; i ++)
+        {
+            Vector2D xim1(newPath[std::max(sta - 1, i - 1)].getX(), newPath[std::max(sta - 1, i - 1)].getY());
+            Vector2D xi(newPath[i].getX(), newPath[i].getY());
+            Vector2D xip1(newPath[std::min(end + 1, i + 1)].getX(), newPath[std::min(end + 1, i + 1)].getY());
+
+            rotaAngle_sum += rotaAngle(xim1, xi, xip1);
+            rotaAngle_abs += abs(rotaAngle(xim1, xi, xip1));
+        }
+        if(rotaAngle_abs / abs(rotaAngle_sum) > 1.01f) { voronoiKey = true; smoothKey = true; }
+        else if(rotaAngle_abs > 0.16667 * M_PI) { voronoiKey = true; smoothKey = true; }
+        else { voronoiKey = false; smoothKey = false; }
+
         while(iterations < maxIterations)
         {
             for(int i = sta; i <= end; i ++)
@@ -257,21 +284,27 @@ void Smoother::smoothPath(DynamicVoronoi& voronoi)
                 Vector2D xi(newPath[i].getX(), newPath[i].getY());
                 Vector2D xip1(newPath[std::min(end + 1, i + 1)].getX(), newPath[std::min(end + 1, i + 1)].getY());
                 Vector2D xip2(newPath[std::min(end + 1, i + 2)].getX(), newPath[std::min(end + 1, i + 2)].getY());
-                Vector2D correction;
-                float CuspScale = CuspScaling(std::min(abs(i - sta), abs(i - end)));    //交点附近缩放因子
+                Vector2D correction_o, correction_s, correction_c, correction_v, correction;    //每项的修正向量和总修正分开
+                float CuspScale = CuspScaling(std::min(abs(i - sta), abs(i - end)));            //交点附近缩放因子
 
-                correction = correction - CuspScale * obstacleTerm(xi);
-                if (!isOnGrid(xi + correction)) continue;   //假如校正方向超出当前监视的网格范围，不做处理
+                if(voronoiKey)
+                {
+                    correction_o = correction_o - CuspScale * obstacleTerm(xi);
+                    if (!isOnGrid(xi + correction_o)) continue;   //假如校正方向超出当前监视的网格范围，不做处理 
 
-                correction = correction - CuspScale * smoothnessTerm(xim2, xim1, xi, xip1, xip2);
-                // correction = correction - smoothnessNewTerm(xim1, xi, xip1);
-                if (!isOnGrid(xi + correction)) continue; 
-
-                correction = correction - CuspScale * curvatureTerm(xim2, xim1, xi, xip1, xip2);
-                if (!isOnGrid(xi + correction)) continue; 
-
-                correction = correction - CuspScale * voronoiTerm(xi);
-                if (!isOnGrid(xi + correction)) continue;
+                    correction_v = correction_v - CuspScale * voronoiTerm(xi);
+                    if (!isOnGrid(xi + correction_v)) continue;
+                }   //voronoi系平滑项
+                
+                if(smoothKey)
+                {
+                    correction_s = correction_s - CuspScale * smoothnessTerm(xim2, xim1, xi, xip1, xip2);
+                    // correction = correction - CuspScale * smoothnessNewTerm(xim1, xi, xip1);
+                    if (!isOnGrid(xi + correction_s)) continue; 
+                }   //smooth平滑项
+                 
+                correction_c = correction_c - CuspScale * curvatureTerm(xim2, xim1, xi, xip1, xip2);
+                if (!isOnGrid(xi + correction_c)) continue; 
 
                 auto update = alpha * correction/totalWeight;
                 xi = xi + update;

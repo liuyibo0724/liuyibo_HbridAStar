@@ -86,7 +86,7 @@ bool ActionPlanner::DDSMsgsOut()
     {
         m_sta_goa.first = HybridAStar::Node3D(localization.longitude, localization.latitude, localization.headingAngle, 0, 0, nullptr,);    //更新起始点
         plan();     //重新规划
-        firstBSplinePath = *(m_planner->getBSplinePath().begin());
+        auto firstBSplinePath = *(m_planner->getBSplinePath().begin());
         outputDT.isPlanSucceeded = isRunSuccess;
         for(int i = 0; i < firstBSplinePath.size(); i ++)   //赋值x, y坐标和航向角kappa和速度Vel
         {

@@ -9,6 +9,8 @@
 
 namespace HybridAStar
 {
+    //DynamicVoronoi前处理，为赋值m_voronoiField做准备
+    DynamicVoronoi DynamicVoronoi_Pretreat(CollisionDetection *m_map);
     bool compareNode3DSet(std::vector<Node3D> &path1, std::vector<Node3D> &path2);   //m_nodes3D_Set排序准则
     class hybridAStar
     {
@@ -31,6 +33,7 @@ namespace HybridAStar
 
         std::vector<std::vector<Node3D>> m_nodes3D_Set; //保存成品点列的队列
         bool sortNode3D_Set();                          //对保存成品点列的队列进行自定义排序，排序准则长度和段数升序；并对每一个成品点列进行倒序排列
+        bool getReverseOrNot() const { return reverseOrNot; }
 
     private:
         //更新启发代价H
@@ -38,11 +41,12 @@ namespace HybridAStar
         Node2D *m_nodes2D{};
         
         CollisionDetection *m_map{};
+        DynamicVoronoi m_voronoi;   //用于计算启发函数的voronoi
         ReedsShepp m_RS{param::RS_Scaling};
         ReedsShepp::ReedsSheppPath m_RS_path;
         bool m_shootSuccess;
         
-
+        bool reverseOrNot = false;
     };
 }
 #endif      //HYBRID_ASTAR_HYBRIDASTAR_H

@@ -32,6 +32,8 @@ hybridAStar::hybridAStar(CollisionDetection *map) : m_map(map)
 {
     m_nodes2D = new Node2D[map->getSize()];
     m_nodes3D = new Node3D[map->getSize() * param::headings];
+
+    m_voronoi = HybridAStar::DynamicVoronoi_Pretreat(m_map);
 }
 
 //析构函数
@@ -111,6 +113,14 @@ float HybridAStar::hybridAStar::aStar(Node2D &start, Node2D &goal, float scale)
 //（注意scale的意义不明也许是缩放尺度记得修改）
 Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, float scale)
 {
+    reverseOrNot = m_map->reverseOrNot(start, goal, m_voronoi);
+    if(reverseOrNot)
+    {
+        auto tmp = start;
+        start = goal;
+        goal = tmp;
+    }   //是否起点终点交换
+    
     int m_nodes3D_size = m_map->getSize() * param::headings;    //记录m_nodes3D[]中的点个数
     Node3D *m_nodes3D_tmp = new Node3D[m_nodes3D_size];         //new出临时m_nodes3D_tmp[]用于深拷贝
     int width = m_map->getWidth();
@@ -155,7 +165,7 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                                         + (nPred.getY() - goal.getY())
                                         * (nPred.getX() - goal.getY()); //nPred到goal距离平方
             //如果当前距离进入总距离的后半程，开始RS射
-            if(current_distance < 0.5 * sta2goa_distance)
+            if(current_distance < param::RS_SearchPoint * sta2goa_distance)
             {
                 m_RS.plan(ReedsShepp::pos(nPred.getX(), nPred.getY(), nPred.getT()),
                                       ReedsShepp::pos(goal.getX(), goal.getY(), goal.getT()));
@@ -235,7 +245,7 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                         m_nodes3D_Set.push_back(m_nodes3D_SettTmp);     //加入保存成品点列的队列m_nodes3D_Set
                     }
                 }
-                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 6 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
+                if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 3 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
                 else for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
             }
             //充实open集6向搜索
@@ -306,16 +316,21 @@ void hybridAStar::updateH(Node3D &start, Node3D &goal)
     float g_x = goal.getX();
     float g_y = goal.getY();
     /* 1.ReedsShepp曲线代价 */
-    ReedsShepp::pos start_pt(s_x, s_y, start.getT());
-    ReedsShepp::pos goal_pt(g_x, g_y, goal.getT());
-    RSCost = (float)m_RS.distance(start_pt, goal_pt);  //返回RS曲线长度
+    // ReedsShepp::pos start_pt(s_x, s_y, start.getT());
+    // ReedsShepp::pos goal_pt(g_x, g_y, goal.getT());
+    // RSCost = (float)m_RS.distance(start_pt, goal_pt);  //返回RS曲线长度
     /* 2.传统A*距离代价 */
     offset = sqrt(pow((s_x - (float)((int)s_x)) - (g_x - (float)((int)g_x)) , 2.) +
                   pow((s_x - (float)((int)s_x)) - (g_x - (float)((int)g_x)) , 2.));
     Node2D start2d((int)s_x, (int)s_y, 0, 0, nullptr);
     Node2D goal2d((int)g_x, (int)g_y, 0, 0, nullptr);
     AStarCost = aStar(start2d, goal2d, 0.2) - offset;  //aStar规划结果减去offset返回两点A*代价
-    start.setH(std::max(RSCost, AStarCost));         //取两者最大值当作新H
+    float H_tmp = std::max(RSCost, AStarCost);
+    // H_tmp += m_voronoiField[(int)start.getY() + (int)start.getX() * m_map->getWidth()];
+    /* 3.voronoiField启发搜索 */
+    H_tmp += 1e7 * m_voronoi.voronoiField((int)s_x, (int)s_y);
+
+    start.setH(H_tmp);                                 //取两者最大值且与voronoiField相加当作新H
 }
 
 bool HybridAStar::compareNode3DSet(std::vector<Node3D> &path1, std::vector<Node3D> &path2)
@@ -331,5 +346,28 @@ bool HybridAStar::compareNode3DSet(std::vector<Node3D> &path1, std::vector<Node3
 bool hybridAStar::sortNode3D_Set()
 {
     std::sort(m_nodes3D_Set.begin(), m_nodes3D_Set.end(), HybridAStar::compareNode3DSet);
-    for(int i = 0; i < m_nodes3D_Set.size(); i ++) std::reverse(m_nodes3D_Set[i].begin(), m_nodes3D_Set[i].end());  //对每一个成品点列进行倒序排列
+    if(!reverseOrNot)
+        for(int i = 0; i < m_nodes3D_Set.size(); i ++) std::reverse(m_nodes3D_Set[i].begin(), m_nodes3D_Set[i].end());  //对每一个成品点列进行倒序排列
+}
+
+DynamicVoronoi HybridAStar::DynamicVoronoi_Pretreat(CollisionDetection *m_map)
+{
+    DynamicVoronoi voronoi;
+    bool** binMap;  //二维数组
+    binMap = new bool*[m_map->getHeight()];
+    for(int x = 0; x < m_map->getHeight(); x ++) { binMap[x] = new bool[m_map->getWidth()]; }
+    for(int x = 0; x < m_map->getHeight(); x ++)
+    {
+        for(int y = 0; y < m_map->getWidth(); y ++)
+        {
+            binMap[x][y] = m_map->m_map[y + x * m_map->getWidth()] < 250;
+        }
+    }   //转化为二值地图
+    voronoi.initializeMap(m_map->getHeight(), m_map->getWidth(), binMap);
+    voronoi.update();
+    voronoi.prune();
+    voronoi.CollectVoronoiEdgePoints();
+    for(int i = 0; i < m_map->getHeight(); i ++) delete[] binMap[i];    //释放内存binMap
+    delete[] binMap;                                                    //释放内存binMap
+    return voronoi;
 }

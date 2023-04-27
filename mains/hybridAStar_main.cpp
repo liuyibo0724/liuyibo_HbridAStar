@@ -85,6 +85,21 @@ void drawCarProfile(cv::Mat &map_color, Node3D &node3D)
     for(int i = 0; i < 4; i ++) cv::line(map_color, pos_list[i], pos_list[(i + 1)%4], cv::Scalar(0, 0, 0));  //画车框
 }
 
+//绘制车体轮廓运动的动画
+void animaCarProfile(std::vector<std::pair<HybridAStar::Node3D, float>> BSplinePath, cv::Mat &map_color)
+{
+    int i = 0;
+    for(auto tmp_pair : BSplinePath)
+    {
+        ++ i;
+        auto map_color_clone = map_color.clone();
+        drawCarProfile(map_color_clone, tmp_pair.first);
+        cv::imshow("animation", map_color_clone);
+        if(i == BSplinePath.size()) cv::waitKey(0);
+        else cv::waitKey(50);
+    }
+}
+
 //绘制线段切向指向线
 void drawTangentLine(cv::Mat &map_color, Node3D &node3D)
 {
@@ -122,9 +137,9 @@ int main()
     cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
 
     Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(290 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
+    Node3D goal(300 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);                                  
-    // drawParkingSpaceProfile(map_color, map_data, goal);     //在map_gray上画车位边界线
+    drawParkingSpaceProfile(map_color, map_data, goal);     //在map_gray上画车位边界线
     hybridAStar planer(&map_data);
     int goalIdx = goal.setIdx(map_data.getWidth(), map_data.getHeight());   //拿到goal的idx索引
 
@@ -179,7 +194,8 @@ int main()
             // drawCarProfile(map_color, smooth_path[j]);      //绘制车体轮廓
             // drawTangentLine(map_color, smooth_path[j]);     //画线段指向切线
         }
-        // drawCollisionLookup(map_color, map_data, goal);               //画碰撞检测区域
+        // auto real_goal = planer.getReverseOrNot() ? start : goal;     //真goal考虑start和goal的调换
+        // drawCollisionLookup(map_color, map_data, real_goal);          //画碰撞检测区域
 
         std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
         cv::imshow("smooth_result",map_color);
@@ -202,6 +218,8 @@ int main()
         }
         cv::imshow("BSpline_result",map_color);
         cv::waitKey(0); 
+
+        animaCarProfile(BSplinePath, map_color);    //绘制动画
     }
 
     return 0;

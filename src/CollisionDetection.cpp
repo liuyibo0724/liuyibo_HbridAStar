@@ -156,3 +156,33 @@ void HybridAStar::CollisionDetection::updateMap(unsigned char* data, int width, 
     m_map = new unsigned char[width * height];
     memcpy(m_map, data, width * height * sizeof(unsigned char));
 }
+
+//start和goal是否反转
+bool HybridAStar::CollisionDetection::reverseOrNot(Node3D &start, Node3D &goal, DynamicVoronoi &voronoi)
+{
+    float x = start.getX(), y = start.getY(), t = start.getT();
+    float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
+    param::relPos pos_list[4];
+    pos_list[0] = mkRelPos(x + dx*sin(t) + param::front2Rate*dy*cos(t), y - dx*cos(t) + param::front2Rate*dy*sin(t));
+    pos_list[1] = mkRelPos(x + dx*sin(t) - param::rear2Rate*dy*cos(t), y - dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[2] = mkRelPos(x - dx*sin(t) - param::rear2Rate*dy*cos(t), y + dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[3] = mkRelPos(x - dx*sin(t) + param::front2Rate*dy*cos(t), y + dx*cos(t) + param::front2Rate*dy*sin(t));
+
+    float start_obsDst_sum = 0.f;
+    for(int i = 0; i < 4; i ++) start_obsDst_sum += voronoi.getDistance(pos_list[i].x, pos_list[i].y);
+
+    x = goal.getX();
+    y = goal.getY();
+    t = goal.getT();
+    dx = 0.5 * param::width;
+    dy = 0.5 * param::length;   //半车宽和半车长
+    pos_list[0] = mkRelPos(x + dx*sin(t) + param::front2Rate*dy*cos(t), y - dx*cos(t) + param::front2Rate*dy*sin(t));
+    pos_list[1] = mkRelPos(x + dx*sin(t) - param::rear2Rate*dy*cos(t), y - dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[2] = mkRelPos(x - dx*sin(t) - param::rear2Rate*dy*cos(t), y + dx*cos(t) - param::rear2Rate*dy*sin(t));
+    pos_list[3] = mkRelPos(x - dx*sin(t) + param::front2Rate*dy*cos(t), y + dx*cos(t) + param::front2Rate*dy*sin(t));
+
+    float goal_obsDst_sum = 0.f;
+    for(int i = 0; i < 4; i ++) goal_obsDst_sum += voronoi.getDistance(pos_list[i].x, pos_list[i].y);
+
+    return start_obsDst_sum > goal_obsDst_sum;
+}

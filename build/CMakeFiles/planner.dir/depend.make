@@ -10,14 +10,18 @@ CMakeFiles/planner.dir/src/BSpline.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/BSpline.cpp.o: ../src/BSpline.cpp
 
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../includes/CollisionDetection.h
+CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../includes/dynamicVoronoi.h
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../includes/node.h
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../includes/param.h
+CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../src/CollisionDetection.cpp
 
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/CollisionDetection.h
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/ReedsSheppPath.h
+CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/dynamicVoronoi.h
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/node.h
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/param.h
+CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../includes/vec2i.h
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../src/ReedsSheppPath.cpp
 
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../includes/dynamicVoronoi.h

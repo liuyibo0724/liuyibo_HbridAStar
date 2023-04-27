@@ -33,6 +33,8 @@ set
 -
 node.h
 ../includes/node.h
+dynamicVoronoi.h
+../includes/dynamicVoronoi.h
 
 ../includes/ReedsSheppPath.h
 boost/math/constants/constants.hpp

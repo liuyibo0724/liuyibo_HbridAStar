@@ -32,6 +32,8 @@ namespace HybridAStar
         double sqrlength() const { return x * x + y * y; }
         //向量点乘
         double dot(const Vector2D &cpr) const { return x * cpr.x + y * cpr.y; }
+        //向量叉乘
+        double cross(const Vector2D &cpr) const { return x * cpr.y - y * cpr.x; }
         //求与某向量正交的分量
         inline Vector2D ort(const Vector2D &cpr) const
         {

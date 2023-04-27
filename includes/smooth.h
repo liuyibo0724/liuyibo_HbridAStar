@@ -17,6 +17,9 @@ namespace HybridAStar
     //判断是否为交点（内联）
     inline bool isCusp(std::vector<Node3D> path, int i);
 
+    //计算旋转角小函数
+    float rotaAngle(Vector2D x_im1, Vector2D x_i, Vector2D x_ip1);
+
     //轨迹平滑器类
     class Smoother
     {
