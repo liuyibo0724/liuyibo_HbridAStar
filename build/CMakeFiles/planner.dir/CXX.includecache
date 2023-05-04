@@ -6,22 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../includes/BSpline.h
-iostream
--
-vector
--
-cmath
--
-param.h
-../includes/param.h
-dynamicVoronoi.h
-../includes/dynamicVoronoi.h
-node.h
-../includes/node.h
-smooth.h
-../includes/smooth.h
-
 ../includes/CollisionDetection.h
 math.h
 -
@@ -110,18 +94,6 @@ vec2i.h
 cmath
 -
 
-/home/liuyibo/liuyibo_HbridAStar/src/BSpline.cpp
-BSpline.h
-/home/liuyibo/liuyibo_HbridAStar/src/BSpline.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/CollisionDetection.cpp
-CollisionDetection.h
-/home/liuyibo/liuyibo_HbridAStar/src/CollisionDetection.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.cpp
-ReedsSheppPath.h
-/home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.h
-
 /home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.cpp
 math.h
 -
@@ -133,12 +105,4 @@ set
 -
 hybridAStar.h
 /home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/node.cpp
-node.h
-/home/liuyibo/liuyibo_HbridAStar/src/node.h
-
-/home/liuyibo/liuyibo_HbridAStar/src/smooth.cpp
-smooth.h
-/home/liuyibo/liuyibo_HbridAStar/src/smooth.h
 

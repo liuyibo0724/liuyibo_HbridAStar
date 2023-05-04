@@ -228,6 +228,43 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                         goal.setPred(nPred_tmp_ptr);
                         goal.pIdx = iPred_tmp;
                         m_nodes3D[goal_id] = goal;  //将目标点goal赋值入点列中
+
+                        //为了使轨迹平滑度的达到更高的水平，尝试RS曲线由nPred反射入start
+                        m_RS_sta2pred.plan(ReedsShepp::pos(start.getX(), start.getY(), start.getT()),
+                                              ReedsShepp::pos(nPred.getX(), nPred.getY(), nPred.getT()));
+                        for(auto RS_sta2pred_ptr = m_RS_sta2pred.RSCurves_Set.begin(); 
+                            RS_sta2pred_ptr != m_RS_sta2pred.RSCurves_Set.end(); 
+                            RS_sta2pred_ptr ++)
+                        {
+                            m_RS_sta2pred_path = *(RS_sta2pred_ptr);
+                            if(m_RS_sta2pred.isTraversable(&start, &m_RS_sta2pred_path, m_map)) 
+                            {
+                                iPred_tmp = start.setIdx(width, height);
+                                for(int i = 1; i < m_RS_sta2pred_path.length() * 10; i ++)
+                                {
+                                    float t = (float)i / (m_RS_sta2pred_path.length() * 10);    //t表示整个RS曲线百分比
+                                    ReedsShepp::pos p;
+                                    ReedsShepp::pos st(start.getX(), start.getY(), start.getT());     //以start作为起点
+                                    sta2pred_interpolate(&st, t, &p);    //插值
+                                    ReedsShepp::pos p1;     //设置p的微扰偏移点p1
+                                    float t1 = (float)(i + 0.1) / (m_RS_sta2pred_path.length() * 10);    //t1表示p1点百分比
+                                    sta2pred_interpolate(&st, t1, &p1);
+                                    float d_x = (p1.x - p.x);     //p与p1的x差值
+                                    float d_y = (p1.y - p.y);
+                                    float angle = atan2(d_y, d_x);
+                                    angle = HybridAStar::normalizeHeadingRad(angle);
+                                    nPred_tmp_ptr =  new Node3D(p.x, p.y, angle, -1, -1, nullptr, 0, iPred_tmp);
+                                    iPred_tmp = nPred_tmp_ptr->setIdx(width, height);   //拿到nPred_tmp_ptr的Idx
+                                    m_nodes3D[iPred_tmp] = *(nPred_tmp_ptr);            //将new出来的插值点数据置入m_nodes3D[]中
+                                    delete nPred_tmp_ptr;                               //释放空间防止内存泄露
+                                }
+                                nPred.pIdx = iPred_tmp;
+                                m_nodes3D[iPred] = nPred;  //将中间点pred赋值入点列中
+                                break;
+                            }
+                        }
+                        
+
                         
                         //准备尾插进m_nodes3D_Set中
                         std::vector<Node3D> m_nodes3D_SettTmp;
@@ -245,6 +282,9 @@ Node3D* HybridAStar::hybridAStar::search_planner(Node3D &start, Node3D &goal, fl
                         m_nodes3D_Set.push_back(m_nodes3D_SettTmp);     //加入保存成品点列的队列m_nodes3D_Set
                     }
                 }
+                
+
+
                 if(m_shootSuccess == true && (m_nodes3D_Set.size() >= 3 || current_distance < 0.1 * sta2goa_distance)) { delete[] m_nodes3D_tmp; return &goal; }
                 else for(int i = 0; i < m_nodes3D_size; i ++) m_nodes3D[i] = m_nodes3D_tmp[i];   //重新将暂存在m_nodes3D_tmp[]中的数据拷贝回m_nodes3D[]中
             }
@@ -306,6 +346,13 @@ void hybridAStar::interpolate(const ReedsShepp::pos *from, float t,
     m_RS.interpolate(from, m_RS_path, t, state);
 }
 
+//start到pred的RS路径插值
+void hybridAStar::sta2pred_interpolate(const ReedsShepp::pos *from, float t,
+                         ReedsShepp::pos *state) const
+{
+    m_RS_sta2pred.interpolate(from, m_RS_sta2pred_path, t, state);
+}
+
 //更新启发代价H
 void hybridAStar::updateH(Node3D &start, Node3D &goal)
 {
@@ -328,7 +375,7 @@ void hybridAStar::updateH(Node3D &start, Node3D &goal)
     float H_tmp = std::max(RSCost, AStarCost);
     // H_tmp += m_voronoiField[(int)start.getY() + (int)start.getX() * m_map->getWidth()];
     /* 3.voronoiField启发搜索 */
-    H_tmp += 1e7 * m_voronoi.voronoiField((int)s_x, (int)s_y);
+    H_tmp += 1e5 * m_voronoi.voronoiField((int)s_x, (int)s_y);//1e7
 
     start.setH(H_tmp);                                 //取两者最大值且与voronoiField相加当作新H
 }

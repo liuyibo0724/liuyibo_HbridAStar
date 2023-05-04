@@ -27,6 +27,8 @@ namespace HybridAStar
         float aStar(Node2D &start, Node2D &goal, float scale = 1.0);
         void interpolate(const ReedsShepp::pos *from, float t,
                          ReedsShepp::pos *state) const; //RS路径插值
+        void sta2pred_interpolate(const ReedsShepp::pos *from, float t,
+                         ReedsShepp::pos *state) const; //start到pred的RS路径插值
         //后半程是否用RS曲线射入goal成功
         bool isShootSuccess(){ return m_shootSuccess; }
         Node3D *m_nodes3D{};
@@ -43,7 +45,9 @@ namespace HybridAStar
         CollisionDetection *m_map{};
         DynamicVoronoi m_voronoi;   //用于计算启发函数的voronoi
         ReedsShepp m_RS{param::RS_Scaling};
+        ReedsShepp m_RS_sta2pred{param::RS_Scaling};    //start射入pred的RS
         ReedsShepp::ReedsSheppPath m_RS_path;
+        ReedsShepp::ReedsSheppPath m_RS_sta2pred_path;  //start射入pred的RS轨迹
         bool m_shootSuccess;
         
         bool reverseOrNot = false;
