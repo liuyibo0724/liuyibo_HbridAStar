@@ -49,6 +49,7 @@ namespace HybridAStar
         ReedsShepp::ReedsSheppPath m_RS_path;
         ReedsShepp::ReedsSheppPath m_RS_sta2pred_path;  //start射入pred的RS轨迹
         bool m_shootSuccess;
+        bool m_sta2pred_shootSuccess;
         
         bool reverseOrNot = false;
     };

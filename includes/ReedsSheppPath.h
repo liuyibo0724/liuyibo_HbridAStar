@@ -77,6 +77,12 @@ namespace HybridAStar
         void CCC(double x, double y, double phi, ReedsSheppPath &path);
         void CSC(double x, double y, double phi, ReedsSheppPath &path);
         void CCSCC(double x, double y, double phi, ReedsSheppPath &path);
+
+        void custom_CCSC(double x, double y, double phi);
+        void custom_CCCC(double x, double y, double phi);
+        void custom_CCC(double x, double y, double phi);
+        void custom_CSC(double x, double y, double phi);
+        void custom_CCSCC(double x, double y, double phi);
         ReedsSheppPath plan(double x, double y, double phi);
 
         ///////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,19 @@ void BSpline_referenceLine::setRawPath(std::vector<HybridAStar::Node3D> path)
     }
 }
 
+//避免插值出现角度突变
+float BSpline::AvoidAngleMutation(std::vector<HybridAStar::Node3D> path, int ref, int pos)
+{
+    float ref_t = path[ref].getT(), pos_t = path[pos].getT();
+    float add[2] = {2.f * M_PI, -2.f * M_PI};
+    if(fabs(pos_t - ref_t) > M_PI)
+    {
+        for(int i = 0; i < 2; i ++)
+            if(fabs((pos_t + add[i]) - ref_t) < M_PI) return pos_t + add[i];
+    }
+    else return pos_t;
+}
+
 //拟合核心函数
 void BSpline_referenceLine::fit()
 {
@@ -50,6 +63,22 @@ void BSpline_referenceLine::fit()
             // m_rawPath.push_back(back);
 
             int pathLength = subPath_tmp.size();
+
+            //防止头尾出现0至2 * M_PI的隐藏bug
+            if((subPath_tmp[1].getT() == 0.f || subPath_tmp[1].getT() == 2.f * M_PI) 
+                && abs(subPath_tmp[2].getT() - subPath_tmp[1].getT()) > M_PI)
+            {
+                auto Var_tmp = subPath_tmp[0].getT() == 0.f ? 2.f * M_PI : 0.f;
+                subPath_tmp[0].setT(Var_tmp);
+                subPath_tmp[1].setT(Var_tmp);
+            }  
+            if((subPath_tmp[pathLength - 1].getT() == 0.f || subPath_tmp[pathLength - 1].getT() == 2.f * M_PI) 
+                && abs(subPath_tmp[pathLength - 1].getT() - subPath_tmp[pathLength - 2].getT()) > M_PI)
+            {
+                auto Var_tmp = subPath_tmp[0].getT() == 0.f ? 2.f * M_PI : 0.f;
+                subPath_tmp[pathLength - 1].setT(Var_tmp);
+            }
+
             for(int num = 0; num < pathLength * 5; num ++)
             {
                 float position = (float)num / 5.;   //精确位置
@@ -64,7 +93,7 @@ void BSpline_referenceLine::fit()
                     int i_j = std::min(std::max(0, i + j), pathLength - 1);     //防止i + j超出范围
                     vector2D_tmp = vector2D_tmp + BSpline_base(order, i + j, position + 0.5 * (1. + (float)order))
                                      * HybridAStar::Vector2D(subPath_tmp[i_j].getX(), subPath_tmp[i_j].getY()); //拟合x, y坐标
-                    T_tmp += BSpline_base(order, i + j, position + 0.5 * (1. + (float)order)) * subPath_tmp[i_j].getT(); //拟合T角度
+                    T_tmp += BSpline_base(order, i + j, position + 0.5 * (1. + (float)order)) * AvoidAngleMutation(subPath_tmp, i, i_j);//subPath_tmp[i_j].getT(); //拟合T角度
                     ++ j;
                 }
                 HybridAStar::Node3D node3D_tmp(vector2D_tmp.getX(), vector2D_tmp.getY(), T_tmp, 0, 0, nullptr); //生成对应的拟合后节点

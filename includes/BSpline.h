@@ -14,6 +14,9 @@ namespace BSpline
     //B样条曲线任意阶基函数
     float BSpline_base(int order, int i, float position);    //i为中心点
 
+    //避免插值出现角度突变
+    float AvoidAngleMutation(std::vector<HybridAStar::Node3D> path, int ref, int pos);
+
     //BSpline局部规划器
     class BSpline_referenceLine
     {

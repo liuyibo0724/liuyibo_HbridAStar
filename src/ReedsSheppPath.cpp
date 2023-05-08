@@ -95,13 +95,20 @@ namespace HybridAStar
     ReedsShepp::ReedsSheppPath ReedsShepp::plan(double x, double y, double phi)
     {
         RSCurves_Set.clear();   //每次plan前清空RS曲线族set
-        ReedsSheppPath path;
-        CSC(x, y, phi, path);
-        CCC(x, y, phi, path);
-        CCCC(x, y, phi, path);
-        CCSC(x, y, phi, path);
-        CCSCC(x, y, phi, path);
-        return path;
+        // ReedsSheppPath path;
+        // CSC(x, y, phi, path);
+        // CCC(x, y, phi, path);
+        // CCCC(x, y, phi, path);
+        // CCSC(x, y, phi, path);
+        // CCSCC(x, y, phi, path);
+        // return path;
+
+        custom_CSC(x, y, phi);
+        custom_CCC(x, y, phi);
+        custom_CCCC(x, y, phi);
+        custom_CCSC(x, y, phi);
+        custom_CCSCC(x, y, phi);
+        return *(RSCurves_Set.begin());
     }
 
     void ReedsShepp::CCSC(double x, double y, double phi, ReedsShepp::ReedsSheppPath &path)
@@ -403,9 +410,9 @@ namespace HybridAStar
 
     bool ReedsShepp::isTraversable(Node3D* start,ReedsShepp::ReedsSheppPath *path, CollisionDetection *map) const
     {
-        for(int i = 0;i < path->length()*7;i ++)
+        for(int i = 0;i < path->length() * 8;i ++)
         {
-            float t = (float)(i) / (float)(path->length()*7);
+            float t = (float)(i) / (float)(path->length() * 8);
             ReedsShepp::pos p;
             ReedsShepp::pos s(start->getX(),start->getY(),start->getT());
             interpolate(&s,*path,t,&p);
@@ -419,6 +426,267 @@ namespace HybridAStar
         }
         return true;
     }
+
+    //自定义更高效鲁棒性更强的RS规划函数
+
+    void ReedsShepp::custom_CCSC(double x, double y, double phi)
+    {
+        double t, u, v;
+        if (LpRmSmLm(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[4], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[4], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[5], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[5], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+
+        if (LpRmSmRm(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[8], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[8], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[9], t, -.5 * pi, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[9], -t, .5 * pi, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+
+        // backwards
+        double xb = x * cos(phi) + y * sin(phi), yb = x * sin(phi) - y * cos(phi);
+        if (LpRmSmLm(xb, yb, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[6], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(-xb, yb, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[6], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(xb, -yb, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[7], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmLm(-xb, -yb, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[7], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+
+        if (LpRmSmRm(xb, yb, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[10], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(-xb, yb, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[10], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(xb, -yb, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[11], v, u, -.5 * pi, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSmRm(-xb, -yb, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[11], -v, -u, .5 * pi, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+    }
+
+    void ReedsShepp::custom_CCCC(double x, double y, double phi)
+    {
+        double t, u, v;
+        if (LpRupLumRm(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[2], t, u, -u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRupLumRm(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[2], -t, -u, u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRupLumRm(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[3], t, u, -u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRupLumRm(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[3], -t, -u, u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+
+        if (LpRumLumRp(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[2], t, u, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRumLumRp(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[2], -t, -u, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRumLumRp(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[3], t, u, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRumLumRp(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[3], -t, -u, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+    }
+
+    void ReedsShepp::custom_CCC(double x, double y, double phi)
+    {
+        double t, u, v;
+        if (LpRmL(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[0], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[0], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[1], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[1], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+
+        // backwards
+        double xb = x * cos(phi) + y * sin(phi), yb = x * sin(phi) - y * cos(phi);
+        if (LpRmL(xb, yb, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[0], v, u, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(-xb, yb, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[0], -v, -u, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(xb, -yb, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[1], v, u, t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmL(-xb, -yb, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[1], -v, -u, -t);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+    }
+
+    void ReedsShepp::custom_CSC(double x, double y, double phi)
+    {
+        double t, u, v;
+        if (LpSpLp(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[14], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpLp(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[14], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpLp(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[15], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpLp(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[15], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpRp(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[12], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpRp(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[12], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpRp(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[13], t, u, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpSpRp(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[13], -t, -u, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+    }
+
+    void ReedsShepp::custom_CCSCC(double x, double y, double phi)
+    {
+        double t, u, v;
+        if (LpRmSLmRp(x, y, phi, t, u, v))
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[16], t, -.5 * pi, u,
+                                                        -.5 * pi, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSLmRp(-x, y, -phi, t, u, v))  // timeflip
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[16], -t, .5 * pi, -u,
+                                                        .5 * pi, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSLmRp(x, -y, -phi, t, u, v))  // reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[17], t, -.5 * pi, u,
+                                                        -.5 * pi, v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+        if (LpRmSLmRp(-x, -y, phi, t, u, v))  // timeflip + reflect
+        {
+            auto path = ReedsSheppPath(reedsSheppPathType[17], -t, .5 * pi, -u,
+                                                        .5 * pi, -v);
+            RSCurves_Set.insert(path);  //插入RS曲线族
+        }
+    }
+
 }
 
 

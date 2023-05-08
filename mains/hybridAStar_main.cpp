@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <unistd.h>
+
 #include "CollisionDetection.h"
 #include <opencv2/opencv.hpp>
 #include <cmath>
@@ -125,32 +130,51 @@ void drawParkingSpaceProfile(cv::Mat &map_color, CollisionDetection &map_data, N
         if(map_data.isInMap((*ptr).x, (*ptr).y)) map_color.at<cv::Vec3b>((*ptr).x, (*ptr).y) = {0, 0, 0};  //画碰撞检测区域
 }
 
+//打印当下时间
+void coutNowMS(struct timeval &time)
+{
+    gettimeofday(&time, NULL);
+    std::cout << "当前时间：" << time.tv_sec * 1000 + time.tv_usec / 1000 << " ms" << std::endl;
+}
+
 int main()
 {
     cv::Mat map_gray
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map7.png", cv::IMREAD_GRAYSCALE);
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map13b.png", cv::IMREAD_GRAYSCALE);
     int inv_resolution = 1;
     cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/25, map_gray.rows/25));   //缩小黑白图片
 
     cv::Mat map_color
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map7.png");
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map13b.png");
     cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
 
-    Node3D start(100, 50, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(300 * 1, 320 * 1, 1. * M_PI, 0, 0, nullptr);
+    Node3D start(220, 250, 1.5 * M_PI, 0, 0, nullptr);
+    Node3D goal(300 * 1, 45 * 1, 1. * M_PI, 0, 0, nullptr);
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);                                  
     // drawParkingSpaceProfile(map_color, map_data, goal);     //在map_gray上画车位边界线
     hybridAStar planer(&map_data);
     int goalIdx = goal.setIdx(map_data.getWidth(), map_data.getHeight());   //拿到goal的idx索引
 
     //生图展示
+    drawCarProfile(map_color, goal);    //查看自车在goal是否触碰障碍物
+    drawCollisionLookup(map_color, map_data, goal); //查看查询范围
     cv::imshow("raw_pic",map_color);
     cv::waitKey(0);
+
+    /* 搜索起始时间 */
+    struct timeval timeStart;
+    coutNowMS(timeStart);
     
     //hybridAStar粗搜索
-    auto nSolution = planer.search_planner(start, goal, 0.2);
+    auto nSolution = planer.search_planner(start, goal, 0.02);
     auto tmp_show = nSolution;
     planer.sortNode3D_Set();
+
+    /* 搜索结束时间 */
+    struct timeval timeEnd;
+    coutNowMS(timeEnd);
+    std::cout << "搜索耗时：" << (timeEnd.tv_sec * 1000 + timeEnd.tv_usec / 1000)
+                             - (timeStart.tv_sec * 1000 + timeStart.tv_usec / 1000) << " ms" << std::endl;
 
     //DynamicVoronoi预处理
     DynamicVoronoi voronoi = DynamicVoronoi_Pretreat(map_gray, map_color);
@@ -167,7 +191,7 @@ int main()
         // SmootherGet_m_path(smoother, ptr, goalIdx);     //smoother.m_path记录溯源路径
         smoother.m_path = *ptr;
         //轨迹光顺前画线
-        for(int j = 0; j < smoother.m_path.size() - 1; j ++)
+        for(int j = 0; j < smoother.m_path.size(); j ++)
         {
             map_color.at<cv::Vec3b>(smoother.m_path[j].getX(), smoother.m_path[j].getY()) = {0, 0, 255};
             // cv::line(map_color, cv::Point(smoother.m_path[j].getY(), smoother.m_path[j].getX()),

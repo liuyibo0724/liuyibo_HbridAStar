@@ -5,8 +5,8 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/sysd_framework/**",
                 "/usr/local/include/**"
-                
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

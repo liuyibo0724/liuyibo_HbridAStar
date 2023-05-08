@@ -7,7 +7,7 @@ inline bool isPosRVec(param::relPos vec, param::relPos pos)
     { return pos.x * vec.y - vec.x * pos.y >= 0; }
 
 //快速构造relPos
-inline param::relPos mkRelPos(double x, double y)
+inline param::relPos mkRelPos(int x, int y)
 {
     param::relPos result;
     result.x = x;
@@ -56,47 +56,57 @@ void HybridAStar::CollisionDetection::setCollisionLookup(
     float y, 
     float t)
 {
-    float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长
+    float dx = 0.5 * param::width, dy = 0.5 * param::length;   //半车宽和半车长加上padding
     param::relPos pos_list[4];
     pos_list[0] = mkRelPos(x + dx*sin(t) + param::front2Rate*dy*cos(t), y - dx*cos(t) + param::front2Rate*dy*sin(t));
     pos_list[1] = mkRelPos(x + dx*sin(t) - param::rear2Rate*dy*cos(t), y - dx*cos(t) - param::rear2Rate*dy*sin(t));
     pos_list[2] = mkRelPos(x - dx*sin(t) - param::rear2Rate*dy*cos(t), y + dx*cos(t) - param::rear2Rate*dy*sin(t));
     pos_list[3] = mkRelPos(x - dx*sin(t) + param::front2Rate*dy*cos(t), y + dx*cos(t) + param::front2Rate*dy*sin(t));
-    float minX = pos_list[0].x, minY = pos_list[0].y, 
-            maxX = pos_list[0].x, maxY = pos_list[0].y;      //四个边角点的坐标极值
-    for(int i = 1; i < 4; i ++)
+    // float minX = pos_list[0].x, minY = pos_list[0].y, 
+    //         maxX = pos_list[0].x, maxY = pos_list[0].y;      //四个边角点的坐标极值
+    // for(int i = 1; i < 4; i ++)
+    // {
+    //     maxX = pos_list[i].x > maxX ? pos_list[i].x : maxX;
+    //     maxY = pos_list[i].y > maxY ? pos_list[i].y : maxY;
+    //     minX = pos_list[i].x < minX ? pos_list[i].x : minX;
+    //     minY = pos_list[i].y < minY ? pos_list[i].y : minY;
+    // }
+    // for(int i = (int)(ceil(minX)); i < (int)(floor(maxX)); i ++)
+    // {
+    //     for(int j = (int)(ceil(minY)); j < (int)(floor(maxY)); j ++)
+    //     {
+    //         if(!isInMap(i, j)) continue;
+    //         int count = 0;      //计数点在右侧的边数
+    //         for(int k = 0; k < 4; k ++)
+    //         {
+    //             param::relPos temp_vec = 
+    //                 mkRelPos(pos_list[(k + 1)%4].x - pos_list[k].x
+    //                 , pos_list[(k + 1)%4].y - pos_list[k].y);
+    //             param::relPos temp_pos = 
+    //                 mkRelPos(i - pos_list[k].x, j - pos_list[k].y);
+    //             if(!isPosRVec(temp_vec, temp_pos)) break;
+    //             ++ count;
+    //         }
+    //         if(count == 4)
+    //         {
+    //             if(isInMap(i - 1, j - 1)) this->collisionLookup.insert(mkRelPos(i - 1, j - 1));
+    //             if(isInMap(i - 1, j)) this->collisionLookup.insert(mkRelPos(i - 1, j));
+    //             if(isInMap(i, j - 1)) this->collisionLookup.insert(mkRelPos(i, j - 1));
+    //             if(isInMap(i, j)) this->collisionLookup.insert(mkRelPos(i, j));
+    //             if(isInMap(i + 1, j + 1)) this->collisionLookup.insert(mkRelPos(i + 1, j + 1));
+    //             if(isInMap(i + 1, j)) this->collisionLookup.insert(mkRelPos(i + 1, j));
+    //             if(isInMap(i, j + 1)) this->collisionLookup.insert(mkRelPos(i, j + 1));
+    //         }
+    //     }
+    // }
+
+    for(int i = 0; i < 4; i ++)
     {
-        maxX = pos_list[i].x > maxX ? pos_list[i].x : maxX;
-        maxY = pos_list[i].y > maxY ? pos_list[i].y : maxY;
-        minX = pos_list[i].x < minX ? pos_list[i].x : minX;
-        minY = pos_list[i].y < minY ? pos_list[i].y : minY;
-    }
-    for(int i = (int)(ceil(minX)); i < (int)(floor(maxX)); i ++)
-    {
-        for(int j = (int)(ceil(minY)); j < (int)(floor(maxY)); j ++)
+        for(int j = 0; j < 10; j ++)
         {
-            if(!isInMap(i, j)) continue;
-            int count = 0;      //计数点在右侧的边数
-            for(int k = 0; k < 4; k ++)
-            {
-                param::relPos temp_vec = 
-                    mkRelPos(pos_list[(k + 1)%4].x - pos_list[k].x
-                    , pos_list[(k + 1)%4].y - pos_list[k].y);
-                param::relPos temp_pos = 
-                    mkRelPos(i - pos_list[k].x, j - pos_list[k].y);
-                if(!isPosRVec(temp_vec, temp_pos)) break;
-                ++ count;
-            }
-            if(count == 4)
-            {
-                if(isInMap(i - 1, j - 1)) this->collisionLookup.insert(mkRelPos(i - 1, j - 1));
-                if(isInMap(i - 1, j)) this->collisionLookup.insert(mkRelPos(i - 1, j));
-                if(isInMap(i, j - 1)) this->collisionLookup.insert(mkRelPos(i, j - 1));
-                if(isInMap(i, j)) this->collisionLookup.insert(mkRelPos(i, j));
-                if(isInMap(i + 1, j + 1)) this->collisionLookup.insert(mkRelPos(i + 1, j + 1));
-                if(isInMap(i + 1, j)) this->collisionLookup.insert(mkRelPos(i + 1, j));
-                if(isInMap(i, j + 1)) this->collisionLookup.insert(mkRelPos(i, j + 1));
-            }
+            float t = (float)j / 10.f;
+            this->collisionLookup.insert(mkRelPos((int)(t * pos_list[i].x + (1.f - t) * pos_list[(i + 1) % 4].x),
+                                                  (int)(t * pos_list[i].y + (1.f - t) * pos_list[(i + 1) % 4].y)));
         }
     }
 }
@@ -184,5 +194,5 @@ bool HybridAStar::CollisionDetection::reverseOrNot(Node3D &start, Node3D &goal, 
     float goal_obsDst_sum = 0.f;
     for(int i = 0; i < 4; i ++) goal_obsDst_sum += voronoi.getDistance(pos_list[i].x, pos_list[i].y);
 
-    return start_obsDst_sum > goal_obsDst_sum;
+    return start_obsDst_sum > goal_obsDst_sum;//start_obsDst_sum > goal_obsDst_sum;
 }

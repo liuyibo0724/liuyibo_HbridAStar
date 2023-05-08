@@ -10,7 +10,7 @@ namespace param
     //hybrid_astar的planner的最大搜索迭代数[#]
     static const int iterations = 50000;
     //开始RS搜索阈值比例
-    static const float RS_SearchPoint = 0.5;
+    static const float RS_SearchPoint = 1.0;//0.5;
     //自车padding宽度[m]
     static const float padding = 1.5;  //0.15;
     //自车宽度（KIWI_EV)[m]
@@ -34,7 +34,9 @@ namespace param
     //阿克曼中心距离车位后端比例*2
     static const float parkingRear2Rate = 1.;
     //RS曲线半径缩放因子
-    static const float RS_Scaling = 40.;
+    static const float RS_Scaling = 80.f;//40.;
+    //sta2pred插值缩放因子
+    static const int sta2predShoot_Scaling = 10;
     //航向角离散数[#]
     static const int headings = 120;
     //航向角离散步长（度）[°]
@@ -74,11 +76,11 @@ namespace param
     //};
     typedef std::set<relPos> poseConfig;
     //转向惩罚[#]
-    static const float penaltyTurning = 1.05;
+    static const float penaltyTurning = 4.0;//1.05;
     //倒车惩罚（运动图元>2）[#]
-    static const float penaltyReversing = 1.25;  //25.0;
+    static const float penaltyReversing = 5.;  //25.0;
     //改变方向惩罚（运动图元由<3到>2）[#]
-    static const float penaltyCOD = 2.5;  //50.0;
+    static const float penaltyCOD = 10.;  //50.0;
     static const float dubinsShotDistance = 100.0;
     //障碍物最大惩罚距离
     static const float obsPenaMax = 60.0;
