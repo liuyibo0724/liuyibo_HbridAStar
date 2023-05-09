@@ -90,6 +90,12 @@ namespace param
     static const int smoothMaxIterations = 500;
     //BSpline拟合阶次
     static const int BSpline_order = 3;
+
+    /*子节点搜索步长相关参数*/
+    static const float dt = 0.441786375;
+    static const float dx = 1.7671455;
+    static const float dx_sin = 1.71022;
+    static const float dy = 0.38404267;
 }
 
 #endif //HYBRID_ASTAR_PARAM_H

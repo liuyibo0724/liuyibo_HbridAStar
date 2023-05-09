@@ -42,7 +42,7 @@ float BSpline::AvoidAngleMutation(std::vector<HybridAStar::Node3D> path, int ref
         for(int i = 0; i < 2; i ++)
             if(fabs((pos_t + add[i]) - ref_t) < M_PI) return pos_t + add[i];
     }
-    else return pos_t;
+    return pos_t;
 }
 
 //拟合核心函数

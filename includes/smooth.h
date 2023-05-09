@@ -15,7 +15,17 @@ namespace HybridAStar
     }
     
     //判断是否为交点（内联）
-    inline bool isCusp(std::vector<Node3D> path, int i);
+    inline bool isCusp(std::vector<Node3D> path, int i)
+    {
+    if(i == 0 || i == (path.size() - 1)) return true;
+    Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());
+    Vector2D xi(path[i].getX(), path[i].getY());
+    Vector2D xip1(path[i + 1].getX(), path[i + 1].getY());
+    Vector2D vec1 = xi - xim1;
+    Vector2D vec2 = xip1 - xi;
+    return vec1.dot(vec2) < 0;
+
+    }
 
     //计算旋转角小函数
     float rotaAngle(Vector2D x_im1, Vector2D x_i, Vector2D x_ip1);

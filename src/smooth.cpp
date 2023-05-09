@@ -6,17 +6,17 @@ using namespace HybridAStar;
 inline bool isAdv(int prim) { return prim < 3 && prim >= 0; }
 
 //判断是否为交点（内联）
-inline bool HybridAStar::isCusp(std::vector<Node3D> path, int i)
-{
-    if(i == 0 || i == (path.size() - 1)) return true;
-    Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());
-    Vector2D xi(path[i].getX(), path[i].getY());
-    Vector2D xip1(path[i + 1].getX(), path[i + 1].getY());
-    Vector2D vec1 = xi - xim1;
-    Vector2D vec2 = xip1 - xi;
-    return vec1.dot(vec2) < 0;
+// inline bool HybridAStar::isCusp(std::vector<Node3D> path, int i)
+// {
+//     if(i == 0 || i == (path.size() - 1)) return true;
+//     Vector2D xim1(path[i - 1].getX(), path[i - 1].getY());
+//     Vector2D xi(path[i].getX(), path[i].getY());
+//     Vector2D xip1(path[i + 1].getX(), path[i + 1].getY());
+//     Vector2D vec1 = xi - xim1;
+//     Vector2D vec2 = xip1 - xi;
+//     return vec1.dot(vec2) < 0;
 
-}
+// }
 
 //交点附近缩放因子
 inline float CuspScaling(int i)

@@ -16,8 +16,8 @@ inline param::relPos mkRelPos(int x, int y)
 }
 
 //是否在图中
-inline bool HybridAStar::CollisionDetection::isInMap(int x, int y)
-    { return x >= 0 && x < m_height && y >= 0 && y < m_width; }
+// inline bool HybridAStar::CollisionDetection::isInMap(int x, int y)
+//     { return x >= 0 && x < m_height && y >= 0 && y < m_width; }
 
 //由目标点在m_map中画出车位边界线
 bool HybridAStar::CollisionDetection::drawParkingSpaceOnMap(Node3D goal)

@@ -16,7 +16,7 @@ namespace HybridAStar
         //1.连通性检查函数
         bool isNodeTraversable(Node2D* node);    //2D结点可否通行
         bool isNodeTraversable(Node3D* node);    //3D结点可否通行
-        inline bool isInMap(int x, int y);       //点是否在图中
+        inline bool isInMap(int x, int y) { return x >= 0 && x < m_height && y >= 0 && y < m_width; }       //点是否在图中
         //2.设置类函数
         void updateMap(unsigned char* data, int width, int height);     //读入新图
         void setCollisionLookup(float x, float y, float t);      //设置亚格子碰撞查询清单
