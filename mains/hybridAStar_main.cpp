@@ -140,16 +140,16 @@ void coutNowMS(struct timeval &time)
 int main()
 {
     cv::Mat map_gray
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map11b.png", cv::IMREAD_GRAYSCALE);
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map13b.png", cv::IMREAD_GRAYSCALE);
     int inv_resolution = 1;
     cv::resize(map_gray, map_gray, cv::Size(map_gray.cols/25, map_gray.rows/25));   //缩小黑白图片
 
     cv::Mat map_color
-         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map11b.png");
+         = cv::imread("/home/liuyibo/liuyibo_HbridAStar/test_pictures/map13b.png");
     cv::resize(map_color, map_color, cv::Size(map_color.cols/25, map_color.rows/25));   //缩小彩色图片
 
-    Node3D start(220, 350, 0.5 * M_PI, 0, 0, nullptr);
-    Node3D goal(270 * 1, 160 * 1, 0.5 * M_PI, 0, 0, nullptr);
+    Node3D start(220, 150, 1.5 * M_PI, 0, 0, nullptr);
+    Node3D goal(300 * 1, 45 * 1, 1. * M_PI, 0, 0, nullptr);
     CollisionDetection map_data(map_gray.data, map_gray.cols, map_gray.rows);                                  
     // drawParkingSpaceProfile(map_color, map_data, goal);     //在map_gray上画车位边界线
     hybridAStar planer(&map_data);
@@ -158,8 +158,8 @@ int main()
     //生图展示
     drawCarProfile(map_color, goal);    //查看自车在goal是否触碰障碍物
     drawCollisionLookup(map_color, map_data, goal); //查看查询范围
-    // cv::imshow("raw_pic",map_color);
-    // cv::waitKey(0);
+    cv::imshow("raw_pic",map_color);
+    cv::waitKey(0);
 
     /* 搜索起始时间 */
     struct timeval timeStart;
@@ -198,14 +198,14 @@ int main()
             //                     cv::Point(smoother.m_path[j + 1].getY(), smoother.m_path[j + 1].getX()), cv::Scalar(0, 0, 255));
         }
         std::cout << "smoother.m_path.size() = " << smoother.m_path.size() << std::endl;
-        // cv::imshow("smooth_before",map_color);
-        // cv::waitKey(0);
+        cv::imshow("smooth_before",map_color);
+        cv::waitKey(0);
 
         // smoother.tracePath(tmp_show);
         smoother.smoothPath(voronoi);
         auto smooth_path = smoother.getPath();
         //轨迹光顺后画线
-        for(int j = 0; j < smooth_path.size() - 1; j ++)
+        for(int j = 0; j < smooth_path.size(); j ++)
         {
             // cv::line(map_color, cv::Point(smooth_path[j].getY(), smooth_path[j].getX()),
             //                     cv::Point(smooth_path[j + 1].getY(), smooth_path[j + 1].getX()), cv::Scalar(255, 0, 0));
@@ -222,8 +222,8 @@ int main()
         // drawCollisionLookup(map_color, map_data, real_goal);          //画碰撞检测区域
 
         std::cout << "smooth_path.size() = " << smooth_path.size() << std::endl;
-        // cv::imshow("smooth_result",map_color);
-        // cv::waitKey(0);   
+        cv::imshow("smooth_result",map_color);
+        cv::waitKey(0);   
 
         //BSpline拟合
         referenceLine.clearRawPath();
@@ -231,7 +231,7 @@ int main()
         referenceLine.setRawPath(smooth_path); 
         referenceLine.fit();
         auto BSplinePath = referenceLine.getBSplinePath();
-        for(int j = 0; j < BSplinePath.size() - 1; j ++)
+        for(int j = 0; j < BSplinePath.size(); j ++)
         {
             //前进绿色，停驻黑色，后退红色
             cv::Vec3b color;
@@ -240,8 +240,8 @@ int main()
             map_color.at<cv::Vec3b>(BSplinePath[j].first.getX(), BSplinePath[j].first.getY()) = color;  //画速度大小
             // drawCarProfile(map_color, BSplinePath[j].first);      //绘制车体轮廓
         }
-        // cv::imshow("BSpline_result",map_color);
-        // cv::waitKey(0); 
+        cv::imshow("BSpline_result",map_color);
+        cv::waitKey(0); 
 
         animaCarProfile(BSplinePath, map_color);    //绘制动画
     }

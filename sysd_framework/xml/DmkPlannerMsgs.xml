@@ -38,7 +38,7 @@
     <struct name="DiscretizedTrajectory">
       <member name="seq" type="uint32"/>
       <member name="stamp" type="nonBasic" nonBasicTypeName="Timestamp"/>
-      <member name="discretizedTrajectory" sequenceMaxLength="1000" type="nonBasic" nonBasicTypeName="TrajectoryPoint"/>
+      <member name="discretizedTrajectory" sequenceMaxLength="500" type="nonBasic" nonBasicTypeName="TrajectoryPoint"/>
       <member name="isPlanSucceeded" type="boolean"/>
     </struct>
     <struct name="ActionPlannerInfo">

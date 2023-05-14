@@ -82,7 +82,7 @@ void planner::plan()
                                 << std::endl;
         return;
     }
-    m_planner->search_planner(m_start, m_goal, 0.2);    //hybridAStar路径搜索
+    m_planner->search_planner(m_start, m_goal, 0.05);    //hybridAStar路径搜索
     m_planner->sortNode3D_Set();                        //排序m_nodes3D_Set
     for(auto ptr = m_planner->m_nodes3D_Set.begin(); ptr < m_planner->m_nodes3D_Set.end(); ptr ++)
     {

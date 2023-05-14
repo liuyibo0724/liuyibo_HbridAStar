@@ -79,9 +79,9 @@ void BSpline_referenceLine::fit()
                 subPath_tmp[pathLength - 1].setT(Var_tmp);
             }
 
-            for(int num = 0; num < pathLength * 5; num ++)
+            for(int num = 0; num < pathLength * param::BSpline_Scaling; num ++)
             {
-                float position = (float)num / 5.;   //精确位置
+                float position = (float)num / param::BSpline_Scaling;   //精确位置
                 int i = (int)(std::floor(position));//落在[i, i + 1]区间上
                 int upper_halfOrder = order / 2 + order % 2;   //半阶次长度
 

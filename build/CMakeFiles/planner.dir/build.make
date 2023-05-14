@@ -57,9 +57,22 @@ include CMakeFiles/planner.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/planner.dir/flags.make
 
+CMakeFiles/planner.dir/src/planner.cpp.o: CMakeFiles/planner.dir/flags.make
+CMakeFiles/planner.dir/src/planner.cpp.o: ../src/planner.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/planner.dir/src/planner.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/planner.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/planner.cpp
+
+CMakeFiles/planner.dir/src/planner.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/planner.dir/src/planner.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liuyibo/liuyibo_HbridAStar/src/planner.cpp > CMakeFiles/planner.dir/src/planner.cpp.i
+
+CMakeFiles/planner.dir/src/planner.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/planner.dir/src/planner.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liuyibo/liuyibo_HbridAStar/src/planner.cpp -o CMakeFiles/planner.dir/src/planner.cpp.s
+
 CMakeFiles/planner.dir/src/node.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/node.cpp.o: ../src/node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/planner.dir/src/node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/planner.dir/src/node.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/node.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/node.cpp
 
 CMakeFiles/planner.dir/src/node.cpp.i: cmake_force
@@ -72,7 +85,7 @@ CMakeFiles/planner.dir/src/node.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/hybridAStar.cpp.o: ../src/hybridAStar.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/planner.dir/src/hybridAStar.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/planner.dir/src/hybridAStar.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/hybridAStar.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/hybridAStar.cpp
 
 CMakeFiles/planner.dir/src/hybridAStar.cpp.i: cmake_force
@@ -85,7 +98,7 @@ CMakeFiles/planner.dir/src/hybridAStar.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.o: ../src/CollisionDetection.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/planner.dir/src/CollisionDetection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/planner.dir/src/CollisionDetection.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/CollisionDetection.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/CollisionDetection.cpp
 
 CMakeFiles/planner.dir/src/CollisionDetection.cpp.i: cmake_force
@@ -98,7 +111,7 @@ CMakeFiles/planner.dir/src/CollisionDetection.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o: ../src/ReedsSheppPath.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/ReedsSheppPath.cpp
 
 CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.i: cmake_force
@@ -111,7 +124,7 @@ CMakeFiles/planner.dir/src/ReedsSheppPath.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/smooth.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/smooth.cpp.o: ../src/smooth.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/planner.dir/src/smooth.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/planner.dir/src/smooth.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/smooth.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/smooth.cpp
 
 CMakeFiles/planner.dir/src/smooth.cpp.i: cmake_force
@@ -124,7 +137,7 @@ CMakeFiles/planner.dir/src/smooth.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o: ../src/dynamicVoronoi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/dynamicVoronoi.cpp
 
 CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.i: cmake_force
@@ -137,7 +150,7 @@ CMakeFiles/planner.dir/src/dynamicVoronoi.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/BSpline.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/BSpline.cpp.o: ../src/BSpline.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/planner.dir/src/BSpline.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/planner.dir/src/BSpline.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/BSpline.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/BSpline.cpp
 
 CMakeFiles/planner.dir/src/BSpline.cpp.i: cmake_force
@@ -150,7 +163,7 @@ CMakeFiles/planner.dir/src/BSpline.cpp.s: cmake_force
 
 CMakeFiles/planner.dir/src/filter.cpp.o: CMakeFiles/planner.dir/flags.make
 CMakeFiles/planner.dir/src/filter.cpp.o: ../src/filter.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/planner.dir/src/filter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/planner.dir/src/filter.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/planner.dir/src/filter.cpp.o -c /home/liuyibo/liuyibo_HbridAStar/src/filter.cpp
 
 CMakeFiles/planner.dir/src/filter.cpp.i: cmake_force
@@ -163,6 +176,7 @@ CMakeFiles/planner.dir/src/filter.cpp.s: cmake_force
 
 # Object files for target planner
 planner_OBJECTS = \
+"CMakeFiles/planner.dir/src/planner.cpp.o" \
 "CMakeFiles/planner.dir/src/node.cpp.o" \
 "CMakeFiles/planner.dir/src/hybridAStar.cpp.o" \
 "CMakeFiles/planner.dir/src/CollisionDetection.cpp.o" \
@@ -175,6 +189,7 @@ planner_OBJECTS = \
 # External object files for target planner
 planner_EXTERNAL_OBJECTS =
 
+libplanner.a: CMakeFiles/planner.dir/src/planner.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/node.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/hybridAStar.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/CollisionDetection.cpp.o
@@ -185,7 +200,7 @@ libplanner.a: CMakeFiles/planner.dir/src/BSpline.cpp.o
 libplanner.a: CMakeFiles/planner.dir/src/filter.cpp.o
 libplanner.a: CMakeFiles/planner.dir/build.make
 libplanner.a: CMakeFiles/planner.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libplanner.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liuyibo/liuyibo_HbridAStar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX static library libplanner.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/planner.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/planner.dir/link.txt --verbose=$(VERBOSE)
 

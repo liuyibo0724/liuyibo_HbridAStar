@@ -10,7 +10,7 @@ include_directories(
 
 add_library(
         planner
-        # src/planner.cpp
+        src/planner.cpp
         src/node.cpp
         src/hybridAStar.cpp
         src/CollisionDetection.cpp

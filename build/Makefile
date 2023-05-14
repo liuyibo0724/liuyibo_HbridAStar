@@ -352,6 +352,33 @@ src/node.cpp.s:
 	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/node.cpp.s
 .PHONY : src/node.cpp.s
 
+src/planner.o: src/planner.cpp.o
+
+.PHONY : src/planner.o
+
+# target to build an object file
+src/planner.cpp.o:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/planner.cpp.o
+.PHONY : src/planner.cpp.o
+
+src/planner.i: src/planner.cpp.i
+
+.PHONY : src/planner.i
+
+# target to preprocess a source file
+src/planner.cpp.i:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/planner.cpp.i
+.PHONY : src/planner.cpp.i
+
+src/planner.s: src/planner.cpp.s
+
+.PHONY : src/planner.s
+
+# target to generate assembly for a file
+src/planner.cpp.s:
+	$(MAKE) -f CMakeFiles/planner.dir/build.make CMakeFiles/planner.dir/src/planner.cpp.s
+.PHONY : src/planner.cpp.s
+
 src/smooth.o: src/smooth.cpp.o
 
 .PHONY : src/smooth.o
@@ -413,6 +440,9 @@ help:
 	@echo "... src/node.o"
 	@echo "... src/node.i"
 	@echo "... src/node.s"
+	@echo "... src/planner.o"
+	@echo "... src/planner.i"
+	@echo "... src/planner.s"
 	@echo "... src/smooth.o"
 	@echo "... src/smooth.i"
 	@echo "... src/smooth.s"

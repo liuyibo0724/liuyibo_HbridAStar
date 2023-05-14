@@ -36,9 +36,9 @@ namespace param
     //RS曲线半径缩放因子
     static const float RS_Scaling = 80.f;//40.;
     //sta2pred插值缩放因子
-    static const int sta2predShoot_Scaling = 10;
+    static const int sta2predShoot_Scaling = 4;
     //航向角离散数[#]
-    static const int headings = 120;
+    static const int headings = 72;//120;
     //航向角离散步长（度）[°]
     static const float deltaHeadingDeg = 360 / (double) headings;
     //航向角离散步长（弧度）[rad]
@@ -49,8 +49,12 @@ namespace param
     static const float cellSize = 1.;
     //代价计算误差小余量[m]
     static const float tieBreaker = 0.01;
+    //起始点误差余量[pixel]
+    static const float startBreaker = 2.f;
+    //停驻误差余量[pixel]
+    static const float parkBreaker = 4.f;
     //cell中坐标离散分辨率[#]
-    static const int positionResolution = 10;
+    static const int positionResolution = 8;//10;
     //cell中离散位置数量[#]
     static const int positions = positionResolution*positionResolution;
     //相对cell中心的坐标[m]
@@ -90,6 +94,8 @@ namespace param
     static const int smoothMaxIterations = 500;
     //BSpline拟合阶次
     static const int BSpline_order = 3;
+    //BSpline插值数量
+    static const int BSpline_Scaling = 2;
 
     /*子节点搜索步长相关参数*/
     static const float dt = 0.441786375;
