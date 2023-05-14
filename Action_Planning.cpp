@@ -78,8 +78,8 @@ bool ActionPlanner::DDSMsgsOut()
     //如果状态机不为Guidance_则速度为零
     if(currentAPInfo->currentAction != Guidance_)
     {
-        float x_brake_start = localization.longitude - 160;
-        float y_brake_start = localization.latitude - 200;
+        float x_brake_start = localization.longitude;
+        float y_brake_start = localization.latitude;
         float t_brake_start = localization.headingAngle;
         float vel_brake_start = inputEVCanInfoMsg.vehicleSpeed;
 
