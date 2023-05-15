@@ -21,7 +21,7 @@ namespace actionPlanning
             m_inputPin.localization_in = this->createInputPinCache("Localization", Localization, 100);
             m_inputPin.start_in = this->createInputPinCache("Start", Localization, 100);
             m_inputPin.goal_in = this->createInputPinCache("Goal", Localization, 100);
-            m_inputPin.map_in = this->createInputPinCache("Map", Mapdat, 100);
+            // m_inputPin.map_in = this->createInputPinCache("Map", Mapdat, 100);  //Mapdata由于上游适配问题先注释隐去
             m_inputPin.objFusionData_in = this->createInputPinCache("FusionData", FusionData, 100);
             m_inputPin.remoteVehicleInfo_in = this->createInputPinCache("RemoteVehicleInfoMsg", RemoteVehicleInfoMsg, 100);
             m_inputPin.longitudinalControlMsg_in = this->createInputPinCache("LongitudinalControlMsg",LongitudinalControlMsg, 100);

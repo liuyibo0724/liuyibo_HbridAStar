@@ -81,13 +81,13 @@ namespace actionPlanning
             return false;
         }
 
-        if(false == sysdGetNewestSignalTemplate(
-            inputSignal.map,
-            inputPin.map_in, timeout, oldestTimeStamp))
-        {
-            sysdPrintError("actionPlanning: map is null or too old!\n");
-            return false;
-        }
+        // if(false == sysdGetNewestSignalTemplate(
+        //     inputSignal.map,
+        //     inputPin.map_in, timeout, oldestTimeStamp))
+        // {
+        //     sysdPrintError("actionPlanning: map is null or too old!\n");
+        //     return false;
+        // }
 
         if(false == sysdGetNewestSignalTemplate(
             inputSignal.objFusionData,
@@ -209,12 +209,12 @@ namespace actionPlanning
             return false;
         }
 
-        inputSignal.map = inputPin.map_in->getSyncedMsg(syncTime, syncTimeGap);
-        if(nullptr == inputSignal.map)
-        {
-            sysdPrintError("actionPlanning: Fail to sync map!\n");
-            return false;
-        }
+        // inputSignal.map = inputPin.map_in->getSyncedMsg(syncTime, syncTimeGap);
+        // if(nullptr == inputSignal.map)
+        // {
+        //     sysdPrintError("actionPlanning: Fail to sync map!\n");
+        //     return false;
+        // }
 
         inputSignal.objFusionData = inputPin.objFusionData_in->getSyncedMsg(syncTime, syncTimeGap);
         if(nullptr == inputSignal.objFusionData)

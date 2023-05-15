@@ -41,7 +41,7 @@ namespace actionPlanning
         sysd::InputPinCache<Localization> *localization_in = nullptr;
         sysd::InputPinCache<Localization> *start_in = nullptr;
         sysd::InputPinCache<Localization> *goal_in = nullptr;
-        sysd::InputPinCache<Mapdata> *map_in = nullptr;
+        // sysd::InputPinCache<Mapdata> *map_in = nullptr;
         //感知信息
         sysd::InputPinCache<FusionData> *objFusionData_in = nullptr;
         sysd::InputPinCache<RemoteVehicleInfoMsg> *remoteVehicleInfo_in = nullptr;
@@ -72,7 +72,7 @@ namespace actionPlanning
         const Localization *localization = nullptr;
         const Localization *start = nullptr;
         const Localization *goal = nullptr;
-        const Mapdata *map = nullptr;
+        // const Mapdata *map = nullptr;
 
         const FusionData *objFusionData = nullptr;
         const RemoteVehicleInfoMsg *remoteVehicleInfo = nullptr;
